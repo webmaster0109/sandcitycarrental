@@ -1,0 +1,14 @@
+*.pyc
+*.pyo
+*.pyd
+*.sqlite3
+*.db
+*.log
+*.env
+
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+public
