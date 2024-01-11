@@ -11,4 +11,6 @@ __pycache__/
 *.pyo
 *.pyd
 
-public
+public/static/
+db.sqlite3
+media/
