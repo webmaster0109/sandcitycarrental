@@ -4,16 +4,18 @@ import uuid
 import os
 
 class CarTypes(models.Model):
-    types_id = models.CharField(max_length=100, primary_key=True, unique=True, editable=False, default=random.randint(10000000, 99999999))
+    types_id = models.UUIDField(primary_key=True, unique=True, editable=False, default=uuid.uuid4)
     car_types = models.CharField(max_length=255, null=True, blank=True)
+    slug = models.SlugField(max_length=255, unique=True, null=True, blank=True)
 
     def __str__(self):
         return self.car_types
 
 class Cars(models.Model):
-    car_id = models.CharField(max_length=100, primary_key=True, unique=True, editable=False, default=random.randint(10000000, 99999999))
+    car_id = models.UUIDField(primary_key=True, unique=True, editable=False, default=uuid.uuid4)
     car_type = models.ForeignKey(CarTypes, on_delete=models.CASCADE)
     brand = models.CharField(max_length=255, null=True, blank=True)
+    slug = models.SlugField(max_length=255, unique=True, null=True, blank=True)
     year = models.PositiveIntegerField(default=random.randint(2000, 3000), null=True, blank=True)
     desc = models.TextField(default="", null=True, blank=True)
     price = models.PositiveIntegerField(default=0, null=True, blank=True)
@@ -32,4 +34,10 @@ class CarImages(models.Model):
 
     def __str__(self):
         return self.my_instance()
+    
+    def delete(self, *args, **kwargs):
+        if self.car_images:
+            storage, path = self.car_images.storage, self.car_images.path
+            storage.delete(path)
+        super().delete(*args, **kwargs)
     
