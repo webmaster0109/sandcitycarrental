@@ -2,6 +2,7 @@ from django.db import models
 import random
 import uuid
 import os
+from django.core.files.storage import default_storage
 
 class CarTypes(models.Model):
     types_id = models.UUIDField(primary_key=True, unique=True, editable=False, default=uuid.uuid4)
@@ -40,4 +41,15 @@ class CarImages(models.Model):
             storage, path = self.car_images.storage, self.car_images.path
             storage.delete(path)
         super().delete(*args, **kwargs)
+    
+    def save(self, *args, **kwargs):
+        if self.pk:
+            try:
+                old_instance = CarImages.objects.get(pk=self.pk)
+                if old_instance.car_images.name != self.car_images.name:
+                    old_image_path = old_instance.car_images.path
+                    default_storage.delete(old_image_path)
+            except CarImages.DoesNotExist:
+                pass
+        super(CarImages, self).save(*args, **kwargs)
     
