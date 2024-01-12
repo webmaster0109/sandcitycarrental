@@ -1,0 +1,51 @@
+<header class="navbar navbar-expand-lg navbar-light fixed-top" data-scroll-header="">
+    <div class="container">
+    
+    <a class="navbar-brand me-3 me-xl-4" href="/"><img class="d-block" src="/media/img/logo/logo-light.png" width="220" alt="sandcitycarrental"></a>
+
+      <button class="navbar-toggler ms-auto" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+      {% if request.user.is_authenticated %}
+        <a class="btn btn-lg text-primary d-none d-lg-block order-lg-3" href="">
+            <i class="fi-cart me-1"></i>Cart
+        </a>
+        {% if request.user.is_staff %}
+        <a class="btn btn-primary btn-lg rounded-pill ms-2 order-lg-3" href="{% url 'dashboard' %}">
+            <i class="fi-dashboard me-1"></i> Dashboard
+        </a>
+        {% else %}
+        <a class="btn btn-primary btn-lg rounded-pill ms-2 order-lg-3" href="{% url 'dashboard' %}">
+            <i class="fi-user me-1"></i> My Profile
+        </a>
+        {% endif %}
+        {% else %}
+        <a class="btn btn-lg text-primary d-none d-lg-block order-lg-3" href="#signin-modal" data-bs-toggle="modal">
+            <i class="fi-login me-1"></i>Login
+        </a>
+      {% endif %}
+        <div class="collapse navbar-collapse order-lg-2" id="navbarNav">
+            <ul class="navbar-nav navbar-nav-scroll ms-3" style="max-height: 35rem;">
+            <!-- Menu items-->
+            <li class="nav-item active">
+                <a class="nav-link" href="/">Home</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">About us</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">Our Cars</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">FAQs</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">Blog</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">Contact us</a>
+            </li>
+            <li class="nav-item d-lg-none"><a class="nav-link" href="#signin-modal" data-bs-toggle="modal"><i class="fi-user"></i>Login</a></li>
+            <li class="nav-item d-lg-none"><a class="nav-link" href="#"><i class="fi-cart"></i>Cart</a></li>
+            </ul>
+        </div>
+    </div>
+</header>

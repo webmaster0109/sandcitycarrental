@@ -1,8 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.models import User
-from torch import Use
-from models.users import Profile
+from rentalapp.models.users import Profile
 from django.urls import reverse
 from django.contrib import messages
 from django.contrib.auth import login, authenticate, logout
@@ -28,7 +27,7 @@ def login_attempt(request):
             return redirect('/')
         messages.warning(request, 'Invalid Credentials!')
         return HttpResponseRedirect(request.path_info)
-    return render(request, template_name="credentials/login.html")
+    return render(request, template_name="backend/credentials/login.html")
 
 
 def signup_attempt(request):
@@ -55,11 +54,12 @@ def signup_attempt(request):
             user_obj.save()
             profile_obj = Profile.objects.create(user=user_obj, number=number, country=country, profile_image=profile_image)
             profile_obj.save()
-            login(request, user_obj)
-            if 'next' in request.POST:
-                return redirect(request.POST['next'])
-            return redirect('/')
         except Exception as e:
             print(e)
+        
+        login(request, user_obj)
+        if 'next' in request.POST:
+            return redirect(request.POST['next'])
+        return redirect('/')
     
     return render(request, template_name="credentials/register.html")

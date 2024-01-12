@@ -11,7 +11,7 @@ class Profile(models.Model):
     created_on = models.DateTimeField(auto_now_add=True, null=True, blank=True)
     
     def __str__(self):
-        return self.user.username
+        return f'{self.user.first_name} {self.user.last_name}'
     
     def delete(self, *args, **kwargs):
         if self.profile_image:

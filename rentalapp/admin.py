@@ -1,6 +1,6 @@
 from django.contrib import admin
-import os
 from .models.cars import CarImages, Cars, CarTypes
+from .models.users import Profile
 # Register your models here.
 
 @admin.register(CarTypes)
@@ -16,3 +16,7 @@ class CarsAdmin(admin.ModelAdmin):
     list_display = ['brand', 'year', 'price']
     inlines = [CarImagesAdmin,]
     prepopulated_fields = {'slug': ('brand',)}
+
+admin.site.register(CarImages)
+
+admin.site.register(Profile)
