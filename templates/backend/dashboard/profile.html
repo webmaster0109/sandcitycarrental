@@ -15,45 +15,14 @@
       <aside class="col-lg-4 col-md-5 pe-xl-4 mb-5">
         <!-- Account nav-->
         <div class="card card-body border-0 shadow-sm pb-1 me-lg-1">
-          <div class="d-flex d-md-block d-lg-flex align-items-start pt-lg-2 mb-4"><img class="rounded-circle" src="{{request.user.profile.profile_image.url}}" width="54" alt="Annette Black">
-            <div class="pt-md-2 pt-lg-0 ps-3 ps-md-0 ps-lg-3">
-              <h2 class="fs-lg mb-0">{{request.user.first_name}} {{request.user.last_name}}</h2>
-              <span>@{{request.user.username}}</span>
-              <ul class="list-unstyled fs-sm mt-3 mb-0">
-                <li><a class="nav-link fw-normal p-0" href="javascript:void(0);"><i class="fi-phone opacity-60 me-2"></i>{{request.user.profile.number}}</a></li>
-                <li><a class="nav-link fw-normal p-0" href="javascript:void(0);"><i class="fi-mail opacity-60 me-2"></i>{{request.user.email}}</a></li>
-              </ul>
-            </div>
-          </div>
-            {% if request.user.is_staff %}
-            <div class="row">
-                <div class="col-lg-6 col-md-6">
-                    <a class="btn btn-primary btn-lg w-100 mb-3" href="#"><i class="fi-plus me-2"></i>Add Car</a>
-                </div>
-                <div class="col-lg-6 col-md-6">
-                    <a class="btn btn-outline-primary btn-lg w-100 mb-3" href="#"><i class="fi-plus me-2"></i>Add User</a>
-                </div>
-            </div>
-            {% endif %}
-          <a class="btn btn-outline-secondary d-block d-md-none w-100 mb-3" href="#account-nav" data-bs-toggle="collapse">
-            <i class="fi-align-justify me-2"></i>Menu</a>
-          <div class="collapse d-md-block mt-3" id="account-nav">
-            <div class="card-nav">
-                    <a class="card-nav-link active" href="#"><i class="fi-user opacity-60 me-2"></i>Personal Info</a>
-                    <a class="card-nav-link" href="#"><i class="fi-car opacity-60 me-2"></i>My Car Lists</a>
-                    <a class="card-nav-link" href="#"><i class="fi-heart opacity-60 me-2"></i>Wishlist</a>
-                    <a class="card-nav-link" href="#"><i class="fi-star opacity-60 me-2"></i>Reviews</a>
-                    <a class="card-nav-link" href="#"><i class="fi-bell opacity-60 me-2"></i>Notifications</a>
-                    <a class="card-nav-link" href="#"><i class="fi-help opacity-60 me-2"></i>Help</a>
-                    <a class="card-nav-link" href="#"><i class="fi-logout opacity-60 me-2"></i>Sign Out</a>
-                </div>
-          </div>
+          {% include './profile_menu.html' %}
         </div>
       </aside>
       <!-- Content-->
       <div class="col-lg-8 col-md-7 mb-5 shadow-sm rounded" style="padding-left: 25px; padding-right: 25px; padding-top: 15px; padding-bottom: 15px;">
         <h1 class="h2">Personal Info</h1>
-        <form action="" method="post">
+        <form action="{% url 'update_profile' user.id %}" method="post">
+            {% csrf_token %}
             <div class="border rounded-3 p-3 mb-4" id="personal-info">
             <!-- Name-->
             <div class="border-bottom pb-3 mb-3">
@@ -66,7 +35,7 @@
                     href="#first-name-collapse" data-bs-toggle="collapse"><i class="fi-edit"></i></a></div>
                 </div>
                 <div class="collapse" id="first-name-collapse" data-bs-parent="#personal-info">
-                <input class="form-control mt-3" type="text" data-bs-binded-element="#name-value" data-bs-unset-value="Not specified" value="{{request.user.first_name}}">
+                <input class="form-control mt-3" type="text" data-bs-binded-element="#name-value" name="first_name" data-bs-unset-value="Not specified" value="{{request.user.first_name}}">
                 </div>
             </div>
             <!-- Last Name -->
@@ -80,7 +49,7 @@
                     href="#last-name-collapse" data-bs-toggle="collapse"><i class="fi-edit"></i></a></div>
                 </div>
                 <div class="collapse" id="last-name-collapse" data-bs-parent="#personal-info">
-                <input class="form-control mt-3" type="text" data-bs-binded-element="#name-value" data-bs-unset-value="Not specified" value="{{request.user.last_name}}">
+                <input class="form-control mt-3" type="text" data-bs-binded-element="#name-value" name="last_name" data-bs-unset-value="Not specified" value="{{request.user.last_name}}">
                 </div>
             </div>
             <!-- Email-->
@@ -94,7 +63,7 @@
                     <i class="fi-edit"></i></a></div>
                 </div>
                 <div class="collapse" id="email-collapse" data-bs-parent="#personal-info">
-                <input class="form-control mt-3" type="email" data-bs-binded-element="#email-value" data-bs-unset-value="Not specified" value="{{request.user.email}}">
+                <input class="form-control mt-3" type="email" data-bs-binded-element="#email-value" data-bs-unset-value="Not specified" value="{{request.user.email}}" disabled="true">
                 </div>
             </div>
             <!-- Phone number-->
@@ -107,7 +76,7 @@
                 <div data-bs-toggle="tooltip" title="Edit"><a class="nav-link py-0" href="#phone-collapse" data-bs-toggle="collapse"><i class="fi-edit"></i></a></div>
                 </div>
                 <div class="collapse" id="phone-collapse" data-bs-parent="#personal-info">
-                <input class="form-control mt-3" type="text" data-bs-binded-element="#phone-value" data-bs-unset-value="Not specified" value="{{request.user.profile.number}}">
+                <input class="form-control mt-3" type="text" name="number" data-bs-binded-element="#phone-value" data-bs-unset-value="Not specified" value="{{request.user.profile.number}}">
                 </div>
             </div>
             <!-- Gender-->
@@ -120,13 +89,13 @@
                 <div data-bs-toggle="tooltip" title="Edit"><a class="nav-link py-0" href="#gender-collapse" data-bs-toggle="collapse"><i class="fi-edit"></i></a></div>
                 </div>
                 <div class="collapse" id="gender-collapse" data-bs-parent="#personal-info">
-                    <select class="form-select mt-3" data-bs-binded-element="#gender-value">
+                    <select class="form-select mt-3" name="gender" data-bs-binded-element="#gender-value">
                         {% if request.user.profile.gender == 'Male' %}
-                        <option value="{{request.user.profile.gender}}" selected="true" disabled="true">{{request.user.profile.gender}}</option>
+                        <option value="Male" selected="true">Male</option>
                         <option value="Female">Female</option>
                         {% elif request.user.profile.gender == 'Female' %}
                         <option value="Male">Male</option>
-                        <option value="{{request.user.profile.gender}}" selected="true" disabled="true">{{request.user.profile.gender}}</option>
+                        <option value="Female" selected="true">Female</option>
                         {% else %}
                         <option value="Male">Male</option>
                         <option value="Female">Female</option>
@@ -141,7 +110,7 @@
                 <div class="pe-2">
                     <label class="form-label fw-bold">Date of Birth</label>
                     {% if request.user.profile.dob %}
-                    <div id="dob-value">{{request.user.profile.dob}}</div>
+                    <div id="dob-value">{{request.user.profile.dob|date:'d F Y'}}</div>
                     {% else %}
                     <div id="dob-value">Not Specified</div>
                     {% endif %}
@@ -149,7 +118,7 @@
                 <div data-bs-toggle="tooltip" title="Edit"><a class="nav-link py-0" href="#dob-collapse" data-bs-toggle="collapse"><i class="fi-edit"></i></a></div>
                 </div>
                 <div class="collapse" id="dob-collapse" data-bs-parent="#personal-info">
-                <input class="form-control mt-3" type="date" data-bs-binded-element="#address-value" data-bs-unset-value="Not specified" placeholder="{{request.user.profile.dob}}">
+                <input class="form-control mt-3" type="date" name="dob" data-bs-binded-element="#dob-value" data-bs-unset-value="Not specified" value="{{request.user.profile.dob|date:'d F Y'}}">
                 </div>
             </div>
 
@@ -163,16 +132,16 @@
                 <div data-bs-toggle="tooltip" title="Edit"><a class="nav-link py-0" href="#address-collapse" data-bs-toggle="collapse"><i class="fi-edit"></i></a></div>
                 </div>
                 <div class="collapse" id="address-collapse" data-bs-parent="#personal-info">
-                <input class="form-control mt-3" type="text" data-bs-binded-element="#address-value" data-bs-unset-value="Not specified" placeholder="{{request.user.profile.country}}">
+                <input class="form-control mt-3" type="text" name="country" data-bs-binded-element="#address-value" data-bs-unset-value="Not specified" placeholder="Country" value="{{request.user.profile.country}}">
                 </div>
             </div>
             
             </div>
             <div class="d-flex align-items-center justify-content-between border-top mt-4 pt-4 pb-1">
-            <button class="btn btn-primary px-3 px-sm-4" type="button">Save changes</button>
+            <input type="submit" class="btn btn-primary px-3 px-sm-4" value="Update Profile">
             </div>
         </form>
       </div>
     </div>
-  </div>
+</div>
 {% endblock %}

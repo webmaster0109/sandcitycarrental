@@ -1,0 +1,127 @@
+{% extends 'base/base.html' %}
+
+{% block content %}
+<div class="container pt-5 pb-lg-4 mb-sm-2" style="margin-top: 100px;">
+    <!-- Breadcrumb-->
+    <nav class="mb-4 pt-md-3" aria-label="Breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/">Home</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Car Lists</li>
+      </ol>
+    </nav>
+    <!-- Page content-->
+    <div class="row">
+      <!-- Sidebar-->
+      <aside class="col-lg-4 col-md-5 pe-xl-4 mb-5">
+        <!-- Account nav-->
+        <div class="card card-body border-0 shadow-sm pb-1 me-lg-1">
+        {% include './profile_menu.html' %}
+        </div>
+      </aside>
+      <!-- Content-->
+        <div class="col-lg-8 col-md-7 mb-5 shadow-sm rounded" style="padding-left: 25px; padding-right: 25px; padding-top: 15px; padding-bottom: 15px;">
+            <div class="d-flex align-items-center justify-content-between mb-3">
+              <h1 class="h2 text-dark mb-0">Car Lists</h1><a class="nav-link-primary fw-bold" href="#" style="text-decoration: none;"><i class="fi-trash mt-n1 me-2"></i>Delete all</a>
+            </div>
+            <p class="text-dark pt-1 mb-4">Here you can see car details and edit them easily.</p>
+            <!-- Nav tabs-->
+            <ul class="nav nav-tabs nav-tabs-dark border-bottom border-faded-light mb-4" role="tablist">
+              <li class="nav-item mb-3"><a class="nav-link active" href="#" role="tab" aria-selected="true"><i class="fi-list fs-base me-2"></i>Published</a></li>
+              <li class="nav-item mb-3"><a class="nav-link" href="#" role="tab" aria-selected="false"><i class="fi-file fs-base me-2"></i>Available</a></li>
+              <li class="nav-item mb-3"><a class="nav-link" href="#" role="tab" aria-selected="false"><i class="fi-archive fs-base me-2"></i>Not Available</a></li>
+              <li class="nav-item mb-3">
+                <form method="get" action="{% url 'car_lists' %}">
+                    <div class="row ms-auto">
+                        <div class="col-md-7">
+                            <select class="form-select" id="category" name="category">
+                                {% if category_filter == 'Premium' %}
+                                <option value="">All</option>
+                                <option value="Premium" selected="true" disabled="true">Premium</option>
+                                <option value="Economy">Economy</option>
+                                <option value="Sports">Sports</option>
+                                <option value="7Seaters">7 Seaters</option>
+                                {% elif category_filter == 'Economy' %}
+                                <option value="">All</option>
+                                <option value="Premium">Premium</option>
+                                <option value="Economy" selected="true" disabled="true">Economy</option>
+                                <option value="Sports">Sports</option>
+                                <option value="7Seaters">7 Seaters</option>
+                                {% elif category_filter == 'Sports' %}
+                                <option value="">All</option>
+                                <option value="Premium">Premium</option>
+                                <option value="Economy">Economy</option>
+                                <option value="Sports" selected="true" disabled="true">Sports</option>
+                                <option value="7Seaters">7 Seaters</option>
+                                {% elif category_filter == '7Seaters' %}
+                                <option value="">All</option>
+                                <option value="Premium">Premium</option>
+                                <option value="Economy">Economy</option>
+                                <option value="Sports">Sports</option>
+                                <option value="7Seaters" selected="true" disabled="true">7 Seaters</option>
+                                {% else %}
+                                <option value="">All</option>
+                                <option value="Premium">Premium</option>
+                                <option value="Economy">Economy</option>
+                                <option value="Sports">Sports</option>
+                                <option value="7Seaters">7 Seaters</option>
+                                {% endif %}
+                            </select>
+                        </div>
+                        <div class="col-md-4"><button class="btn btn-primary px-4 px-sm-4" type="submit"><i class="fi-filter me-sm-1"></i>Filter</button></div>
+                    </div>
+                </form>
+              </li>
+            </ul>
+            <!-- Item-->
+            {% for car in cars %}
+            <div class="card card-dark card-hover card-horizontal mb-4">
+              <div class="tns-carousel-wrapper card-img-top card-img-hover"><a class="img-overlay" href="#"></a>
+                <div class="position-absolute start-0 top-0 pt-3 ps-3"><span class="d-table badge bg-info">{{car.year}}</span></div>
+                <div class="content-overlay end-0 top-0 pt-3 pe-3">
+                  <button class="btn btn-icon btn-light btn-xs text-primary rounded-circle" type="button" data-bs-toggle="tooltip" data-bs-placement="left" title="Add to Wishlist">
+                    <i class="fi-heart"></i></button>
+                </div>
+                <div class="tns-carousel-inner position-absolute top-0 h-100">
+                    {% for image in car.carimages_set.all %}
+                    <div class="bg-size-cover bg-position-center w-100 h-100" style="background-image: url({{image.car_images.url}});"></div>
+                    {% endfor %}
+                </div>
+              </div>
+              <div class="card-body position-relative">
+                <div class="dropdown position-absolute zindex-5 top-0 end-0 mt-3 me-3">
+                  <button class="btn btn-icon btn-translucent-primary btn-xs rounded-circle" type="button" id="contextMenu1" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="fi-dots-vertical"></i></button>
+                  <ul class="dropdown-menu dropdown-menu-dark my-1" aria-labelledby="contextMenu1">
+                    <li>
+                      <button class="dropdown-item" type="button"><i class="fi-edit me-2"></i>Edit</button>
+                    </li>
+                    <li>
+                      <button class="dropdown-item" type="button"><i class="fi-trash me-2"></i>Delete</button>
+                    </li>
+                  </ul>
+                </div>
+                <div class=""><a class="nav-link-primary" href="#" style="text-decoration: none; font-weight: bold;">{{car.brand}}</a></div>
+                <div class="fs-sm text-muted">{{car.category}}</div>
+                <div class="fs-sm text-dark opacity-70"><i class="fi-map-pin me-1"></i>Dubai</div>
+                <div class="row g-2" style="margin-top: 10px;">
+                    {% for price in car.carprice_set.all %}
+                    {% if price.timeline == "Monthly" %}
+                    <div class="col me-sm-1">
+                        <span class="text-muted" style="text-decoration: line-through!important; font-size: 13px;">{{price.actual_price}} AED</span><br />
+                        <p class="text-dark" style="font-size: 15px;"><b>{{price.discounted_price}} AED</b> /{{price.timeline}}</p>
+                    </div>
+                    {% else %}
+                    <div class="col">
+                        <span class="text-muted" style="text-decoration: line-through!important; font-size: 13px;">{{price.actual_price}} AED</span><br />
+                        <p class="text-dark" style="font-size: 15px;"><b>{{price.discounted_price}} AED</b> /{{price.timeline}}</p>
+                    </div>
+                    {% endif %}
+                    {% endfor %}
+                </div>
+              </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -10,32 +10,34 @@
               <div class="mt-4 mt-sm-5">Don't have an account? <a href="#signup-modal" data-bs-toggle="modal" data-bs-dismiss="modal">Sign up here</a></div>
             </div>
             <div class="col-md-6 px-4 pt-2 pb-4 px-sm-5 pb-sm-5 pt-md-5">
-                <a class="btn btn-outline-info rounded-pill w-100 mb-3" href="#"><i class="fi-google fs-lg me-1"></i>Sign in with Google</a>
+                <a class="btn btn-outline-info rounded-pill w-100 mb-3" href="{% url 'social:begin' 'google-oauth2' %}"><i class="fi-google fs-lg me-1"></i>Sign in with Google</a>
                 <a class="btn btn-outline-info rounded-pill w-100 mb-3" href="#"><i class="fi-facebook fs-lg me-1"></i>Sign in with Facebook</a>
               <div class="d-flex align-items-center py-3 mb-3">
                 <hr class="w-100">
                 <div class="px-3">Or</div>
                 <hr class="w-100">
               </div>
-              <form class="needs-validation" novalidate="">
+              {% include './alerts.html' %}
+              <form class="needs-validation" method="post" action="{% url 'login' %}">
+                {% csrf_token %}
                 <div class="mb-4">
-                  <label class="form-label mb-2" for="signin-email">Email address</label>
-                  <input class="form-control" type="email" id="signin-email" placeholder="Enter your email" required="">
-                  {% if request.GET.next %}
-                  <input type="hidden" name="next" value="{{request.GET.next}}" />
-                  {% endif %}
+                  <label class="form-label mb-2" for="signin-email">Username</label>
+                  <input class="form-control" type="text" id="signin-email" placeholder="Enter your username" name="username" required>
                 </div>
                 <div class="mb-4">
                   <div class="d-flex align-items-center justify-content-between mb-2">
-                    <label class="form-label mb-0" for="signin-password">Password</label><a class="fs-sm" href="#">Forgot password?</a>
+                    <label class="form-label mb-0" for="signin-password">Password</label>
                   </div>
                   <div class="password-toggle">
-                    <input class="form-control" type="password" id="signin-password" placeholder="Enter password" required="">
+                    <input class="form-control" type="password" id="signin-password" name="password" placeholder="Enter password" required>
                     <label class="password-toggle-btn" aria-label="Show/hide password">
                       <input class="password-toggle-check" type="checkbox"><span class="password-toggle-indicator"></span>
                     </label>
                   </div>
                 </div>
+                  {% if request.GET.next %}
+                  <input type="hidden" name="next" value="{{request.GET.next}}" />
+                  {% endif %}
                 <button class="btn btn-primary btn-lg rounded-pill w-100" type="submit">Sign in</button>
               </form>
             </div>
@@ -63,7 +65,7 @@
               <div class="mt-sm-4 pt-md-3">Already have an account? <a href="#signin-modal" data-bs-toggle="modal" data-bs-dismiss="modal">Sign in</a></div>
             </div>
             <div class="col-md-6 px-4 pt-2 pb-4 px-sm-5 pb-sm-5 pt-md-5">
-                <a class="btn btn-outline-info rounded-pill w-100 mb-3" href="#">
+                <a class="btn btn-outline-info rounded-pill w-100 mb-3" href="{% url 'social:begin' 'google-oauth2' %}">
                     <i class="fi-google fs-lg me-1"></i>Sign in with Google</a>
                 <a class="btn btn-outline-info rounded-pill w-100 mb-3" href="#">
                     <i class="fi-facebook fs-lg me-1"></i>Sign in with Facebook</a>

@@ -1,0 +1,49 @@
+<div class="d-flex d-md-block d-lg-flex align-items-start pt-lg-2 mb-4">
+    {% if request.user.profile.profile_image %}
+    <img class="rounded-circle" src="{{request.user.profile.profile_image.url}}" width="54" alt="{{request.user.first_name}} {{request.user.last_name}}">
+    {% else %}
+    <img class="rounded-circle" src="/media/images/profile/default_avatar/default_avatar.svg" width="54" alt="{{request.user.first_name}} {{request.user.last_name}}">
+    {% endif %}
+    <div class="pt-md-2 pt-lg-0 ps-3 ps-md-0 ps-lg-3">
+      <h2 class="fs-lg mb-0">{{request.user.first_name}} {{request.user.last_name}}</h2>
+      <span>@{{request.user.username}}</span>
+      <ul class="list-unstyled fs-sm mt-3 mb-0">
+        <li><a class="nav-link fw-normal p-0" href="javascript:void(0);">
+            <i class="fi-phone opacity-60 me-2"></i>{% if request.user.profile.number %}{{request.user.profile.number}}{% else %}Not Specified{% endif %}</a>
+        </li>
+        <li><a class="nav-link fw-normal p-0" href="javascript:void(0);"><i class="fi-mail opacity-60 me-2"></i>{{request.user.email}}</a></li>
+      </ul>
+    </div>
+</div>
+{% if request.user.is_staff %}
+<div class="row">
+    <div class="col-lg-6 col-md-6">
+        <a class="btn btn-primary btn-lg w-100 mb-3" href="#"><i class="fi-plus me-2"></i>Add Car</a>
+    </div>
+    <div class="col-lg-6 col-md-6">
+        <a class="btn btn-outline-primary btn-lg w-100 mb-3" href="#"><i class="fi-plus me-2"></i>Add User</a>
+    </div>
+</div>
+{% endif %}
+<a class="btn btn-outline-secondary d-block d-md-none w-100 mb-3" href="#account-nav" data-bs-toggle="collapse">
+<i class="fi-align-justify me-2"></i>Menu</a>
+<div class="collapse d-md-block mt-3" id="account-nav">
+<div class="card-nav">
+        {% url 'dashboard' as url %}
+        <a class="card-nav-link {% if request.path == url %}active{% endif %}" href="{{url}}"><i class="fi-user opacity-60 me-2"></i>Personal Info</a>
+        {% if request.user.is_staff %}
+        {% url 'car_lists' as url %}
+        <a class="card-nav-link {% if request.path == url %}active{% endif %}" href="{{url}}"><i class="fi-car opacity-60 me-2"></i>My Car Lists</a>
+        <a class="card-nav-link" href="#"><i class="fi-users opacity-60 me-2"></i>User Lists</a>
+        <a class="card-nav-link" href="#"><i class="fi-star opacity-60 me-2"></i>Reviews</a>
+        <a class="card-nav-link" href="#"><i class="fi-cart opacity-60 me-2"></i>Order</a>
+        <a class="card-nav-link" href="#"><i class="fi-cash opacity-60 me-2"></i>Payment</a>
+        <a class="card-nav-link" href="{% url 'logout' %}"><i class="fi-logout opacity-60 me-2"></i>Sign Out</a>
+        {% else %}
+        <a class="card-nav-link" href="#"><i class="fi-car opacity-60 me-2"></i>My Cars</a>
+        <a class="card-nav-link" href="#"><i class="fi-heart opacity-60 me-2"></i>Wishlist</a>
+        <a class="card-nav-link" href="#"><i class="fi-help opacity-60 me-2"></i>Help</a>
+        <a class="card-nav-link" href="{% url 'logout' %}"><i class="fi-logout opacity-60 me-2"></i>Sign Out</a>
+        {% endif %}
+    </div>
+</div>

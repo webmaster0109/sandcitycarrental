@@ -8,15 +8,43 @@
         <a class="btn btn-lg text-primary d-none d-lg-block order-lg-3" href="">
             <i class="fi-cart me-1"></i>Cart
         </a>
-        {% if request.user.is_staff %}
-        <a class="btn btn-primary btn-lg rounded-pill ms-2 order-lg-3" href="{% url 'dashboard' %}">
-            <i class="fi-dashboard me-1"></i> Dashboard
-        </a>
-        {% else %}
-        <a class="btn btn-primary btn-lg rounded-pill ms-2 order-lg-3" href="{% url 'dashboard' %}">
-            <i class="fi-user me-1"></i> My Profile
-        </a>
-        {% endif %}
+        <div class="dropdown d-none d-lg-block order-lg-3 my-n2 me-3">
+            <a class="d-block py-2" href="javascript:void(0)">
+            {% if request.user.profile.profile_image %}
+            <img class="rounded-circle" src="{{request.user.profile.profile_image.url}}" width="40" alt="{{request.user.first_name}} {{request.user.last_name}}">
+            {% else %}
+            <img class="rounded-circle" src="/media/images/profile/default_avatar/default_avatar.svg" width="40" alt="{{request.user.first_name}} {{request.user.last_name}}">
+            {% endif %}
+            </a>
+            <div class="dropdown-menu dropdown-menu-end">
+              <div class="d-flex align-items-start border-bottom px-3 py-1 mb-2" style="width: 16rem;">
+                {% if request.user.profile.profile_image %}
+                <img class="rounded-circle" src="{{request.user.profile.profile_image.url}}" width="48" alt="{{request.user.first_name}} {{request.user.last_name}}">
+                {% else %}
+                <img class="rounded-circle" src="/media/images/profile/default_avatar/default_avatar.svg" width="48" alt="{{request.user.first_name}} {{request.user.last_name}}">
+                {% endif %}
+                <div class="ps-2">
+                  <h6 class="fs-base mb-0">{{request.user.first_name}} {{request.user.last_name}}</h6>
+                  <div class="fs-xs py-2">{% if request.user.profile.number %}{{request.user.profile.number}}<br>{% endif %}{{request.user.email}}</div>
+                </div>
+              </div>
+              <a class="dropdown-item" href="{% url 'dashboard' %}"><i class="fi-user opacity-60 me-2"></i>Personal Info</a>
+              {% if request.user.is_staff %}
+              <a class="dropdown-item" href="{% url 'car_lists' %}"><i class="fi-car opacity-60 me-2"></i>Car Lists</a>
+              <a class="dropdown-item" href="#"><i class="fi-users opacity-60 me-2"></i>User Lists</a>
+              <a class="dropdown-item" href="#"><i class="fi-cart opacity-60 me-2"></i>Order</a>
+              <a class="dropdown-item" href="#"><i class="fi-cash opacity-60 me-2"></i>Payment</a>
+              <a class="dropdown-item" href="#"><i class="fi-star opacity-60 me-2"></i>Reviews</a>
+              <div class="dropdown-divider"></div>
+              {% else %}
+              <a class="dropdown-item" href="#"><i class="fi-car opacity-60 me-2"></i>My Car</a>
+              <a class="dropdown-item" href="#"><i class="fi-heart opacity-60 me-2"></i>Wishlist</a>
+              <div class="dropdown-divider"></div>
+              <a class="dropdown-item" href="#">Help</a>
+              {% endif %}
+              <a class="dropdown-item" href="{% url 'logout' %}">Sign Out</a>
+            </div>
+        </div>
         {% else %}
         <a class="btn btn-lg text-primary d-none d-lg-block order-lg-3" href="#signin-modal" data-bs-toggle="modal">
             <i class="fi-login me-1"></i>Login

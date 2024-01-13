@@ -113,16 +113,23 @@
       </div>
     </div>
     <main class="page-wrapper bg-white">
+      {% if request.path == '/auth/login' %}
+      {% elif request.path == '/auth/register' %}
+      {% else %}
       <!-- modals -->
       {% include "base/includes/modals.html" %}
       <!-- Navbar-->
       {% include "base/includes/header.html" %}
-
+      {% endif %}
       {% block content %}{% endblock  %}
 
     </main>
     <!-- Footer-->
+    {% if request.path == '/auth/login' %}
+    {% elif request.path == '/auth/register' %}
+    {% else %}
     {% include "base/includes/footer.html" %}
+    {% endif %}
     
     <!-- Back to top button-->
     <a class="btn-scroll-top" href="#top" data-scroll>

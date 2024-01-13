@@ -13,16 +13,37 @@ class CarTypes(models.Model):
         return self.car_types
 
 class Cars(models.Model):
+    category_choices = [
+        ('Premium', 'Premium'),
+        ('Economy', 'Economy'),
+        ('Sports', 'Sports'),
+        ('7Seaters', '7Seaters'),
+    ]
+    category = models.CharField(max_length=20, choices=category_choices, default='Premium')
     car_id = models.UUIDField(primary_key=True, unique=True, editable=False, default=uuid.uuid4)
-    car_type = models.ForeignKey(CarTypes, on_delete=models.CASCADE)
+    car_type = models.ForeignKey(CarTypes, on_delete=models.CASCADE, null=True, blank=True)
     brand = models.CharField(max_length=255, null=True, blank=True)
     slug = models.SlugField(max_length=255, unique=True, null=True, blank=True)
     year = models.PositiveIntegerField(default=random.randint(2000, 3000), null=True, blank=True)
     desc = models.TextField(default="", null=True, blank=True)
-    price = models.PositiveIntegerField(default=0, null=True, blank=True)
+
+    body_type = models.CharField(max_length=100, null=True, blank=True)
+    engine = models.CharField(max_length=255, null=True, blank=True)
+    fuel_type = models.CharField(max_length=255, null=True, blank=True)
+    exterior_color = models.CharField(max_length=50, null=True, blank=True)
 
     def __str__(self):
         return self.brand
+
+class CarPrice(models.Model):
+    cars = models.ForeignKey(Cars, on_delete=models.CASCADE, null=True, blank=True)
+    actual_price = models.PositiveIntegerField(default=100, null=True, blank=True)
+    discounted_price = models.PositiveIntegerField(default=50, null=True, blank=True)
+    timeline = models.CharField(max_length=100, null=True, blank=True)
+
+    def __str__(self):
+        return f"{self.cars.brand} - {self.actual_price}"
+    
 
 class CarImages(models.Model):
     car_images_id = models.UUIDField(primary_key=True, unique=True, editable=False, default=uuid.uuid4)
@@ -34,7 +55,7 @@ class CarImages(models.Model):
         return str(image_name).split('.')[0]
 
     def __str__(self):
-        return self.my_instance()
+        return f"{self.my_instance()} {self.cars.brand}"
     
     def delete(self, *args, **kwargs):
         if self.car_images:
