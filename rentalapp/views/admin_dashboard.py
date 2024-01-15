@@ -6,12 +6,20 @@ from django.contrib import messages
 from django.contrib.auth.models import User
 from django.http import HttpResponseRedirect
 from rentalapp.models.cars import Cars
-import datetime
 
 @login_required(login_url='/auth/login')
 def admin_dashboard_home(request):
     user = request.user
-    return render(request, template_name="backend/dashboard/profile.html")
+    dob = request.user.profile.dob
+    date_of_birth = ""
+    if dob is not None:
+        date_of_birth = dob.strftime("%Y-%m-%d")
+    else:
+        pass
+    context = {
+        'date_object' : date_of_birth
+    }
+    return render(request, template_name="backend/dashboard/profile.html", context=context)
 
 @login_required(login_url='/auth/login')
 def admin_cars_lists(request):
@@ -43,4 +51,28 @@ def update_profile(request, user_id):
         user_obj.save()
         user_obj.profile.save()
         messages.success(request, 'Your details has been updated successfully!!!')
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+@login_required(login_url='/authentication/login')
+def upload_image(request, user_id):
+    if request.method == "POST":
+        user_obj = get_object_or_404(User, id=user_id)
+        user_obj.profile.profile_image = request.FILES['profile_img']
+        user_obj.profile.save()
+        messages.success(request, 'Image has been uploaded successfully!!!')
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+@login_required(login_url='/authentication/login')
+def remove_image(request, user_id):
+    user_obj = User.objects.get(id=user_id)
+    
+    if user_obj.profile.profile_image:
+        user_obj.profile.profile_image = None
+        user_obj.profile.save()
+        
+        messages.success(request, 'Image removed.')
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    
+    if not user_obj.profile.profile_image:
+        messages.warning(request, 'Image is not exists anymore.')
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))

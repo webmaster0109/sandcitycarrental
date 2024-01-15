@@ -1,13 +1,10 @@
-from django.shortcuts import render, get_object_or_404, redirect
+from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.models import User
 from rentalapp.models.users import Profile
 from django.urls import reverse
 from django.contrib import messages
-from django.contrib.auth import login, authenticate, logout
-from django.contrib.auth.decorators import login_required
-from django.views.decorators.csrf import csrf_exempt
-
+from django.contrib.auth import login, authenticate
 
 def login_attempt(request):
     if request.user.is_authenticated:
@@ -28,7 +25,6 @@ def login_attempt(request):
         messages.warning(request, 'Invalid Credentials!')
         return redirect('login')
     return render(request, template_name="backend/credentials/login.html")
-
 
 def signup_attempt(request):
     if request.user.is_authenticated:
@@ -62,7 +58,7 @@ def signup_attempt(request):
         except Exception as e:
             print(e)
         
-        login(request, user_obj)
+        login(request, user_obj, backend='django.contrib.auth.backends.ModelBackend')
         if 'next' in request.POST:
             return redirect(request.POST['next'])
         return redirect('dashboard')
