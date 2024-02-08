@@ -1,5 +1,4 @@
 django
 django-hitcount
 django-ckeditor-5
-django-social-auth
 social-auth-app-django
