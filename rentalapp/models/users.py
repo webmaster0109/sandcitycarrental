@@ -1,8 +1,12 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.core.mail import send_mail
+from django.conf import settings
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="profile")
+    is_email_verified = models.BooleanField(default=False)
+    email_token = models.CharField(max_length=100, null=True, blank=True)
     number = models.CharField(max_length=20, null=True, blank=True)
     profile_image = models.ImageField(upload_to="images/profile/", null=True, blank=True)
     dob = models.DateField(blank=True, null=True)
@@ -18,3 +22,17 @@ class Profile(models.Model):
             storage, path = self.profile_image.storage, self.profile_image.path
             storage.delete(path)
         super().delete(*args, **kwargs)
+
+
+def send_registration_email(user_obj):
+    subject = f'Congrats {user_obj.first_name} {user_obj.last_name}! You have done registration in Sandcity Car Rental.'
+    # Change the following line to the admin's email address
+    recipient_email = f'{user_obj.email}'
+    message = f"Hi {user_obj.email},\nYou've registered! Now login your account."
+
+    # admin_subject = f'New Registration on Sandcity Car Rental'
+
+    try:
+        send_mail(subject=subject, message=message, from_email=settings.EMAIL_HOST_USER, recipient_list=[recipient_email])
+    except Exception as e:
+        print(f"Failed to send registration email to {recipient_email}. Error: {e}")

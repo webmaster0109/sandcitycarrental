@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.models import User
-from rentalapp.models.users import Profile
+from rentalapp.models.users import Profile, send_registration_email
 from django.urls import reverse
 from django.contrib import messages
 from django.contrib.auth import login, authenticate
@@ -12,18 +12,15 @@ def login_attempt(request):
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
-        user_obj = User.objects.filter(username=username)
-        if not user_obj.exists():
-            messages.warning(request, 'User not found...')
-            return redirect('login')
-        user_obj = authenticate(username=username, password=password)
+        user_obj = authenticate(request, username=username, password=password)
         if user_obj:
             login(request, user_obj)
             if 'next' in request.POST:
                 return redirect(request.POST['next'])
             return redirect('dashboard')
-        messages.warning(request, 'Invalid Credentials!')
-        return redirect('login')
+        else:
+            messages.warning(request, 'Invalid username or password. Please try again.')
+            return redirect('login')
     return render(request, template_name="backend/credentials/login.html")
 
 def signup_attempt(request):
@@ -45,16 +42,16 @@ def signup_attempt(request):
 
         try:
             username = str(email).split('@')[0]
-            if User.objects.filter(email=email).first():
-                messages.warning(request, 'Email id is already taken.')
-            elif User.objects.filter(username=username).first():
-                messages.warning(request, 'Username is already taken')
-            
-            user_obj = User(first_name=first_name, last_name=last_name, email=email, username=username)
+            user_obj, created = User.objects.get_or_create(email=email, defaults={'first_name': first_name, 'last_name': last_name, 'username': username})
             user_obj.set_password(password)
+            if not created:
+                messages.warning(request, 'Email or username is already taken.')
+                return redirect('register')
             user_obj.save()
+            send_registration_email(user_obj)
             profile_obj = Profile.objects.create(user=user_obj)
             profile_obj.save()
+            
         except Exception as e:
             print(e)
         
