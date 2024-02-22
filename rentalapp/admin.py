@@ -1,6 +1,6 @@
 from django.contrib import admin
 from .models.cars import CarImages, Cars, CarTypes, CarPrice
-from .models.users import Profile
+from .models.users import Profile, Country
 from .models.car_features import CarFeatures
 # Register your models here.
 
@@ -28,3 +28,4 @@ admin.site.register(CarImages)
 
 admin.site.register(Profile)
 admin.site.register(CarFeatures)
+admin.site.register(Country)

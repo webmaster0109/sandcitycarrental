@@ -34,7 +34,8 @@
         {% if request.user.is_staff %}
         {% url 'car_lists' as url %}
         <a class="card-nav-link {% if request.path == url %}active{% endif %}" href="{{url}}"><i class="fi-car opacity-60 me-2"></i>My Car Lists</a>
-        <a class="card-nav-link" href="#"><i class="fi-users opacity-60 me-2"></i>User Lists</a>
+        {% url 'user_lists' as url %}
+        <a class="card-nav-link {% if request.path == url %}active{% endif %}" href="{{url}}"><i class="fi-users opacity-60 me-2"></i>User Lists</a>
         <a class="card-nav-link" href="#"><i class="fi-star opacity-60 me-2"></i>Reviews</a>
         <a class="card-nav-link" href="#"><i class="fi-cart opacity-60 me-2"></i>Order</a>
         <a class="card-nav-link" href="#"><i class="fi-cash opacity-60 me-2"></i>Payment</a>

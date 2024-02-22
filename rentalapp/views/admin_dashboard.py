@@ -4,8 +4,10 @@ from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.contrib.auth.models import User
-from django.http import HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect
 from rentalapp.models.cars import Cars
+import requests
+from rentalapp.models.users import Country, Profile
 
 @login_required(login_url='/auth/login')
 def admin_dashboard_home(request):
@@ -16,8 +18,12 @@ def admin_dashboard_home(request):
         date_of_birth = dob.strftime("%Y-%m-%d")
     else:
         pass
+
+    country = Country.objects.all()
+
     context = {
-        'date_object' : date_of_birth
+        'date_object' : date_of_birth,
+        'country': country
     }
     return render(request, template_name="backend/dashboard/profile.html", context=context)
 
@@ -47,7 +53,11 @@ def update_profile(request, user_id):
         user_obj.profile.number = request.POST['number']
         user_obj.profile.dob = request.POST['dob']
         user_obj.profile.gender = request.POST['gender']
-        user_obj.profile.country = request.POST['country']
+        try:
+            user_obj.profile.country = request.POST['country']
+        except KeyError:
+            # Handle the case when 'country' key is not present in the POST data
+            return HttpResponse("Error: 'country' key not found in the POST data")
         user_obj.save()
         user_obj.profile.save()
         messages.success(request, 'Your details has been updated successfully!!!')
@@ -76,3 +86,20 @@ def remove_image(request, user_id):
     if not user_obj.profile.profile_image:
         messages.warning(request, 'Image is not exists anymore.')
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+@login_required(login_url='/authentication/login')
+def user_lists(request):
+
+    user_profile = Profile.objects.all()
+
+    context = {'user_profile': user_profile}
+
+    return render(request, template_name="backend/dashboard/user_lists.html", context=context)
+
+@login_required(login_url='/authentication/login')
+def delete_user(request, user_id):    
+    if request.method == 'POST':
+        users = get_object_or_404(User, id=user_id)
+        # Perform the deletion
+        users.delete()
+        return redirect("user_lists")

@@ -1,0 +1,130 @@
+{% extends 'base/base.html' %}
+
+{% block content %}
+<div class="container pt-5 pb-lg-4 mb-sm-2" style="margin-top: 100px;">
+    <!-- Breadcrumb-->
+    <nav class="mb-4 pt-md-3" aria-label="Breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/">Home</a></li>
+        <li class="breadcrumb-item active" aria-current="page">User Lists</li>
+      </ol>
+    </nav>
+    <!-- Page content-->
+    <div class="row">
+      <!-- Sidebar-->
+      <aside class="col-lg-4 col-md-5 pe-xl-4 mb-5">
+        <!-- Account nav-->
+        <div class="card card-body border-0 shadow-sm pb-1 me-lg-1">
+        {% include './profile_menu.html' %}
+        </div>
+      </aside>
+      <!-- Content-->
+        <div class="col-lg-8 col-md-7 mb-5 shadow-sm rounded" style="padding-left: 25px; padding-right: 25px; padding-top: 15px; padding-bottom: 15px;">
+            <div class="d-flex align-items-center justify-content-between mb-3">
+              <h1 class="h2 text-dark mb-0">User Lists</h1>
+            </div>
+            <p class="text-dark pt-1 mb-4">Here you can see user details.</p>
+            {% if request.user.is_staff %}
+            <table class="table">
+                <thead>
+                  <tr>
+                    <th scope="col">S.No.</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                {% for users in user_profile %}
+                {% if not users.user.is_staff %}
+                  <tr>
+                    <th scope="row">{{forloop.counter0}}</th>
+                    <td>{{users.user.first_name}} {{users.user.last_name}}</td>
+                    <td>{{users.user.email}}</td>
+                    <td>
+                        <a href="#view-{{users.user.username}}" data-bs-target="#modalViewUser{{users.id}}" data-bs-toggle="modal"><i class="bi bi-eye"></i></a> &nbsp;&nbsp;
+                        <a href="#edit-{{users.user.username}}"><i class="bi bi-pencil-square"></i></a>&nbsp;&nbsp;
+                        <a href="#delete-{{users.user.username}}" data-bs-target="#modalDeleteUser{{users.user.id}}" data-bs-toggle="modal"><i class="bi bi-trash"></i></a>
+                    </td>
+                  </tr>
+                {% endif %}
+                {% endfor %}
+                </tbody>
+              </table>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+{% for users in user_profile %}
+<div class="modal fade" id="modalViewUser{{users.id}}" aria-hidden="true" aria-labelledby="modalViewUser{{users.id}}Label" tabindex="-1">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="modalViewUser{{users.id}}Label">View User</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-lg-4">
+                    {% if users.profile_image %}
+                    <img class="img-fluid" src="{{users.profile_image.url}}" width="100%" alt="{{users.user.first_name}} {{users.user.last_name}}">
+                    {% else %}
+                    <img class="img-fluid" src="/media/images/profile/default_avatar/default_avatar.svg" width="100%" alt="{{users.user.first_name}} {{users.user.last_name}}">
+                    {% endif %}
+            </div>
+            <div class="col-lg-8 col-12">
+                <form>
+                    <div class="mb-3">
+                        <label for="userName" class="form-label">Name</label>
+                        <input type="text" value="{{users.user.first_name}} {{users.user.last_name}}" class="form-control" id="userName" readonly>
+                    </div>
+                    <div class="mb-3">
+                        <label for="userName" class="form-label">Email</label>
+                        <input type="text" value="{{users.user.email}}" class="form-control" id="userName" readonly>
+                    </div>
+                    <div class="mb-3">
+                        <label for="userName" class="form-label">Phone Number</label>
+                        <input type="text" value="{{users.number}}" class="form-control" id="userName" readonly>
+                    </div>
+                    <div class="mb-3">
+                        <label for="userName" class="form-label">Gender</label>
+                        <input type="text" value="{{users.gender}}" class="form-control" id="userName" readonly>
+                    </div>
+                    <div class="mb-3">
+                        <label for="userName" class="form-label">Country</label>
+                        <input type="text" value="{{users.country}}" class="form-control" id="userName" readonly>
+                    </div>
+                  </form>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-primary" data-bs-target="#exampleModalToggle2" data-bs-toggle="modal">Edit User</button>
+        </div>
+      </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modalDeleteUser{{users.user.id}}" aria-hidden="true" aria-labelledby="modalDeleteUser{{users.user.id}}Label" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="modalDeleteUser{{users.user.id}}Label">Delete {{users.user.username}}</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p>Do you want to delete this user?</p>
+        </div>
+        <div class="modal-footer">
+            <form action="{% url 'delete_user' users.user.id %}" method="post">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-sm btn-danger">Yes</button>
+            </form>
+            <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-dismiss="modal" aria-label="Close">No</button>
+        </div>
+      </div>
+    </div>
+</div>
+{% endfor %}
+{% endblock %}

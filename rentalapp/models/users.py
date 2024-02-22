@@ -23,6 +23,12 @@ class Profile(models.Model):
             storage.delete(path)
         super().delete(*args, **kwargs)
 
+class Country(models.Model):
+    name = models.CharField(max_length=100, null=True, blank=True)
+    flag = models.URLField()
+
+    def __str__(self):
+        return self.name
 
 def send_registration_email(user_obj):
     subject = f'Congrats {user_obj.first_name} {user_obj.last_name}! You have done registration in Sandcity Car Rental.'

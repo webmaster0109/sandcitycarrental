@@ -160,7 +160,11 @@
                 <div data-bs-toggle="tooltip" title="Edit"><a class="nav-link py-0" href="#address-collapse" data-bs-toggle="collapse"><i class="fi-edit"></i></a></div>
                 </div>
                 <div class="collapse" id="address-collapse" data-bs-parent="#personal-info">
-                <input class="form-control mt-3" type="text" name="country" data-bs-binded-element="#address-value" data-bs-unset-value="Not specified" placeholder="Country" value="{{request.user.profile.country}}">
+                    <select class="form-select mt-3" name="country" data-bs-binded-element="#address-value">
+                        {% for cn in country %}
+                        <option value="{{cn.name}}" {% if cn.name == request.user.profile.country %}selected{% endif %}>{{cn.name}}</option>
+                        {% endfor %}
+                    </select>
                 </div>
             </div>
             
