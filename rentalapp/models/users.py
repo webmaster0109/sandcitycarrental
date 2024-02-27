@@ -26,6 +26,14 @@ class Profile(models.Model):
 class Country(models.Model):
     name = models.CharField(max_length=100, null=True, blank=True)
     flag = models.URLField()
+    capital = models.CharField(max_length=100, null=True, blank=True)
+    languages = models.TextField(default="", null=True, blank=True)
+    region = models.CharField(max_length=50, null=True, blank=True)
+    subregion = models.CharField(max_length=50, null=True, blank=True)
+    maps = models.URLField()
+    population = models.CharField(max_length=100, null=True, blank=True)
+    timezones = models.CharField(max_length=20, null=True, blank=True)
+    currencies = models.CharField(max_length=20, null=True, blank=True)
 
     def __str__(self):
         return self.name

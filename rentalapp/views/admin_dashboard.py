@@ -103,3 +103,8 @@ def delete_user(request, user_id):
         # Perform the deletion
         users.delete()
         return redirect("user_lists")
+
+@login_required(login_url='/authentication/login')
+def add_users(request):
+    if request.method == "POST":
+        pass

@@ -43,7 +43,6 @@
                     <td>{{users.user.email}}</td>
                     <td>
                         <a href="#view-{{users.user.username}}" data-bs-target="#modalViewUser{{users.id}}" data-bs-toggle="modal"><i class="bi bi-eye"></i></a> &nbsp;&nbsp;
-                        <a href="#edit-{{users.user.username}}"><i class="bi bi-pencil-square"></i></a>&nbsp;&nbsp;
                         <a href="#delete-{{users.user.username}}" data-bs-target="#modalDeleteUser{{users.user.id}}" data-bs-toggle="modal"><i class="bi bi-trash"></i></a>
                     </td>
                   </tr>
@@ -61,7 +60,7 @@
     <div class="modal-dialog modal-lg modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header">
-          <h1 class="modal-title fs-5" id="modalViewUser{{users.id}}Label">View User</h1>
+          <h1 class="modal-title fs-5" id="modalViewUser{{users.id}}Label">{{users.user.first_name}} {{users.user.last_name}} Details</h1>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
@@ -100,7 +99,6 @@
           </div>
         </div>
         <div class="modal-footer">
-          <button class="btn btn-primary" data-bs-target="#exampleModalToggle2" data-bs-toggle="modal">Edit User</button>
         </div>
       </div>
     </div>
