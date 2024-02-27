@@ -1,0 +1,111 @@
+{% extends "base/base.html" %}
+
+{% block content %}
+<section>
+	<div class="container">
+		<div class="row mb-5">
+                <div class="col-lg-10 mx-auto text-center">
+                    <!-- Breadcrumb -->
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb breadcrumb-dots justify-content-center">
+                            <li class="breadcrumb-item"><a href="/"><i class="bi bi-house me-1"></i>Home</a></li>
+                            <li class="breadcrumb-item active">About us</li>
+                        </ol>
+                    </nav>
+                </div>
+			<div class="col-xl-10 mx-auto text-center">
+				<!-- Title -->
+				<h1>About Us</h1>
+				<p class="lead">
+                    Welcome to Sandcity Car Rental! We're a passionate family-run business in Dubai, dedicated to making your exploration of this vibrant city as convenient and enjoyable as possible.
+                    Dubai is a city full of wonder, and we believe your car rental experience should add to that wonder, not detract from it. That's why we emphasize flexible rentals, friendly service, and transparent pricing.
+                </p>
+				<!-- Meta -->
+				<div class="hstack gap-3 flex-wrap justify-content-center">
+					<!-- Item -->
+					<h6 class="bg-mode shadow rounded-2 fw-normal d-inline-block py-2 px-4">
+						<img src="/media/assets/images/element/06.svg" class="h-20px me-2" alt="">
+						5K+ Global Customers
+					</h6>
+
+					<!-- Item -->
+					<h6 class="bg-mode shadow rounded-2 fw-normal d-inline-block py-2 px-4">
+						<img src="/media/assets/images/element/07.svg" class="h-20px me-2" alt="">
+						2K+ Happy Customers
+					</h6>
+
+					<!-- Item -->
+					<h6 class="bg-mode shadow rounded-2 fw-normal d-inline-block py-2 px-4">
+						<img src="/media/assets/images/element/08.svg" class="h-20px me-2" alt="">
+						500+ Daily Customers
+					</h6>
+				</div>
+			</div>
+		</div> <!-- Row END -->
+
+		<!-- Image START -->
+		<div class="row g-4 align-items-center">
+			<!-- Image -->
+			<div class="col-md-6">
+				<img src="/media/assets/images/about/desert_1.webp" class="rounded-3" alt="">
+			</div>
+
+			<div class="col-md-6">
+				<div class="row g-4">
+					<!-- Image -->
+					<div class="col-md-8">
+						<img src="/media/assets/images/about/dubai_2.png" class="rounded-3" alt="">
+					</div>
+
+					<!-- Image -->
+					<div class="col-12">
+						<img src="/media/assets/images/about/desert_3.jpg" class="rounded-3" alt="">
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- Image END -->
+	</div>
+</section>
+<section class="pt-2 pt-lg-3">
+	<div class="container">
+		<!-- Content START -->
+		<div class="row">
+			<div class="col-md-12 mx-auto">
+                <h5>Imagine this:</h5>
+				<ul>
+					<li>
+                        <strong>Flexibility is king:</strong> Need a last-minute rental? Want to extend your booking? No problem! We adapt to your needs, ensuring a smooth and stress-free journey.
+                    </li>
+					<li>
+                        <strong>Friendly faces, always:</strong> Our team is here to guide you every step of the way, offering personalized recommendations and a genuine smile, not hidden fees or confusing jargon.
+                    </li>
+					<li>
+                        <strong>No deposit dramas:</strong> We believe in trust and hassle-free transactions. Enjoy a seamless rental experience without the burden of hefty deposits holding you back.
+                    </li>
+                    <li>
+                        <strong>Transparent pricing upfront:</strong> Know exactly what you're paying for! We offer competitive rates and absolutely no hidden costs. Book with confidence, knowing the full price from the get-go. We understand that choosing a car rental company can sometimes feel daunting. Let go of the doubts and embrace the freedom.
+                    </li>
+				</ul>
+                <h5>Here's what makes Sandcity Car Rental your ideal partner:</h5>
+                <ul>
+                    <li>
+                        <strong>Family-owned and operated:</strong> We treat our customers like family, providing personalized service and ensuring you choose the perfect car for your needs.
+                    </li>
+                    <li>
+                        <strong>Diverse and reliable fleet:</strong> From fuel-efficient city cars to adventure-ready SUVs, we offer a variety of vehicles to suit every travel style and budget.
+                    </li>
+                    <li>
+                        <strong>Unwavering commitment to customer satisfaction:</strong> Your satisfaction is our top priority, and we strive to exceed your expectations with every interaction.
+                    </li>
+                </ul>
+				<p>
+                    Join the Sandcity Car Rental family and unlock the true magic of Dubai! We're here to help you create unforgettable memories, one adventure at a time. Ready to get behind the wheel and explore Dubai? <a href="{% url "contact_us" %}">Contact us</a> today to learn more and book your rental car!
+                </p>
+			</div>
+		</div>
+		<!-- Content END -->
+
+	</div>
+</section>
+{% endblock content %}

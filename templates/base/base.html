@@ -1,150 +1,138 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <title>Rent your favorite car - SandCity Car Rental</title>
-    <!-- SEO Meta Tags-->
-    <meta name="description" content="">
-    <meta name="keywords" content="">
-    <meta name="author" content="SandCity Car Rental">
-    <!-- Viewport-->
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- Favicon and Touch Icons-->
-    <link rel="apple-touch-icon" sizes="180x180" href="/media/img/icons/favicon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="/media/img/icons/favicon.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/media/img/icons/favicon.png">
-    <link rel="manifest" href="">
-    <link rel="mask-icon" color="#5bbad5" href="/media/img/icons/favicon.png">
-    <meta name="msapplication-TileColor" content="#766df4">
-    <meta name="theme-color" content="#ffffff">
-    <!-- Page loading styles-->
-    <style>
-      .page-loading {
-        position: fixed;
-        top: 0;
-        right: 0;
-        bottom: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        -webkit-transition: all .4s .2s ease-in-out;
-        transition: all .4s .2s ease-in-out;
-        background-color: #1f1b2d;
-        opacity: 0;
-        visibility: hidden;
-        z-index: 9999;
-      }
-      .page-loading.active {
-        opacity: 1;
-        visibility: visible;
-      }
-      .page-loading-inner {
-        position: absolute;
-        top: 50%;
-        left: 0;
-        width: 100%;
-        text-align: center;
-        -webkit-transform: translateY(-50%);
-        transform: translateY(-50%);
-        -webkit-transition: opacity .2s ease-in-out;
-        transition: opacity .2s ease-in-out;
-        opacity: 0;
-      }
-      .page-loading.active > .page-loading-inner {
-        opacity: 1;
-      }
-      .page-loading-inner > span {
-        display: block;
-        font-size: 1rem;
-        font-weight: normal;
-        color: #fff;;
-      }
-      .page-spinner {
-        display: inline-block;
-        width: 2.75rem;
-        height: 2.75rem;
-        margin-bottom: .75rem;
-        vertical-align: text-bottom;
-        border: .15em solid #9691a4;
-        border-right-color: transparent;
-        border-radius: 50%;
-        -webkit-animation: spinner .75s linear infinite;
-        animation: spinner .75s linear infinite;
-      }
-      @-webkit-keyframes spinner {
-        100% {
-          -webkit-transform: rotate(360deg);
-          transform: rotate(360deg);
-        }
-      }
-      @keyframes spinner {
-        100% {
-          -webkit-transform: rotate(360deg);
-          transform: rotate(360deg);
-        }
-      }
-      
-    </style>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <!-- Page loading scripts-->
-    <script>
-      (function () {
-        window.onload = function () {
-          var preloader = document.querySelector('.page-loading');
-          preloader.classList.remove('active');
-          setTimeout(function () {
-            preloader.remove();
-          }, 2000);
-        };
-      })();
-      
-    </script>
-    <!-- Vendor Styles-->
-    <link rel="stylesheet" media="screen" href="/media/vendor/simplebar/dist/simplebar.min.css"/>
-    <link rel="stylesheet" media="screen" href="/media/vendor/tiny-slider/dist/tiny-slider.css"/>
-    <!-- Main Theme Styles + Bootstrap-->
-    <link rel="stylesheet" media="screen" href="/media/css/theme.min.css">
-  </head>
-  <!-- Body-->
-  <body class="bg-dark">
-    <!-- Page loading spinner-->
-    <div class="page-loading active">
-      <div class="page-loading-inner">
-        <div class="page-spinner"></div><span>Loading...</span>
-      </div>
-    </div>
-    <main class="page-wrapper bg-white">
-      {% if request.path == '/auth/login' %}
-      {% elif request.path == '/auth/register' %}
-      {% else %}
-      <!-- modals -->
-      {% include "base/includes/modals.html" %}
-      <!-- Navbar-->
-      {% include "base/includes/header.html" %}
-      {% endif %}
-      {% block content %}{% endblock  %}
+<head>
+	<title>Sandcity Car Rental</title>
 
-    </main>
-    <!-- Footer-->
-    {% if request.path == '/auth/login' %}
-    {% elif request.path == '/auth/register' %}
-    {% else %}
-    {% include "base/includes/footer.html" %}
-    {% endif %}
-    
-    <!-- Back to top button-->
-    <a class="btn-scroll-top" href="#top" data-scroll>
-        <span class="btn-scroll-top-tooltip text-muted fs-sm me-2">Top</span>
-        <i class="btn-scroll-top-icon fi-chevron-up"></i>
-    </a>
-    <!-- Vendor scrits: js libraries and plugins-->
-    <script src="/media/vendor/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="/media/vendor/simplebar/dist/simplebar.min.js"></script>
-    <script src="/media/vendor/smooth-scroll/dist/smooth-scroll.polyfills.min.js"></script>
-    <script src="/media/vendor/tiny-slider/dist/min/tiny-slider.js"></script>
-    <script src="/media/vendor/jarallax/dist/jarallax.min.js"></script>
-    <script src="/media/vendor/rellax/rellax.min.js"></script>
-    <!-- Main theme script-->
-    <script src="/media/js/theme.min.js"></script>
-  </body>
+	<!-- Meta Tags -->
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<meta name="author" content="Sandcity Car Rental">
+	<meta name="description" content="Rental Car in Dubai">
+
+	<!-- Dark mode -->
+	<script>
+		const storedTheme = localStorage.getItem('theme')
+ 
+		const getPreferredTheme = () => {
+			if (storedTheme) {
+				return storedTheme
+			}
+			return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+		}
+
+		const setTheme = function (theme) {
+			if (theme === 'auto' && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+				document.documentElement.setAttribute('data-bs-theme', 'dark')
+			} else {
+				document.documentElement.setAttribute('data-bs-theme', theme)
+			}
+		}
+
+		setTheme(getPreferredTheme())
+
+		window.addEventListener('DOMContentLoaded', () => {
+		    var el = document.querySelector('.theme-icon-active');
+			if(el != 'undefined' && el != null) {
+				const showActiveTheme = theme => {
+				const activeThemeIcon = document.querySelector('.theme-icon-active use')
+				const btnToActive = document.querySelector(`[data-bs-theme-value="${theme}"]`)
+				const svgOfActiveBtn = btnToActive.querySelector('.mode-switch use').getAttribute('href')
+
+				document.querySelectorAll('[data-bs-theme-value]').forEach(element => {
+					element.classList.remove('active')
+				})
+
+				btnToActive.classList.add('active')
+				activeThemeIcon.setAttribute('href', svgOfActiveBtn)
+			}
+
+			window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+				if (storedTheme !== 'light' || storedTheme !== 'dark') {
+					setTheme(getPreferredTheme())
+				}
+			})
+
+			showActiveTheme(getPreferredTheme())
+
+			document.querySelectorAll('[data-bs-theme-value]')
+				.forEach(toggle => {
+					toggle.addEventListener('click', () => {
+						const theme = toggle.getAttribute('data-bs-theme-value')
+						localStorage.setItem('theme', theme)
+						setTheme(theme)
+						showActiveTheme(theme)
+					})
+				})
+
+			}
+		})
+		
+	</script>
+
+	<!-- Favicon -->
+	<link rel="shortcut icon" href="/media/assets/images/favicon.png">
+
+	<!-- Google Font -->
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Poppins:wght@400;500;700&display=swap">
+
+	<!-- Plugins CSS -->
+	<link rel="stylesheet" type="text/css" href="/media/assets/vendor/font-awesome/css/all.min.css">
+	<link rel="stylesheet" type="text/css" href="/media/assets/vendor/bootstrap-icons/bootstrap-icons.css">
+	<link rel="stylesheet" type="text/css" href="/media/assets/vendor/choices/css/choices.min.css">
+	<link rel="stylesheet" type="text/css" href="/media/assets/vendor/flatpickr/css/flatpickr.min.css">
+  <link rel="stylesheet" type="text/css" href="/media/assets/vendor/tiny-slider/tiny-slider.css">
+	<link rel="stylesheet" type="text/css" href="/media/assets/vendor/glightbox/css/glightbox.css">
+
+	<!-- Theme CSS -->
+	<link rel="stylesheet" type="text/css" href="/media/assets/css/style.css">
+
+
+</head>
+
+<body>
+<div class="alert alert-warning py-2 m-0 bg-primary border-0 rounded-0 alert-dismissible fade show text-center overflow-hidden" role="alert">
+  <p class="text-white m-0">Traveling internationally? Get update information on COVID-19 travel guidance and restrictions<a href="index-flight.html#" class="btn btn-xs btn-dark ms-2 mb-0">Learn more!</a></p>
+  <!-- Close button -->
+  <button type="button" class="btn-close btn-close-white opacity-9 p-3" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+<!-- Header START -->
+{% include "base/includes/header.html" %}
+<!-- Header END -->
+
+<!-- **************** MAIN CONTENT START **************** -->
+<main>
+	
+{% block content %}
+{% endblock content %}
+
+</main>
+<!-- **************** MAIN CONTENT END **************** -->
+
+<!-- =======================
+Footer START -->
+{% include "base/includes/footer.html" %}
+<!-- =======================
+Footer END -->
+
+<!-- Back to top -->
+<div class="back-top"></div>
+
+<!-- Bootstrap JS -->
+<script src="/media/assets/vendor/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- Vendors -->
+<script src="/media/assets/vendor/choices/js/choices.min.js"></script>
+<script src="/media/assets/vendor/flatpickr/js/flatpickr.min.js"></script>
+<script src="/media/assets/vendor/jarallax/jarallax.min.js"></script>
+<script src="/media/assets/vendor/jarallax/jarallax-video.min.js"></script>
+<script src="/media/assets/vendor/tiny-slider/tiny-slider.js"></script>
+<script src="/media/assets/vendor/purecounterjs/dist/purecounter_vanilla.js"></script>
+<script src="/media/assets/vendor/glightbox/js/glightbox.js"></script>
+
+<!-- ThemeFunctions -->
+<script src="/media/assets/js/functions.js"></script>
+
+</body>
 </html>

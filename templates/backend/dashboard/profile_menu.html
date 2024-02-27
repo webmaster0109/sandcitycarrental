@@ -1,40 +1,69 @@
-<div class="d-flex d-md-block d-lg-flex align-items-start pt-lg-2 mb-4">
-    {% if request.user.profile.profile_image %}
-    <img class="rounded-circle" src="{{request.user.profile.profile_image.url}}" width="54" alt="{{request.user.first_name}} {{request.user.last_name}}">
-    {% else %}
-    <img class="rounded-circle" src="/media/images/profile/default_avatar/default_avatar.svg" width="54" alt="{{request.user.first_name}} {{request.user.last_name}}">
-    {% endif %}
-    <div class="pt-md-2 pt-lg-0 ps-3 ps-md-0 ps-lg-3">
-      <h2 class="fs-lg mb-0">{{request.user.first_name}} {{request.user.last_name}}</h2>
-      <span>@{{request.user.username}}</span>
-      <ul class="list-unstyled fs-sm mt-3 mb-0">
-        <li><a class="nav-link fw-normal p-0" href="javascript:void(0);">
-            <i class="fi-phone opacity-60 me-2"></i>{% if request.user.profile.number %}{{request.user.profile.number}}{% else %}Not Specified{% endif %}</a>
-        </li>
-        <li><a class="nav-link fw-normal p-0" href="javascript:void(0);"><i class="fi-mail opacity-60 me-2"></i>{{request.user.email}}</a></li>
-      </ul>
+<div class="col-lg-4 col-xl-3">
+  <!-- Responsive offcanvas body START -->
+  <div class="offcanvas-lg offcanvas-end" tabindex="-1" id="offcanvasSidebar" >
+    <!-- Offcanvas header -->
+    <div class="offcanvas-header justify-content-end pb-2">
+      <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#offcanvasSidebar" aria-label="Close"></button>
     </div>
-</div>
-<a class="btn btn-outline-secondary d-block d-md-none w-100 mb-3" href="#account-nav" data-bs-toggle="collapse">
-<i class="fi-align-justify me-2"></i>Menu</a>
-<div class="collapse d-md-block mt-3" id="account-nav">
-<div class="card-nav">
-        {% url 'dashboard' as url %}
-        <a class="card-nav-link {% if request.path == url %}active{% endif %}" href="{{url}}"><i class="fi-user opacity-60 me-2"></i>Personal Info</a>
-        {% if request.user.is_staff %}
-        {% url 'car_lists' as url %}
-        <a class="card-nav-link {% if request.path == url %}active{% endif %}" href="{{url}}"><i class="fi-car opacity-60 me-2"></i>My Car Lists</a>
-        {% url 'user_lists' as url %}
-        <a class="card-nav-link {% if request.path == url %}active{% endif %}" href="{{url}}"><i class="fi-users opacity-60 me-2"></i>User Lists</a>
-        <a class="card-nav-link" href="#"><i class="fi-star opacity-60 me-2"></i>Reviews</a>
-        <a class="card-nav-link" href="#"><i class="fi-cart opacity-60 me-2"></i>Order</a>
-        <a class="card-nav-link" href="#"><i class="fi-cash opacity-60 me-2"></i>Payment</a>
-        <a class="card-nav-link" href="{% url 'logout' %}"><i class="fi-logout opacity-60 me-2"></i>Sign Out</a>
-        {% else %}
-        <a class="card-nav-link" href="#"><i class="fi-car opacity-60 me-2"></i>My Cars</a>
-        <a class="card-nav-link" href="#"><i class="fi-heart opacity-60 me-2"></i>Wishlist</a>
-        <a class="card-nav-link" href="#"><i class="fi-help opacity-60 me-2"></i>Help</a>
-        <a class="card-nav-link" href="{% url 'logout' %}"><i class="fi-logout opacity-60 me-2"></i>Sign Out</a>
-        {% endif %}
+
+    <!-- Offcanvas body -->
+    <div class="offcanvas-body p-3 p-lg-0">
+      <div class="card bg-light w-100">
+
+        <!-- Edit profile button -->
+        <div class="position-absolute top-0 end-0 p-3">
+          <a href="account-profile.html#" class="text-primary-hover" data-bs-toggle="tooltip" data-bs-title="Edit profile">
+            <i class="bi bi-pencil-square"></i>
+          </a>
+        </div>
+
+        <!-- Card body START -->
+        <div class="card-body p-3">
+          <!-- Avatar and content -->
+          <div class="text-center mb-3">
+            <!-- Avatar -->
+            <div class="avatar avatar-xl mb-2">
+              {% if request.user.profile.profile_image %}
+              <img class="avatar-img rounded-circle border border-2 border-white" src="{{request.user.profile.profile_image.url}}" alt="sandcity_{{request.user.username}}">
+              {% else %}
+              <img class="avatar-img rounded-circle border border-2 border-white" src="/media/assets/images/favicon.png" alt="sandcity_{{request.user.username}}">
+              {% endif %}
+            </div>
+            <h6 class="mb-0">{{request.user.first_name}} {{request.user.last_name}}</h6>
+            <a href="account-profile.html#" class="text-reset text-primary-hover small">{{request.user.email}}</a>
+            <hr>
+          </div>
+
+          <!-- Sidebar menu item START -->
+          <ul class="nav nav-pills-primary-soft flex-column">
+            {% url 'dashboard' as url %}
+            <li class="nav-item">
+              <a class="nav-link {% if request.path == url %}active{% endif %}" href="{{url}}"><i class="bi bi-person fa-fw me-2"></i>My Profile</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="account-bookings.html"><i class="bi bi-ticket-perforated fa-fw me-2"></i>My Bookings</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="account-payment-details.html"><i class="bi bi-wallet fa-fw me-2"></i>Payment Details</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="account-wishlist.html"><i class="bi bi-heart fa-fw me-2"></i>Wishlist</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="account-settings.html"><i class="bi bi-gear fa-fw me-2"></i>Settings</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="account-delete.html"><i class="bi bi-trash fa-fw me-2"></i>Delete Profile</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link text-danger bg-danger-soft-hover" href="{% url "logout" %}"><i class="fas fa-sign-out-alt fa-fw me-2"></i>Sign Out</a>
+            </li>
+          </ul>
+          <!-- Sidebar menu item END -->
+        </div>
+        <!-- Card body END -->
+      </div>
     </div>
+  </div>	
+  <!-- Responsive offcanvas body END -->	
 </div>

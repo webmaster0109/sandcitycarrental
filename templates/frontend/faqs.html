@@ -1,0 +1,127 @@
+{% extends "base/base.html" %}
+
+{% block content %}
+<section class="pt-4 pt-lg-5">
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-10 mx-auto text-center">
+				<!-- Breadcrumb -->
+				<nav aria-label="breadcrumb">
+					<ol class="breadcrumb breadcrumb-dots justify-content-center">
+						<li class="breadcrumb-item"><a href="/"><i class="bi bi-house me-1"></i> Home</a></li>
+						<li class="breadcrumb-item active">Faqs</li>
+					</ol>
+				</nav>
+				<!-- Title -->
+				<h6 class="text-primary">FAQ's</h6>
+				<h1>Frequently Asked Questions</h1>
+				<!-- Info -->
+				<p>have questions? We're here to help you</p>
+				<!-- Search -->
+				<form class="col-lg-8 position-relative mx-auto">
+					<input class="form-control form-control-lg pe-5" type="search" placeholder="Type search words" aria-label="Search">
+					<button class="text-primary-hover text-reset border-0 bg-transparent position-absolute top-50 end-0 translate-middle-y pe-3 py-0" type="submit"><i class="fas fa-search fs-6"></i></button>
+				</form>
+			</div>
+		</div>
+	</div>
+</section>
+
+<section class="pt-0 pt-lg-2">
+	<div class="container">
+				<!-- FAQ START -->
+				<div class="accordion accordion-icon accordion-bg-light" id="accordionFaq">
+					<!-- Item -->
+					<div class="accordion-item mb-3">
+						<h6 class="accordion-header font-base" id="heading-1">
+							<button class="accordion-button fw-bold rounded collapsed pe-5" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-1" aria-expanded="true" aria-controls="collapse-1">
+								What is the policy on off-road driving?
+							</button>
+						</h6>
+						<!-- Body -->
+						<div id="collapse-1" class="accordion-collapse collapse show" aria-labelledby="heading-1" data-bs-parent="#accordionFaq">
+							<div class="accordion-body mt-3 pb-0">
+								Off-road use is a violation of the rental agreement and is not allowed.
+							</div>
+						</div>
+					</div>
+
+					<!-- Item -->
+					<div class="accordion-item mb-3">
+						<h6 class="accordion-header font-base" id="heading-2">
+							<button class="accordion-button fw-bold rounded collapsed pe-5" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-2" aria-expanded="false" aria-controls="collapse-2">
+								What happens if I return the car late?
+							</button>
+						</h6>
+						<!-- Body -->
+						<div id="collapse-2" class="accordion-collapse collapse" aria-labelledby="heading-2" data-bs-parent="#accordionFaq">
+							<div class="accordion-body mt-3 pb-0">
+								An Additional day charge is applied.
+							</div>
+						</div>
+					</div>
+
+					<!-- Item -->
+					<div class="accordion-item mb-3">
+						<h6 class="accordion-header font-base" id="heading-3">
+							<button class="accordion-button fw-bold collapsed rounded pe-5" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-3" aria-expanded="false" aria-controls="collapse-3">
+								Do you have airport service surcharges?
+							</button>
+						</h6>
+						<!-- Body -->
+						<div id="collapse-3" class="accordion-collapse collapse" aria-labelledby="heading-3" data-bs-parent="#accordionFaq">
+							<div class="accordion-body mt-3 pb-0">
+								All vehicles picked up/dropped off at Dubai Airports will be charged an airport service surcharge.
+							</div>
+						</div>
+					</div>
+
+					<!-- Item -->
+					<div class="accordion-item mb-3">
+						<h6 class="accordion-header font-base" id="heading-4">
+							<button class="accordion-button fw-bold collapsed rounded pe-5" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-4" aria-expanded="false" aria-controls="collapse-4">
+								What kind of driver’s license is required to drive in the UAE and does it have to be an International License? 
+							</button>
+						</h6>
+						<!-- Body -->
+						<div id="collapse-4" class="accordion-collapse collapse" aria-labelledby="heading-4" data-bs-parent="#accordionFaq">
+							<div class="accordion-body mt-3 pb-0">
+								1. For UAE Resident Visa Holders: A valid UAE Driving License. 2. For Visitors (on visit/transit visa) from GCC Countries: A valid GCC country driving license. 3. For visitors from all other countries other than GCC countries (on visit/transit) a valid international driving license.
+							</div>
+						</div>
+					</div>
+
+					<!-- Item -->
+					<div class="accordion-item mb-3">
+						<h6 class="accordion-header font-base" id="heading-5">
+							<button class="accordion-button fw-bold collapsed rounded pe-5" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-5" aria-expanded="false" aria-controls="collapse-5">
+								What are the minimum age requirements?
+							</button>
+						</h6>
+						<!-- Body -->
+						<div id="collapse-5" class="accordion-collapse collapse" aria-labelledby="heading-5" data-bs-parent="#accordionFaq">
+							<div class="accordion-body mt-3 pb-0">
+								Renters must be 22 years or above at the time of rental.
+							</div>
+						</div>
+					</div>
+
+					<!-- Item -->
+					<div class="accordion-item">
+						<h6 class="accordion-header font-base" id="heading-6">
+							<button class="accordion-button fw-bold collapsed rounded pe-5" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-6" aria-expanded="false" aria-controls="collapse-6">
+								Is there free parking in Dubai?
+							</button>
+						</h6>
+						<!-- Body -->
+						<div id="collapse-6" class="accordion-collapse collapse" aria-labelledby="heading-6" data-bs-parent="#accordionFaq">
+							<div class="accordion-body mt-3 pb-0">
+								Dubai: Parking is free on Sundays in Dubai. Fees are applied from 8am to 6pm and again 8pm to 12 midnight. This is from Monday to Saturday. Sharjah: In Sharjah, the parking is free in most of the zones on Fridays and any public holidays in the week.
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- FAQ END -->
+	</div>
+</section>
+{% endblock content %}
