@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.models import User
-from rentalapp.models.users import Profile, send_registration_email
+from rentalapp.models.users import Profile
 from django.urls import reverse
 from django.contrib import messages
 from django.contrib.auth import login, authenticate
@@ -9,7 +9,7 @@ from rentalapp.helpers import *
 import uuid
 from django.contrib.auth.hashers import check_password
 from django.utils import timezone
-from datetime import timedelta, datetime
+from datetime import timedelta
 from django.utils.safestring import mark_safe
 import random
 
@@ -21,6 +21,14 @@ def login_attempt(request):
         password = request.POST.get('password')
         user_obj = authenticate(request, username=username, password=password)
         if user_obj:
+            profile_obj = Profile.objects.get(user=user_obj)
+            if not profile_obj.is_verified and not user_obj.is_staff:
+                messages.warning(request, 'Your account is not verified. Please check your email for the verification link.')
+                return redirect('login')
+            
+            profile_obj.online_status = True
+            profile_obj.last_activity_time = timezone.now()
+            profile_obj.save()
             login(request, user_obj)
             if 'next' in request.POST:
                 return redirect(request.POST['next'])
@@ -52,19 +60,50 @@ def signup_attempt(request):
                 messages.warning(request, 'Email or username is already taken.')
                 return redirect('register')
             user_obj.save()
-            send_registration_email(user_obj)
-            profile_obj = Profile.objects.create(user=user_obj)
+            otp = random.randint(100000, 999999)
+            profile_obj = Profile.objects.create(user=user_obj, verification_token=str(uuid.uuid4()), verification_code=otp)
             profile_obj.save()
+            send_verification_mail(request, email, profile_obj.verification_token, profile_obj.verification_code)
             
         except Exception as e:
             print(e)
-        
-        login(request, user_obj, backend='django.contrib.auth.backends.ModelBackend')
-        if 'next' in request.POST:
-            return redirect(request.POST['next'])
-        return redirect('dashboard')
-    
+        messages.success(request, "Sent verification OTP and link on your e-mail. Please check mail.")
+        return redirect('login')    
     return render(request, template_name="backend/credentials/register.html")
+
+def verify_account(request, token):
+    try:
+        profile_obj = Profile.objects.get(verification_token=token)
+        if profile_obj.is_verified:
+            messages.warning(request, "Your account is already verified.")
+            return redirect('home')
+        if request.method == "POST":
+            otp = request.POST.get('otp')
+
+            if len(otp) != 6:
+                messages.warning(request, f"You've entered {len(otp)}-digit OTP. Please enter a valid 6-digit OTP.")
+                return redirect(f'/verify-account/{token}')
+            
+            if otp != profile_obj.verification_code:
+                messages.warning(request, "You have entered incorrect OTP.")
+                return redirect(f'/verify-account/{token}')
+            else:
+                profile_obj.is_verified = True
+                profile_obj.verification_code = None
+                profile_obj.online_status = True
+                profile_obj.last_activity_time = timezone.now()
+                profile_obj.save()
+                user_obj = profile_obj.user
+                send_registration_email(user_obj)
+
+                login(request, user_obj)
+                if 'next' in request.POST:
+                    return redirect(request.POST['next'])
+                return redirect('home')
+    
+    except Exception as e:
+        print(e)
+    return render(request, template_name="backend/credentials/verify_account.html")
 
 def forgot_password(request):
     try:
@@ -150,7 +189,7 @@ def change_password(request, token):
             return redirect('/auth/login')
     except Exception as e:
         print(e)
-    return render(request, template_name="change_password.html", context={'profile': profile_obj.user.id})
+    return render(request, template_name="backend/credentials/change_password.html", context={'profile': profile_obj.user.id})
 
 def forgot_username(request):
     try:
@@ -181,4 +220,4 @@ def forgot_username(request):
 
     except Exception as e:
         print(e)
-    return render(request, template_name="forgot_username.html")
+    return render(request, template_name="backend/credentials/forgot_username.html")

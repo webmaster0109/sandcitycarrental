@@ -47,16 +47,3 @@ class Country(models.Model):
 
     def __str__(self):
         return self.name
-
-def send_registration_email(user_obj):
-    subject = f'Congrats {user_obj.first_name} {user_obj.last_name}! You have done registration in Sandcity Car Rental.'
-    # Change the following line to the admin's email address
-    recipient_email = f'{user_obj.email}'
-    message = f"Hi {user_obj.email},\nYou've registered! Now login your account."
-
-    # admin_subject = f'New Registration on Sandcity Car Rental'
-
-    try:
-        send_mail(subject=subject, message=message, from_email=settings.EMAIL_HOST_USER, recipient_list=[recipient_email])
-    except Exception as e:
-        print(f"Failed to send registration email to {recipient_email}. Error: {e}")

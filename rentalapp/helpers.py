@@ -1,6 +1,5 @@
 from django.core.mail import send_mail
 from django.conf import settings
-from django.utils import timezone
 
 user_signature = '\n\nBest regards,\nSandcity Car Rental Pvt. Ltd'
 
