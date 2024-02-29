@@ -2,3 +2,4 @@ django
 django-hitcount
 django-ckeditor-5
 social-auth-app-django
+gunicorn
