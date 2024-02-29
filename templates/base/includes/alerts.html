@@ -1,8 +1,13 @@
-
 {% if messages %}
 {% for message in messages %}
-<div class="alert alert-{% if message.tags %}{{message.tags}}{% endif %}" role="alert">
+<div id="alert-message" class="alert alert-{% if message.tags %}{{message.tags}}{% endif %}" role="alert">
     {{message}}
 </div>
 {% endfor %}
+<script>
+    // Hide the alert message after 3 seconds
+    setTimeout(function() {
+      document.getElementById('alert-message').style.display = 'none';
+    }, 3000);
+</script>
 {% endif %}

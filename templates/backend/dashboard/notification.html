@@ -1,0 +1,70 @@
+{% extends "base/base.html" %}
+
+{% block content %}
+<section class="pt-3">
+	<div class="container">
+		<div class="row">
+
+			<!-- Sidebar START -->
+			{% include "./profile_menu.html" %}
+			<!-- Sidebar END -->
+
+			<!-- Main content START -->
+			<div class="col-lg-8 col-xl-9">
+
+				<div class="vstack gap-4">
+                        <!-- Activities START -->
+                    <div class="row">
+                        <div class="col-12">
+            
+                            <div class="card border">
+                                <!-- Card header -->
+                                <div class="card-header border-bottom">
+                                    <h5 class="card-header-title">Recent Activities</h5>
+                                </div>
+            
+                                <!-- Card body START -->
+                                <div class="card-body">
+                                    {% include 'base/includes/alerts.html' %}
+                                    <!-- Activity item START -->
+                                    {% for notification in notifications %}
+                                    <div class="d-sm-flex justify-content-between align-items-center">
+                                        <div class="d-flex align-items-sm-center me-4 ms-sm-0">
+                                            <!-- Avatar -->
+                                            <div class="avatar flex-shrink-0">
+                                                <div class="avatar-img rounded-circle text-bg-success">
+                                                    <span class="position-absolute top-50 start-50 translate-middle fw-bold"><i class="bi bi-check-lg fs-5"></i></span>
+                                                </div>
+                                            </div>
+                                            <!-- Title -->
+                                            <div class="ms-3">
+                                                <h6 class="fw-light mb-1">{{notification.title}}</h6>
+                                                <p class="mb-1 small">{{notification.message}}</p>
+                                                <small>{{ notification.created_at|date:"F j, Y" }}</small>
+                                            </div>
+                                        </div>
+                                        <!-- Buttons -->
+                                        <div class="d-flex gap-2 mt-2 mt-sm-0">
+                                            <a href="{% url 'delete_notification_view' notification.id %}" class="btn btn-sm btn-danger-soft"><i class="bi bi-trash"></i></a>
+                                        </div>
+                                    </div>
+                                    <hr> <!-- Divider -->
+                                    {% endfor %}
+                                    <!-- Activity item END -->
+            
+            
+                                </div>
+                                <!-- Card body END -->
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Activities END -->
+                </div>
+			</div>
+			<!-- Main content END -->
+
+		</div>
+	</div>
+</section>
+
+{% endblock %}

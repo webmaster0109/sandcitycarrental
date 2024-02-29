@@ -3,23 +3,19 @@ import random
 import uuid
 import os
 from django.core.files.storage import default_storage
+from django.contrib.auth.models import User
 
 class CarTypes(models.Model):
     types_id = models.UUIDField(primary_key=True, unique=True, editable=False, default=uuid.uuid4)
     car_types = models.CharField(max_length=255, null=True, blank=True)
+    category_images = models.ImageField(upload_to="images/category/cars/", null=True, blank=True)
+    price_detail = models.TextField(default="", null=True, blank=True)
     slug = models.SlugField(max_length=255, unique=True, null=True, blank=True)
 
     def __str__(self):
         return self.car_types
 
 class Cars(models.Model):
-    category_choices = [
-        ('Premium', 'Premium'),
-        ('Economy', 'Economy'),
-        ('Sports', 'Sports'),
-        ('7Seaters', '7Seaters'),
-    ]
-    category = models.CharField(max_length=20, choices=category_choices, default='Premium')
     car_id = models.UUIDField(primary_key=True, unique=True, editable=False, default=uuid.uuid4)
     car_type = models.ForeignKey(CarTypes, on_delete=models.CASCADE, null=True, blank=True)
     brand = models.CharField(max_length=255, null=True, blank=True)
@@ -32,17 +28,31 @@ class Cars(models.Model):
     fuel_type = models.CharField(max_length=255, null=True, blank=True)
     exterior_color = models.CharField(max_length=50, null=True, blank=True)
 
+    actual_price = models.PositiveIntegerField(default=100, null=True, blank=True)
+    discounted_price = models.PositiveIntegerField(default=50, null=True, blank=True)
+
+    is_available = models.BooleanField(default=True)
+
     def __str__(self):
         return self.brand
 
-class CarPrice(models.Model):
-    cars = models.ForeignKey(Cars, on_delete=models.CASCADE, null=True, blank=True)
-    actual_price = models.PositiveIntegerField(default=100, null=True, blank=True)
-    discounted_price = models.PositiveIntegerField(default=50, null=True, blank=True)
-    timeline = models.CharField(max_length=100, null=True, blank=True)
+class Booking(models.Model):
+    car = models.ForeignKey(Cars, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
+    booking_id = models.CharField(max_length=100, null=True, blank=True)
+    pickup_date = models.DateField()
+    return_date = models.DateField()
+    total_days = models.PositiveIntegerField(default=0, null=True, blank=True)
+    total_price = models.PositiveIntegerField(default=0, null=True, blank=True)
+    is_paid = models.BooleanField(default=False)
+
+    def total_days(self):
+        if self.pickup_date and self.return_date:
+            return (self.pickup_date - self.return_date).days
+        return None
 
     def __str__(self):
-        return f"{self.cars.brand} - {self.actual_price}"
+        return self.car.brand
     
 
 class CarImages(models.Model):

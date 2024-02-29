@@ -12,7 +12,6 @@ handler404 = 'rentalapp.views.home.handle_unmatched'
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include("rentalapp.urls")),
-    path('social-auth/', include('social_django.urls', namespace='social')),
     path('<str:unmatched_path>/', handle_unmatched, name='handle_unmatched'),
 ]
 

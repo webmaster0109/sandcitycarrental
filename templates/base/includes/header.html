@@ -1,3 +1,4 @@
+
 <header class="navbar-light py-3 sticky-top">
 	<!-- Logo Nav START -->
 	<nav class="navbar navbar-expand-lg">
@@ -22,9 +23,9 @@
 									<li> <a class="dropdown-item me-4" href="/"><img class="fa-fw me-2" src="/media/assets/images/flags/uk.svg" alt="sandcity_carrental">English</a> </li>
 								</ul>
 							</li>
-							<li class="nav-item"> <a href="help-center.html" class="nav-link small pb-2"><i class="bi bi-info-circle me-2"></i>Help</a> </li>
+							<li class="nav-item"> <a href="#" class="nav-link small pb-2"><i class="bi bi-info-circle me-2"></i>Help</a> </li>
                             {% if not request.user.is_authenticated %}
-							<li class="nav-item"> <a href="{% url 'login' %}" class="nav-link small pb-2"><i class="far fa-user me-2"></i>Sign In or Login</a> </li>
+							<li class="nav-item"> <a href="{% url 'login' %}" class="nav-link small pb-2"><i class="far fa-user me-2"></i>Login or Register</a> </li>
                             {% else %}
                             <li class="nav-item"> <a href="#" class="nav-link small pb-2"><i class="bi bi-briefcase me-2"></i>My Trip</a> </li>
                             {% endif %}
@@ -190,46 +191,49 @@
                                 <!-- Notification dropdown START -->
                                 <li class="nav-item dropdown ms-0 ms-md-3">
                                     <!-- Notification button -->
-                                    <a class="nav-notification btn btn-light p-0 mb-0" href="index.html#" role="button" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">
+                                    <a class="nav-notification btn btn-light p-0 mb-0" href="index.html#" role="button" data-bs-toggle="dropdown" 
+									aria-expanded="false" data-bs-auto-close="outside">
                                         <i class="bi bi-bell fa-fw"></i>
                                     </a>
                                     <!-- Notification dote -->
+									{% if total_unread_notifications %}
                                     <span class="notif-badge animation-blink"></span>
+									{% endif %}
 
                                     <!-- Notification dropdown menu START -->
                                     <div class="dropdown-menu dropdown-animation dropdown-menu-end dropdown-menu-size-md shadow-lg p-0">
                                         <div class="card bg-transparent">
                                             <!-- Card header -->
                                             <div class="card-header bg-transparent d-flex justify-content-between align-items-center border-bottom">
-                                                <h6 class="m-0">Notifications <span class="badge bg-danger bg-opacity-10 text-danger ms-2">4 new</span></h6>
-                                                <a class="small" href="index.html#">Clear all</a>
+                                                <h6 class="m-0">Notifications 
+													{% if total_unread_notifications > 0 %}
+													<span class="badge bg-orange bg-opacity-10 text-danger ms-2">{{total_unread_notifications}} unread</span>
+													{% else %}
+													<span class="badge bg-white bg-opacity-10 text-dark ms-2">0 unread</span>
+													{% endif %}
+												</h6>
                                             </div>
 
                                             <!-- Card body START -->
                                             <div class="card-body p-0">
                                                 <ul class="list-group list-group-flush list-unstyled p-2">
                                                     <!-- Notification item -->
+													{% for notification in request.user.usernotification_set.all|slice:":3" %}
                                                     <li>
-                                                        <a href="index.html#" class="list-group-item list-group-item-action rounded notif-unread border-0 mb-1 p-3">
-                                                            <h6 class="mb-2">New! Booking flights from New York ✈️</h6>
-                                                            <p class="mb-0 small">Find the flexible ticket on flights around the world. Start searching today</p>
-                                                            <span>Wednesday</span>
+                                                        <a href="{% url "notification" %}" class="list-group-item list-group-item-action rounded {% if notification.is_read is False %}notif-unread{% endif %} border-0 mb-1 p-3">
+                                                            <h6 class="mb-2">{{notification.title}}</h6>
+                                                            <p class="mb-1 small">{{notification.message}}</p>
+                                                            <span class="small text-orange">{{ notification.created_at|date:"l, F j, Y" }}</span>
                                                         </a>
                                                     </li>
-                                                    <!-- Notification item -->
-                                                    <li>
-                                                        <a href="index.html#" class="list-group-item list-group-item-action rounded border-0 mb-1 p-3">
-                                                            <h6 class="mb-2">Sunshine saving are here 🌞 save 30% or more on a stay</h6>
-                                                            <span>15 Nov 2022</span>
-                                                        </a>
-                                                    </li>
+													{% endfor %}
                                                 </ul>
                                             </div>
                                             <!-- Card body END -->
 
                                             <!-- Card footer -->
                                             <div class="card-footer bg-transparent text-center border-top">
-                                                <a href="index.html#" class="btn btn-sm btn-link mb-0 p-0">See all incoming activity</a>
+                                                <a href="{% url "notification" %}" class="btn btn-sm btn-link mb-0 p-0">See all notifications</a>
                                             </div>
                                         </div>
                                     </div>
@@ -269,12 +273,13 @@
 
                                         <!-- Links -->
                                         <li><hr class="dropdown-divider"></li>
-										{% if not request.user.is_staff %}
-                                        <li><a class="dropdown-item" href="index.html#"><i class="bi bi-bookmark-check fa-fw me-2"></i>My Bookings</a></li>
-										{% else %}
-										<li><a class="dropdown-item" href="index.html#"><i class="bi bi-gear fa-fw me-2"></i>Admin Panel</a></li>
-										{% endif %}
+										{% if request.user.is_staff %}
+                                        <li><a class="dropdown-item" href="index.html#"><i class="bi bi-gear fa-fw me-2"></i>Admin Panel</a></li>
 										<li><a class="dropdown-item" href="{% url "dashboard" %}"><i class="bi bi-person-fill-gear fa-fw me-2"></i>Profile</a></li>
+										{% else %}
+										<li><a class="dropdown-item" href="{% url "dashboard" %}"><i class="bi bi-person-fill-gear fa-fw me-2"></i>Profile</a></li>
+										<li><a class="dropdown-item" href="index.html#"><i class="bi bi-bookmark-check fa-fw me-2"></i>My Bookings</a></li>
+										{% endif %}
                                         <li><a class="dropdown-item" href="index.html#"><i class="bi bi-heart fa-fw me-2"></i>My Wishlist</a></li>
                                         <li><a class="dropdown-item" href="index.html#"><i class="bi bi-gear fa-fw me-2"></i>Settings</a></li>
 										{% if not request.user.is_staff %}

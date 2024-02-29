@@ -1,0 +1,313 @@
+{% extends "base/base.html" %}
+
+{% block content %}
+<section class="pt-0">
+	<div class="container">
+		<div class="row">
+			<div class="col-12">
+				<!-- Booking from START -->
+				<form class="bg-mode border rounded position-relative px-4 pt-4 mb-4 mb-sm-0" method="GET" action="{% url 'booking_search' %}">
+    
+                    <div class="row g-4 position-relative">
+    
+                        <!-- Nav tabs START -->
+                        <div class="col-lg-6">
+                            <ul class="nav nav-pills nav-pills-dark" id="pills-tab" role="tablist">
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link rounded-3 rounded-0 mb-0 active" id="pills-round-trip-tab" 
+                                    data-bs-toggle="pill" data-bs-target="#pills-round-trip" type="button" role="tab" aria-selected="false">Sandcity Rent A Car</button>
+                                </li>
+                            </ul>
+                        </div>
+                        <!-- Nav tabs END -->
+    
+                        <!-- Car Category class -->
+                        <div class="col-lg-3 ms-auto">
+                            <div class="form-control-bg-light form-fs-md">
+                                <select class="form-select js-choice" data-search-enabled="true" name="car_category">
+                                    <option value="" >Select Car Category</option>
+                                    {% for cat in car_types %}
+                                    <option name="car_category" {% if car.car_types == "Premium" %}selected{% endif %} value="{{cat.car_types}}">{{cat.car_types}}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>	
+                        </div>
+
+                            <!-- Tab content START -->
+                            <div class="tab-content mt-4" id="pills-tabContent">
+    
+                        <!-- Round way tab END -->
+                        <div class="tab-pane fade show active" id="pills-round-trip" role="tabpanel" aria-labelledby="pills-round-trip-tab">
+                        <div class="row g-4">
+    
+                            <!-- Leaving From -->
+                            <div class="col-md-6 col-xl-3 position-relative">
+                            <div class="form-border-transparent form-fs-lg bg-light rounded-3 h-100 p-3">
+                                <!-- Input field -->
+                                <label class="mb-1"><i class="bi bi-geo-alt me-2"></i>Pickup Location</label>
+                                <select class="form-select js-choice">
+                                <option selected>Dubai, Downtown</option>
+                                </select>
+                            </div>
+                            
+                            <!-- Auto fill button -->
+                            <div class="btn-flip-icon mt-3 mt-md-0">
+                                <a href="javascript:void(0);" class="btn btn-white shadow btn-round mb-0"><i class="fa-solid fa-right-left"></i></a>
+                            </div>
+                            </div>
+    
+                            <!-- Going To -->
+                            <div class="col-md-6 col-xl-3">
+                            <div class="form-border-transparent form-fs-lg bg-light rounded-3 h-100 p-3">
+                                <!-- Input field -->
+                                <label class="mb-1"><i class="bi bi-send me-2"></i>Return Location</label>
+                                <select class="form-select js-choice">
+                                <option value="">Select location</option>
+                                <option selected>Dubai, Downtown</option>
+                                </select>
+                            </div>
+                            </div>
+    
+                            <!-- Departure -->
+                            <div class="col-md-6 col-xl-3">
+                            <div class="form-border-transparent form-fs-lg bg-light rounded-3 h-100 p-3">
+                                <label class="mb-1"><i class="bi bi-calendar me-2"></i>Pickup Date</label>
+                                <input type="text" class="form-control flatpickr" data-date-format="Y-m-d" name="pickup_date" placeholder="Select date">
+                            </div>
+                            </div>
+    
+                            <!-- Return -->
+                            <div class="col-md-6 col-xl-3">
+                            <div class="form-border-transparent form-fs-lg bg-light rounded-3 h-100 p-3">
+                                <label class="mb-1"><i class="bi bi-calendar me-2"></i>Return Date</label>
+                                <input type="text" class="form-control flatpickr" name="return_date" data-date-format="Y-m-d" placeholder="Select date">
+                            </div>
+                            </div>
+    
+                            <div class="col-12 text-end pt-0">
+                                <button class="btn btn-orange mb-n4" type="submit">Search<i class="bi bi-arrow-right ps-3"></i></button>
+                            </div>
+                        </div>
+                        </div>
+                        <!-- Round way tab END -->
+                    </div>
+                    <!-- Tab content END -->
+                    </div>
+                </form>
+				<!-- Booking from END -->
+			</div>
+		</div>
+	</div>
+</section>
+
+<section class="pt-0">
+	<div class="container">
+		<!-- Tabs and alert START -->
+		<div class="row mb-4">
+			<div class="col-12">
+				<!-- Buttons -->
+				<div class="hstack gap-3 justify-content-between justify-content-md-end">
+					<!-- Filter offcanvas button -->
+					<button class="btn btn-primary-soft btn-primary-check mb-0 d-xl-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasSidebar" aria-controls="offcanvasSidebar">
+						<i class="fa-solid fa-sliders-h me-1"></i> Show filters
+					</button>
+				</div>
+			</div>
+		</div>
+		<!-- Tabs and alert END -->
+
+		<div class="row">
+			<!-- Left sidebar START -->
+			<aside class="col-xl-4 col-xxl-3">
+				<!-- Responsive offcanvas body START -->
+				<div class="offcanvas-xl offcanvas-end" tabindex="-1" id="offcanvasSidebar" aria-labelledby="offcanvasSidebarLabel">
+					<div class="offcanvas-header">
+						<h5 class="offcanvas-title" id="offcanvasSidebarLabel">Advance Filters</h5>
+						<button  type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#offcanvasSidebar" aria-label="Close"></button>
+					</div>
+					<div class="offcanvas-body flex-column p-3 p-xl-0">
+						<form class="rounded-3 shadow" method="get">
+							<!-- Hotel type START -->
+							<div class="card card-body rounded-0 rounded-top p-4">
+								<!-- Title -->
+								<h6 class="mb-2">Car Type</h6>
+								<!-- Hotel Type group -->
+								<div class="col-12">
+									<!-- Checkbox -->
+									<div class="form-check">
+										<input class="form-check-input" name="car_type" type="radio" value="" id="hotelType1">
+										<label class="form-check-label" for="hotelType1">All</label>
+									</div>
+									<!-- Checkbox -->
+                                    {% for car_type in car_types %}
+									<div class="form-check">
+										<input class="form-check-input" name="car_type" type="radio" {% if category.car_types in car_type.car_types %}checked{% endif %}
+                                        value="{% if car_type.car_types %}{{car_type.car_types}}{% endif %}" id="hotelType2">
+										<label class="form-check-label" for="hotelType2">{{car_type.car_types}}</label>
+									</div>
+                                    {% endfor %}
+								</div>
+							</div>
+							<!-- Hotel type END -->
+
+							<hr class="my-0"> <!-- Divider -->
+
+							<!-- Price range START -->
+							<!-- Price START -->
+                            <div class="card card-body rounded-0 p-4">
+                                <!-- Title -->
+                                <h6 class="mb-2">Price</h6>
+                                <!-- Price group -->
+                                <div class="position-relative">
+                                    <div class="noui-wrapper">
+                                        <div class="d-flex justify-content-between">
+                                            <input type="text" name="min_price" class="text-body input-with-range-min">
+                                            <input type="text" name="max_price" class="text-body input-with-range-max">
+                                        </div>
+                                        <div class="noui-slider-range mt-2" data-range-min=100 data-range-max=2000
+                                        data-range-selected-min=100 data-range-selected-max=1000></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Price END -->
+							<!-- Price range END -->
+
+							<hr class="my-0"> <!-- Divider -->
+
+							<!-- Popular type START -->
+							<div class="card card-body rounded-0 p-4">
+								<!-- Title -->
+								<h6 class="mb-2">Popular Type</h6>
+								<!-- Popular Type group -->
+								<div class="col-12">
+									<!-- Checkbox -->
+									<div class="form-check">
+										<input class="form-check-input" type="checkbox" value="" id="popolarType2">
+										<label class="form-check-label" for="popolarType2">Pay At Pickup Available</label>
+									</div>
+									<!-- Checkbox -->
+									<div class="form-check">
+										<input class="form-check-input" type="checkbox" value="" id="popolarType3">
+										<label class="form-check-label" for="popolarType3">Free Cancellation Available</label>
+									</div>
+								</div>
+							</div>
+							<!-- Popular type END -->
+						<!-- Form End -->
+					</div>
+					<!-- Buttons -->
+					<div class="d-flex justify-content-between p-2 p-xl-0 mt-xl-4">
+						<button type="reset" class="btn btn-link p-0 mb-0">Clear all</button>
+						<button type="submit" class="btn btn-primary mb-0">Filter Result</button>
+					</div>
+                </form>
+				</div>
+				<!-- Responsive offcanvas body END -->
+			</aside>
+			<!-- Left sidebar END -->
+
+			<!-- Main content START -->
+			<div class="col-xl-8 col-xxl-9">
+				<div class="vstack gap-4">
+
+					<!-- Card item START -->
+                    {% for car in filtered_cars %}
+					<div class="card shadow p-2">
+						<div class="row g-0">
+							<!-- Card img -->
+							<div class="col-md-5 position-relative">
+
+								<!-- Overlay item -->
+								<div class="position-absolute top-0 start-0 z-index-1 m-2">
+									<div class="badge text-bg-danger">{{car.year}}</div>
+								</div>
+
+								<!-- Slider START -->
+								<div class="tiny-slider arrow-round arrow-xs arrow-dark overflow-hidden rounded-2">
+									<div class="tiny-slider-inner" data-autoplay="false" data-arrow="true" data-dots="false" data-items="1">
+										<!-- Image item -->
+                                        {% for image in car.carimages_set.all %}
+										<div><img src="{{image.car_images.url}}" alt="{{image.car_images_id}}"></div>
+                                        {% endfor %}
+									</div>
+								</div>
+								<!-- Slider END -->
+							</div>
+
+							<!-- Card body -->
+							<div class="col-md-7">
+								<div class="card-body py-md-2 d-flex flex-column h-100 position-relative">
+
+									<!-- Rating and buttons -->
+									<div class="d-flex justify-content-between align-items-center">
+
+										<ul class="list-inline mb-0 z-index-2">
+											<!-- Heart icon -->
+											<li class="list-inline-item">
+												<a href="#" class="btn btn-sm btn-round btn-light"><i class="fa-solid fa-fw fa-heart"></i></a>
+											</li>
+											<!-- Share icon -->
+											<li class="list-inline-item dropdown">
+												<!-- Share button -->
+												<a href="#" class="btn btn-sm btn-round btn-light" role="button" id="dropdownShare" 
+                                                data-bs-toggle="dropdown" aria-expanded="false">
+													<i class="fa-solid fa-fw fa-share-alt"></i>
+												</a>
+												<!-- dropdown button -->
+												<ul class="dropdown-menu dropdown-menu-end min-w-auto shadow rounded" aria-labelledby="dropdownShare">
+													<li><a class="dropdown-item" href="#"><i class="fab fa-twitter-square me-2"></i>Twitter</a></li>
+													<li><a class="dropdown-item" href="#"><i class="fab fa-facebook-square me-2"></i>Facebook</a></li>
+													<li><a class="dropdown-item" href="#"><i class="fab fa-linkedin me-2"></i>LinkedIn</a></li>
+													<li><a class="dropdown-item" href="#"><i class="fa-solid fa-copy me-2"></i>Copy link</a></li>
+												</ul>
+											</li>
+										</ul>
+									</div>
+
+									<!-- Title -->
+									<h5 class="card-title mb-1"><a href="{% url 'car_details' car.slug %}">{{car.brand}}</a></h5>
+									<small><i class="bi bi-geo-alt me-2"></i>Dubai, UAE</small>
+									<!-- Amenities -->
+									<ul class="nav nav-divider mt-3">
+										{% for feature in car.carfeatures_set.all|slice:":3" %}
+										<li class="nav-item">{{feature.features}}</li>
+                                        {% endfor %}
+									</ul>
+
+									<!-- List -->
+									<ul class="list-group list-group-borderless small mb-0 mt-2">
+										<li class="list-group-item d-flex text-success p-0">
+											<i class="bi bi-patch-check-fill me-2"></i>Free Cancellation
+										</li>
+										<li class="list-group-item d-flex text-success p-0">
+											<i class="bi bi-patch-check-fill me-2"></i>Cash in Hand Payment
+										</li>
+									</ul>
+									
+									<!-- Price and Button -->
+									<div class="d-sm-flex justify-content-sm-between align-items-center mt-3 mt-md-auto">
+										<!-- Button -->
+										<div class="d-flex align-items-center">
+											<h5 class="fw-bold mb-0 me-1">AED {{car.discounted_price}}</h5>
+											<span class="mb-0 me-2">/day</span>
+											<span class="text-decoration-line-through mb-0">AED {{car.actual_price}}</span>
+										</div>
+										<!-- Price -->
+										<div class="mt-3 mt-sm-0">
+											<a href="{% url 'car_details' car.slug %}" class="btn btn-sm btn-dark mb-0 w-100">Select</a>    
+										</div>                  
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+                    {% endfor %}
+					<!-- Card item END -->
+
+				</div>
+			</div>
+			<!-- Main content END -->
+		</div> <!-- Row END -->
+	</div>
+</section>
+{% endblock %}

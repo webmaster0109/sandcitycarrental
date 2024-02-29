@@ -31,7 +31,7 @@
 		<div class="rounded-3 p-3 p-sm-5" style="background-image: url(/media/assets/images/bg/dubai_city.webp); background-position: center center; background-repeat: no-repeat; background-size: cover;">
 
 			<!-- Booking from START -->
-			<form class="bg-mode position-relative px-3 px-sm-4 pt-4 mb-4 mb-sm-0">
+			<form class="bg-mode position-relative px-3 px-sm-4 pt-4 mb-4 mb-sm-0" method="GET" action="{% url 'booking_search' %}">
 
 				<!-- Svg decoration -->
 				<figure class="position-absolute top-0 start-0 h-100 ms-n2 ms-sm-n1">
@@ -63,12 +63,11 @@
 					<!-- Car Category class -->
 					<div class="col-lg-3 ms-auto">
 						<div class="form-control-bg-light form-fs-md">
-							<select class="form-select js-choice">
-								<option value="">Select Car Category</option>
-								<option>Economy</option>
-								<option>Premium</option>
-								<option>Sports</option>
-								<option>7 Seaters</option>
+							<select class="form-select js-choice" data-search-enabled="true" name="car_category">
+								<option value="" >Select Car Category</option>
+                                {% for cat in category %}
+								<option name="car_category" value="{{cat.car_types}}">{{cat.car_types}}</option>
+                                {% endfor %}
 							</select>
 						</div>	
 					</div>
@@ -86,9 +85,8 @@
                         <div class="form-border-transparent form-fs-lg bg-light rounded-3 h-100 p-3">
                             <!-- Input field -->
                             <label class="mb-1"><i class="bi bi-geo-alt me-2"></i>Pickup Location</label>
-                            <select class="form-select js-choice" data-search-enabled="true">
-                            <option value="">Select location</option>
-                            <option>Dubai, Downtown</option>
+                            <select class="form-select js-choice">
+                            <option selected>Dubai, Downtown</option>
                             </select>
                         </div>
                         
@@ -103,9 +101,9 @@
                         <div class="form-border-transparent form-fs-lg bg-light rounded-3 h-100 p-3">
                             <!-- Input field -->
                             <label class="mb-1"><i class="bi bi-send me-2"></i>Return Location</label>
-                            <select class="form-select js-choice" data-search-enabled="true">
+                            <select class="form-select js-choice">
                             <option value="">Select location</option>
-                            <option>Dubai, Downtown</option>
+                            <option selected>Dubai, Downtown</option>
                             </select>
                         </div>
                         </div>
@@ -114,7 +112,7 @@
                         <div class="col-md-6 col-xl-3">
                         <div class="form-border-transparent form-fs-lg bg-light rounded-3 h-100 p-3">
                             <label class="mb-1"><i class="bi bi-calendar me-2"></i>Pickup Date</label>
-                            <input type="text" class="form-control flatpickr" data-date-format="d M Y" placeholder="Select date">
+                            <input type="text" class="form-control flatpickr" name="pickup_date" data-date-format="Y-m-d" placeholder="Select date">
                         </div>
                         </div>
 
@@ -122,7 +120,7 @@
                         <div class="col-md-6 col-xl-3">
                         <div class="form-border-transparent form-fs-lg bg-light rounded-3 h-100 p-3">
                             <label class="mb-1"><i class="bi bi-calendar me-2"></i>Return Date</label>
-                            <input type="text" class="form-control flatpickr" data-date-format="d M Y" placeholder="Select date">
+                            <input type="text" class="form-control flatpickr" name="return_date" data-date-format="Y-m-d" placeholder="Select date">
                         </div>
                         </div>
 
@@ -145,109 +143,36 @@
 	<div class="container">
 		<div class="row g-4">
 			<!-- Destination item START -->
+            {% for car in category %}
 			<div class="col-sm-6 col-lg-3">
 				<!-- Card START -->
 				<div class="card card-img-scale overflow-hidden bg-transparent">	
 					<!-- Card format icon -->
 					<div class="position-absolute top-0 end-0 p-3 z-index-9">
-						<a tabindex="0" class="mb-0 btn btn-white btn-round" data-bs-toggle="popover" data-bs-trigger="focus" data-bs-placement="left" data-bs-content="COVID-19 test required Vaccinated travelers can visit">
+						<a tabindex="0" class="mb-0 btn btn-white btn-round" data-bs-toggle="popover" data-bs-trigger="focus" 
+                        data-bs-placement="left" data-bs-content="Sandcity Car Rental {{car.car_types}}">
 							<i class="bi bi-info-circle"></i>
 						</a>
 					</div>
 
 					<!-- Image -->
 					<div class="card-img-scale-wrapper">
-						<img src="/media/assets/images/cars/mersas-gle-scaled.jpg" class="card-img" alt="car image">
+						<img src="{{car.category_images.url}}" class="card-img" alt="car image">
 					</div>
 
 					<!-- Card body -->
 					<div class="card-body px-2">
 						<!-- Title -->
 						<div class="d-flex justify-content-between align-items-center">
-							<h5 class="card-title"><a href="#" class="stretched-link">PREMIUM</a></h5>
+							<h5 class="card-title"><a href="{% url 'car_category' car.slug %}" class="stretched-link">{{car.car_types}}</a></h5>
 						</div>
 						<!-- Content -->
-						<span class="mb-0">Price from AED 250</span>
+						<span class="mb-0">{{car.price_detail}}</span>
 					</div>
 				</div>
 				<!-- Card END -->
 			</div>
-			<!-- Destination item END -->
-
-			<!-- Destination item START -->
-			<div class="col-sm-6 col-lg-3">
-				<!-- Card START -->
-				<div class="card card-img-scale overflow-hidden bg-transparent">
-					<!-- Image -->
-					<div class="card-img-scale-wrapper">
-						<img src="/media/assets/images/cars/sentra.jpg" class="card-img" alt="car image">
-					</div>
-					
-					<!-- Card body -->
-					<div class="card-body px-2">
-						<!-- Title -->
-						<div class="d-flex justify-content-between align-items-center">
-							<h5 class="card-title"><a href="#" class="stretched-link">ECONOMY</a></h5>
-						</div>
-						<!-- Content -->
-						<p class="mb-0">Price from AED 100</p>
-					</div>
-				</div>
-				<!-- Card END -->
-			</div>
-			<!-- Destination item END -->
-
-			<!-- Destination item START -->
-			<div class="col-sm-6 col-lg-3">
-				<!-- Card START -->
-				<div class="card card-img-scale overflow-hidden bg-transparent">
-					<!-- Card format icon -->
-					<div class="position-absolute top-0 end-0 p-3 z-index-9">
-						<a tabindex="0" class="mb-0 btn btn-white btn-round z-index-2" data-bs-toggle="popover" data-bs-trigger="focus" data-bs-placement="left" data-bs-content="Vaccinated travelers can visit. Masks required">
-							<i class="bi bi-info-circle"></i>
-						</a>
-					</div>
-
-					<!-- Image -->
-					<div class="card-img-scale-wrapper rounded-3">
-						<img src="/media/assets/images/cars/AK0A8077-Edit-copy-scaled.jpg" class="card-img" alt="hotel image">
-					</div>
-
-					<!-- Card body -->
-					<div class="card-body px-2">
-						<!-- Title -->
-						<div class="d-flex justify-content-between align-items-center">
-							<h5 class="card-title"><a href="#" class="stretched-link">SPORTS</a></h5>
-						</div>
-						<!-- Content -->
-						<p class="mb-0">Price from AED 250</p>
-					</div>
-				</div>
-				<!-- Card END -->
-			</div>
-			<!-- Destination item END -->
-
-			<!-- Destination item START -->
-			<div class="col-sm-6 col-lg-3">
-				<!-- Card START -->
-				<div class="card card-img-scale overflow-hidden bg-transparent">
-					<!-- Image -->
-					<div class="card-img-scale-wrapper rounded-3">
-						<img src="/media/assets/images/cars/AK0A8068-Edit-copy-scaled.jpg" class="card-img" alt="cars">
-					</div>
-					
-					<!-- Card body -->
-					<div class="card-body px-2">
-						<!-- Title -->
-						<div class="d-flex justify-content-between align-items-center">
-							<h5 class="card-title"><a href="#" class="stretched-link">7 SEATERS</a></h5>
-						</div>
-						<!-- Content -->
-						<p class="mb-0">Price from AED 500</p>
-					</div>
-				</div>
-				<!-- Card END -->
-			</div>
+            {% endfor %}
 			<!-- Destination item END -->
 		</div> <!-- Row END -->
 	</div>

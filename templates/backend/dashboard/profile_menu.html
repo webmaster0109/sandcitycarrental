@@ -12,8 +12,8 @@
 
         <!-- Edit profile button -->
         <div class="position-absolute top-0 end-0 p-3">
-          <a href="account-profile.html#" class="text-primary-hover" data-bs-toggle="tooltip" data-bs-title="Edit profile">
-            <i class="bi bi-pencil-square"></i>
+          <a href="#{{request.user.username}}" class="text-primary-hover" data-bs-toggle="tooltip" data-bs-title="View Profile Pic">
+            <i class="bi bi-eye"></i>
           </a>
         </div>
 
@@ -46,14 +46,15 @@
             <li class="nav-item">
               <a class="nav-link" href="account-payment-details.html"><i class="bi bi-wallet fa-fw me-2"></i>Payment Details</a>
             </li>
+            {% url 'notification' as url %}
+            <li class="nav-item">
+              <a class="nav-link {% if request.path == url %}active{% endif %}" href="{{url}}"><i class="bi bi-bell fa-fw me-2"></i>Notifications</a>
+            </li>
             <li class="nav-item">
               <a class="nav-link" href="account-wishlist.html"><i class="bi bi-heart fa-fw me-2"></i>Wishlist</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="account-settings.html"><i class="bi bi-gear fa-fw me-2"></i>Settings</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="account-delete.html"><i class="bi bi-trash fa-fw me-2"></i>Delete Profile</a>
             </li>
             <li class="nav-item">
               <a class="nav-link text-danger bg-danger-soft-hover" href="{% url "logout" %}"><i class="fas fa-sign-out-alt fa-fw me-2"></i>Sign Out</a>

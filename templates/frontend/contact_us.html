@@ -131,30 +131,32 @@
 
 					<!-- Card body START -->
 					<div class="card-body p-0">
-						<form class="row g-4">
+						{% include 'base/includes/alerts.html' %}
+						<form class="row g-4" method="post">
+							{% csrf_token %}
 							<!-- Name -->
 							<div class="col-md-6">
 								<label class="form-label">Your name *</label>
-								<input type="text" class="form-control">
+								<input type="text" class="form-control" {% if request.user.is_authenticated %}value="{{request.user.first_name}} {{request.user.last_name}}"{% endif %} name="name">
 							</div>
 							<!-- Email -->
 							<div class="col-md-6">
 								<label class="form-label">Email address *</label>
-								<input type="email" class="form-control">
+								<input type="email" class="form-control" {% if request.user.is_authenticated %}value="{{request.user.email}}"{% endif %} name="email">
 							</div>
 							<!-- Mobile number -->
 							<div class="col-12">
 								<label class="form-label">Mobile number *</label>
-								<input type="text" class="form-control">
+								<input type="text" class="form-control" {% if request.user.is_authenticated %}value="{% if request.user.profile.number %}{{request.user.profile.number}}{% endif %}"{% endif %} name="phone">
 							</div>
 							<!-- Message -->
 							<div class="col-12">
 								<label class="form-label">Message *</label>
-								<textarea class="form-control" rows="3"></textarea>
+								<textarea class="form-control" rows="3" name="message"></textarea>
 							</div>
 							<!-- Button -->
 							<div class="col-12">
-								<button class="btn btn-dark mb-0" type="button">Send Message</button>
+								<button class="btn btn-dark mb-0" type="submit">Send Message</button>
 							</div>	
 						</form>
 					</div>

@@ -116,7 +116,7 @@
 
 								<!-- Button -->
 								<div class="col-12 text-end">
-									<button type="submit" class="btn btn-primary mb-0">Save Changes</button>
+									<button type="submit" class="btn btn-sm btn-success mb-0">Save Changes</button>
 								</div>
 							</form>
 							<!-- Form END -->
@@ -201,7 +201,7 @@
             <label for="file-upload">Choose Image</label>
             <input type="file" name="profile_img" id="file-upload" accept="image/*" onchange="previewImage(event);" required />
         </div>
-        <input type="submit" value="{% if request.user.profile.profile_image %}Change Image{% else %}Upload Image{% endif %}" class="btn btn-primary btn-sm col-12 mt-3">
+        <input type="submit" value="{% if request.user.profile.profile_image %}Change Image{% else %}Upload Image{% endif %}" class="btn btn-orange btn-sm col-12 mt-3">
         </form>
       </div>
     </div>

@@ -1,11 +1,10 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.models import User
-from rentalapp.models.users import Profile
+from rentalapp.models.users import *
 from django.urls import reverse
 from django.contrib import messages
 from django.contrib.auth import login, authenticate
-from rentalapp.helpers import *
 import uuid
 from django.contrib.auth.hashers import check_password
 from django.utils import timezone
@@ -32,7 +31,7 @@ def login_attempt(request):
             login(request, user_obj)
             if 'next' in request.POST:
                 return redirect(request.POST['next'])
-            return redirect('dashboard')
+            return redirect('homepage')
         else:
             messages.warning(request, 'Invalid username or password. Please try again.')
             return redirect('login')
@@ -79,7 +78,6 @@ def verify_account(request, token):
             return redirect('home')
         if request.method == "POST":
             otp = request.POST.get('otp')
-
             if len(otp) != 6:
                 messages.warning(request, f"You've entered {len(otp)}-digit OTP. Please enter a valid 6-digit OTP.")
                 return redirect(f'/verify-account/{token}')
@@ -99,7 +97,8 @@ def verify_account(request, token):
                 login(request, user_obj)
                 if 'next' in request.POST:
                     return redirect(request.POST['next'])
-                return redirect('home')
+                UserNotification.objects.create(user=user_obj, title=f"Welcome {user_obj.first_name}🎉, Thanks for registering", message="Sandcity Car Rental! We're a passionate family-run business in Dubai, dedicated to making your exploration of this vibrant city as convenient and enjoyable as possible.")
+                return redirect('/')
     
     except Exception as e:
         print(e)
@@ -107,6 +106,8 @@ def verify_account(request, token):
 
 def forgot_password(request):
     try:
+        if request.user.is_authenticated:
+            return redirect(reverse('homepage'))
         if request.method == "POST":
             username = request.POST.get('username')
             user_obj = User.objects.filter(username=username).first()
@@ -144,8 +145,10 @@ def check_password_similarity(new_password, old_password):
 
 def change_password(request, token):
     try:
+        if request.user.is_authenticated:
+            return redirect(reverse('homepage'))
+        
         profile_obj = Profile.objects.filter(forgot_password_token=token).first()
-
         if not profile_obj:
             messages.warning(request, "Invalid or expired password reset link. Please request a new one.")
             return redirect('forgot_password')
@@ -193,6 +196,8 @@ def change_password(request, token):
 
 def forgot_username(request):
     try:
+        if request.user.is_authenticated:
+            return redirect(reverse('homepage'))
         if request.method == "POST":
             email = request.POST.get('email')
             user_obj = User.objects.filter(email=email).first()

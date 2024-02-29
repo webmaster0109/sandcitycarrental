@@ -1,0 +1,391 @@
+{% extends "base/base.html" %}
+
+{% block content %}
+<section class="pt-4 pt-lg-5">
+	<div class="container position-relative">
+
+		<!-- Title and button START -->
+		<div class="row">
+			<div class="col-12">
+
+				<!-- Meta -->
+				<div class="d-md-flex justify-content-md-between">
+					<!-- Title -->
+					<div>
+						<h1 class="fs-2">{{cars.brand}}, {{cars.year}}</h1>
+						<ul class="nav nav-divider h6 text-body mb-0">
+							<li class="nav-item"><i class="bi bi-geo-alt me-2"></i>Dubai, UAE</li>
+							<li class="nav-item"><i class="far fa-calendar-alt me-2"></i>{% if total_days > 1 %}{{total_days}} Days{% else %}1 Day{% endif %}</li>
+						</ul>
+					</div>
+
+					<!-- Buttons -->
+					<ul class="list-inline text-end">
+							<!-- Heart icon -->
+						<li class="list-inline-item">
+							<a href="#" class="btn btn-sm btn-light px-2"><i class="fa-solid fa-fw fa-heart"></i></a>
+						</li>
+						<!-- Share icon -->
+						<li class="list-inline-item dropdown">
+							<!-- Share button -->
+							<a href="#" class="btn btn-sm btn-light px-2" role="button" id="dropdownShare" data-bs-toggle="dropdown" aria-expanded="false">
+								<i class="fa-solid fa-fw fa-share-alt"></i>
+							</a>
+							<!-- dropdown button -->
+							<ul class="dropdown-menu dropdown-menu-end min-w-auto shadow rounded" aria-labelledby="dropdownShare">
+								<li><a class="dropdown-item" href="#"><i class="fab fa-twitter-square me-2"></i>Twitter</a></li>
+								<li><a class="dropdown-item" href="#"><i class="fab fa-facebook-square me-2"></i>Facebook</a></li>
+								<li><a class="dropdown-item" href="#"><i class="fab fa-linkedin me-2"></i>LinkedIn</a></li>
+								<li><a class="dropdown-item" href="#"><i class="fa-solid fa-copy me-2"></i>Copy link</a></li>
+							</ul>
+						</li>
+					</ul>
+				</div>
+
+			</div>
+		</div>
+		<!-- Title and button END -->
+
+		<!-- Image gallery START -->
+		<div class="row mt-md-5">
+			<div class="col-12">
+				<!-- Primary image -->
+				<div class="splide splide-main mb-3" data-splide='{"type" : "fade","autoplay": true,"heightRatio":0.5,"pagination":false,"arrows":false,"cover":true,"lazyLoad":"sequential"}'>
+					<div class="splide__track">
+						<ul class="splide__list">
+                            {% for image in cars.carimages_set.all %}
+							<li class="splide__slide rounded"><img src="{{image.car_images.url}}" alt="{{image.car_images.url}}">
+								<!-- Glightbox image -->
+								<a href="{{image.car_images.url}}" class="stretched-link" data-glightbox="" data-gallery="banner"></a>
+							</li>
+                            {% endfor %}
+						</ul>
+					</div>
+				</div>
+				<!-- Secondary image -->
+				<div class="splide splide-thumb" data-splide='{"rewind":true,"fixedWidth":200,"fixedHeight":120,"isNavigation":true,"gap":20,"focus":"center","pagination":false,"cover":true,"lazyLoad":"sequential","breakpoints":{"600":{"fixedWidth":150,"fixedHeight":80}}}'>
+					<div class="splide__track">
+						<ul class="splide__list">
+                            {% for image in cars.carimages_set.all %}
+							<li class="splide__slide"><img src="{{image.car_images.url}}" alt="{{image.car_images.url}}"></li>
+                            {% endfor %}
+						</ul>
+					</div>
+					<!-- Arrows -->
+					<div class="splide__arrows">
+						<button class="splide__arrow  splide__arrow--prev p-splide__arrow--prev bg-orange"><span class="spi-angle-left text-white"><i class="fa-solid fa-fw fa-angle-left"></i></span></button>
+						<button class="splide__arrow splide__arrow--next p-splide__arrow--next bg-orange"><span class="spi-angle-right text-white"><i class="fa-solid fa-fw fa-angle-right"></i></span></button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- Image gallery END -->
+	</div>
+</section>
+
+<!-- =======================
+Tabs START -->
+<section class="py-0">
+	<div class="container">
+		
+		<!-- Tabs START -->
+		<div class="row">
+			<div class="col-12">
+				<!-- Outer tabs START -->
+				<ul class="nav nav-pills nav-justified nav-responsive bg-orange bg-opacity-10 rounded p-2" id="tour-pills-tab" role="tablist">
+					<!-- Tab item -->
+					<li class="nav-item" role="presentation">
+						<button class="nav-link active mb-0" id="tour-pills-tab-1" data-bs-toggle="pill" 
+                        data-bs-target="#tour-pills-tab1" type="button" role="tab" aria-controls="tour-pills-tab1" aria-selected="true">Overview</button>
+					</li>
+					<!-- Tab item -->
+					<li class="nav-item" role="presentation">
+						<button class="nav-link mb-0" id="tour-pills-tab-2" data-bs-toggle="pill" data-bs-target="#tour-pills-tab2" 
+                        type="button" role="tab" aria-controls="tour-pills-tab2" aria-selected="false">Features</button>
+					</li>
+					<!-- Tab item -->
+					<li class="nav-item" role="presentation">
+						<button class="nav-link mb-0" id="tour-pills-tab-3" data-bs-toggle="pill" data-bs-target="#tour-pills-tab3" 
+                        type="button" role="tab" aria-controls="tour-pills-tab3" aria-selected="false">Reviews</button>
+					</li>
+				</ul> 
+				<!-- Outer tabs END -->
+			</div>
+		</div>
+		<!-- Tabs END -->
+	</div>
+</section>
+<!-- =======================
+Tabs END -->
+
+<!-- =======================
+Tabs-content START -->
+<section class="pt-4 pt-md-5">
+	<div class="container">
+
+		<div class="row g-4 g-md-5">
+			<!-- Tabs Content START -->
+			<div class="col-xl-8">
+				<!-- Outer tabs contents START -->
+				<div class="tab-content mb-0" id="tour-pills-tabContent">
+
+					<!-- Content item START -->
+					<div class="tab-pane fade show active" id="tour-pills-tab1" role="tabpanel" aria-labelledby="tour-pills-tab-1">
+						<div class="card bg-transparent p-0">
+							<!-- Card header -->
+							<div class="card-header bg-transparent border-bottom p-0 pb-3">
+								<h3 class="mb-0">Description</h3>
+							</div>
+
+							<!-- Card body START -->
+							<div class="card-body p-0 pt-3">
+								<p class="mb-4">
+                                    {{cars.desc}}
+                                </p>
+
+								<!-- List -->
+								<h5>Car Info</h5>
+								<ul class="list-group list-group-borderless mb-4">
+									<li class="list-group-item">
+										<span class="h6 mb-0 me-1">Body Type:</span>
+										<span class="h6 fw-light mb-0">{{cars.body_type}}</span>
+									</li>
+									<li class="list-group-item">
+										<span class="h6 mb-0 me-1">Engine:</span>
+										<span class="h6 fw-light mb-0">{{cars.engine}}</span>
+									</li>
+									<li class="list-group-item">
+										<span class="h6 mb-0 me-1">Fuel Type:</span>
+										<span class="h6 fw-light mb-0">{{cars.fuel_type}}</span>
+									</li>
+									<li class="list-group-item">
+										<span class="h6 mb-0 me-1">Exterior Color:</span>
+										<span class="h6 fw-light mb-0">{{cars.exterior_color}}</span>
+									</li>
+								</ul>
+							</div>
+							<!-- Card body END -->
+						</div>
+					</div>		
+					<!-- Content item END -->
+
+					<!-- Content item START -->
+					<div class="tab-pane fade" id="tour-pills-tab2" role="tabpanel" aria-labelledby="tour-pills-tab-2">
+						<div class="card bg-transparent p-0">
+							<!-- Card header -->
+							<div class="card-header bg-transparent border-bottom p-0 pb-3">
+								<h3 class="mb-0">Features about {{cars.brand}}, {{cars.year}}</h3>
+							</div>
+
+							<!-- Card body START -->
+							<div class="card-body p-0 pt-3">
+								<ul class="list-group list-group-borderless mb-0">
+                                    {% for feature in cars.carfeatures_set.all %}
+									<li class="list-group-item h6 fw-light d-flex mb-0">
+										<i class="fa-solid fa-check-circle text-success me-2"></i>{{feature.features}}
+									</li>
+                                    {% endfor %}
+								</ul>
+							</div>
+							<!-- Card body END -->
+						</div>
+					</div>	
+					<!-- Content item END -->
+
+					<!-- Content item START -->
+					<div class="tab-pane fade" id="tour-pills-tab3" role="tabpanel" aria-labelledby="tour-pills-tab-3">
+						<div class="card bg-transparent p-0">
+							<!-- Card header -->
+							<div class="card-header bg-transparent border-bottom p-0 pb-3">
+								<h3 class="mb-0">Reviews</h3>
+							</div>
+
+							<!-- Card body START -->
+							<div class="card-body p-0 pt-3">
+							</div>
+							<!-- Card body END -->
+						</div>
+					</div>	
+					<!-- Content item END -->
+
+				</div>	
+			</div>
+			<!-- Tabs Content END -->
+
+			<!-- Right side content START -->
+			<aside class="col-xl-4">
+				<div class="row g-4">
+					<!-- Book now item START -->
+					<div class="col-md-6 col-xl-12">
+						<div class="card card-body border bg-transparent">
+							<!-- Title -->
+							<div class="hstack gap-2 mb-1">
+                                {% if total_days > 1 %}
+                                <h3 class="card-title mb-0">AED {{total_price}}</h3>
+								<span class="fs-5">{{total_days}} Days</span>
+                                {% else %}
+                                
+								<h3 class="card-title mb-0">AED {{cars.discounted_price}}</h3>
+								<span class="fs-5">per Day</span>
+                                {% endif %}
+							</div>
+
+							<div class="d-flex justify-content-between mb-4">
+								<!-- Rating -->
+								<ul class="list-inline mb-0">
+									<li class="list-inline-item me-1 h6 mb-0">4.5</li>
+									<li class="list-inline-item me-0 small"><i class="fa-solid fa-star text-warning"></i></li>
+									<li class="list-inline-item me-0 small"><i class="fa-solid fa-star text-warning"></i></li>
+									<li class="list-inline-item me-0 small"><i class="fa-solid fa-star text-warning"></i></li>
+									<li class="list-inline-item me-0 small"><i class="fa-solid fa-star text-warning"></i></li>
+									<li class="list-inline-item me-0 small"><i class="fa-solid fa-star-half-alt text-warning"></i></li>
+								</ul>
+								<a href="#" class="mb-0 m-0 text-reset text-primary-hover">(reviews)</a>
+							</div>
+                            <!-- Button -->
+							<div class="d-grid gap-2">
+								<button class="btn btn-orange mb-3" type="submit">
+									Book Now
+								</button>
+							</div>
+                            {% if not total_days %}
+                            <p style="text-decoration:underline;">Select Date to Book Ride More Than A Day</p>
+                            <form method="GET" action="{% url 'car_details' cars.slug %}">
+                                <div class="row">
+                                <div class="col-md-6 col-xl-6">
+                                    <div class="mb-2">
+                                        <label class="mb-1"><i class="bi bi-calendar me-2"></i>Pickup Date</label>
+                                        <input type="text" class="form-control flatpickr" data-date-format="Y-m-d" name="pickup_date" placeholder="Select date">
+                                    </div>
+                                </div>
+            
+                                    <!-- Return -->
+                                <div class="col-md-6 col-xl-6">
+                                    <div class="mb-2">
+                                        <label class="mb-1"><i class="bi bi-calendar me-2"></i>Return Date</label>
+                                        <input type="text" class="form-control flatpickr" name="return_date" data-date-format="Y-m-d" placeholder="Select date">
+                                    </div>
+                                </div>
+                                </div>
+                                <div class="d-grid gap-2">
+                                    <button class="btn btn-success mb-0" type="submit">
+                                        Select Date
+                                    </button>
+                                </div>
+                            </form>
+                            {% endif %}
+
+						</div>
+					</div>
+					<!-- Book now item END -->
+
+					<!-- Help item START -->
+					<div class="col-md-6 col-xl-12">
+						<div class="card card-body bg-light p-4">
+							<!-- Title -->
+							<h4 class="card-title">Need Help?</h4>
+
+							<!-- List -->
+							<ul class="list-group list-group-borderless">
+								<li class="list-group-item py-3">
+									<a href="tel:+971 50 924 9115" class="h6 mb-0">
+										<i class="bi fa-fw bi-telephone-forward text-orange fs-5 me-2"></i>
+										<span class="fw-light me-1">Call us on:</span>+971 50 924 9115
+									</a>
+								</li>
+
+								<li class="list-group-item py-0"><hr class="my-0"></li><!-- Divider -->
+
+								<li class="list-group-item py-3">
+									<h6 class="mb-0">
+										<i class="bi fa-fw bi-alarm text-orange fs-5 me-2"></i>
+										<span class="h6 fw-light me-1 mb-0">Timing:</span>10AM to 7PM
+									</h6>
+								</li>
+
+								<li class="list-group-item py-0"><hr class="my-0"></li><!-- Divider -->
+
+								<li class="list-group-item py-3">
+									<a href="#" class="h6 mb-0" data-bs-toggle="modal" data-bs-target="#inquiryForm">
+										<i class="bi fa-fw bi-headset text-orange fs-5 me-2"></i>Let Us Call You
+									</a>
+								</li>
+
+								<li class="list-group-item py-0"><hr class="my-0"></li><!-- Divider -->
+
+								<li class="list-group-item pt-3 pb-0">
+									<a href="{% url "contact_us" %}" class="h6 mb-0">
+										<i class="bi fa-fw bi-calendar-check text-orange fs-5 me-2"></i>Book Appointments
+									</a>
+								</li>
+							</ul>
+						</div>
+					</div>
+					<!-- Help item END -->
+				</div>
+			</aside>
+			<!-- Right side content END -->
+
+		</div> <!-- Row END -->
+	</div>
+</section>
+<!-- =======================
+Tabs-content END -->
+
+<div class="modal fade" id="inquiryForm" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<!-- Title -->
+			<div class="modal-header">
+				<h5 class="modal-title" id="inquiryFormlabel"><i class="bi fa-fw bi-headset text-orange fs-5 me-2"></i>Let us call you</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			
+			<!-- Body -->
+			<div class="modal-body p-3">
+				<div class="card bg-transparent">
+					<!-- Card header -->
+					<div class="card-header bg-transparent">
+						<!-- Title -->
+						<h6 class="card-title mb-0">Our expert will get in touch with you shortly</h6>
+					</div>
+
+					<!-- Card body -->
+					<div class="card-body pt-0">
+
+						<form method="post" action="{% url 'contact_us' %}">
+							<!-- Name -->
+							<div class="mb-3">
+								<label class="form-label">Name</label>
+								<input type="text" class="form-control" {% if request.user.is_authenticated %}value="{{request.user.first_name}} {{request.user.last_name}}"{% endif %} name="name">
+							</div>
+							<!-- Email -->
+							<div class="mb-3">
+								<label class="form-label">Email id</label>
+								<input type="email" class="form-control" {% if request.user.is_authenticated %}value="{{request.user.email}}"{% endif %} name="email">
+							</div>
+							<!-- Phone number -->
+							<div class="mb-3">
+								<label class="form-label">Phone number</label>
+								<input type="text" class="form-control" {% if request.user.is_authenticated %}value="{% if request.user.profile.number %}{{request.user.profile.number}}{% endif %}"{% endif %} name="phone">
+							</div>
+
+							<div class="mb-3">
+                                <label class="form-label">Your Message</label>
+								<textarea class="form-control" rows="3" name="message"></textarea>
+							</div>
+
+							<!-- Buttons -->
+							<div class="d-grid gap-2 d-md-block">
+								<button class="btn btn-dark mb-0" type="submit">Send Inquiry</button>
+								<a href="tel:+971 50 924 9115" class="btn btn-link mb-0">Call on: +971 50 924 9115</a>
+							</div>
+						</form> <!-- Form END -->
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+{% endblock content %}
