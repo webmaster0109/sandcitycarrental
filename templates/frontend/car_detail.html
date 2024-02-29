@@ -244,13 +244,13 @@ Tabs-content START -->
 							</div>
                             <!-- Button -->
 							<div class="d-grid gap-2">
-								<button class="btn btn-orange mb-3" type="submit">
+								<a href="{% url 'add_to_cart' cars.slug %}" class="btn btn-orange mb-3">
 									Book Now
-								</button>
+                                </a>
 							</div>
-                            {% if not total_days %}
                             <p style="text-decoration:underline;">Select Date to Book Ride More Than A Day</p>
                             <form method="GET" action="{% url 'car_details' cars.slug %}">
+                                {% include 'base/includes/alerts.html' %}
                                 <div class="row">
                                 <div class="col-md-6 col-xl-6">
                                     <div class="mb-2">
@@ -273,8 +273,6 @@ Tabs-content START -->
                                     </button>
                                 </div>
                             </form>
-                            {% endif %}
-
 						</div>
 					</div>
 					<!-- Book now item END -->

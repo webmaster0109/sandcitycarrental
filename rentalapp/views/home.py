@@ -5,6 +5,7 @@ from rentalapp.models.cars import CarTypes, Cars, Booking
 from django.contrib import messages
 from django.db.models import Q
 from datetime import datetime
+from django.utils import timezone
 from django.contrib.auth.decorators import login_required
 
 
@@ -111,6 +112,14 @@ def car_details(request, slug):
             pickup_date = datetime.strptime(pickup_date, '%Y-%m-%d').date()
             return_date = datetime.strptime(return_date, '%Y-%m-%d').date()
 
+            if pickup_date < datetime.now().date():
+                messages.warning(request, "Pickup date should be not less than today")
+                return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+        
+            if return_date < pickup_date:
+                messages.warning(request, "Return date is less than pickup date.")
+                return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
             booking_days = (return_date - pickup_date).days
             discounted_price = cars.discounted_price
             total_price = booking_days * discounted_price
@@ -138,17 +147,22 @@ def car_details(request, slug):
 def add_to_cart(request, slug):
     car_obj = Cars.objects.get(slug=slug)
     user_obj = request.user
+
+    old_cart_items = Booking.objects.filter(user=user_obj)
+
+    old_cart_items.delete()
+
     car_prices = request.session.get('car_prices', {})
     car_info = car_prices.get(car_obj.slug, {})
     total_days = car_info.get('total_days')
     total_price = car_info.get('total_price')
     cart_item = Booking.objects.create(car=car_obj, user=user_obj)
     if total_days and total_price:
-        cart_item.total_days = total_days
+        cart_item.total_day = total_days
         cart_item.total_price = total_price
         cart_item.save()
     else:
-        cart_item.total_days = 1
+        cart_item.total_day = 1
         cart_item.total_price = car_obj.discounted_price
         cart_item.save()
     messages.success(request, 'Added to cart, make your payment now...')

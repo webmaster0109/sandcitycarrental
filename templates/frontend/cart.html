@@ -1,0 +1,293 @@
+{% extends "base/base.html" %}
+
+{% block content %}
+<!-- =======================
+Page banner START -->
+<section class="py-0">
+	<div class="container">
+		<!-- Card START -->
+		<div class="card bg-light overflow-hidden px-sm-5">
+			<div class="row align-items-center g-4">
+
+				<!-- Content -->
+				<div class="col-sm-9">
+					<div class="card-body">
+						<!-- Breadcrumb -->
+						<nav aria-label="breadcrumb">
+							<ol class="breadcrumb breadcrumb-dots mb-0">
+								<li class="breadcrumb-item"><a href="/"><i class="bi bi-house me-1"></i> Home</a></li>
+								<li class="breadcrumb-item">{{cart.car.brand}}, {{cart.car.year}} Detail</li>
+								<li class="breadcrumb-item active">Booking</li>
+							</ol>
+						</nav>
+						<!-- Title -->
+						<h1 class="m-0 h2 card-title">Review your Booking</h1>
+					</div>
+				</div>	
+
+				<!-- Image -->
+				<div class="col-sm-3 text-end d-none d-sm-block">
+					<img src="/media/assets/images/element/step-1.svg" class="mb-n4" alt="sandcity">
+				</div>
+			</div>
+		</div>
+		<!-- Card END -->
+	</div>
+</section>
+<!-- =======================
+Page banner END -->
+
+<!-- =======================
+Page content START -->
+<section>
+	<div class="container">
+		<div class="row g-4 g-lg-5">	
+
+			<!-- Left side content START -->
+			<div class="col-xl-8">
+				<div class="vstack gap-5">
+					<!-- Hotel information START -->
+					<div class="card shadow">
+						<!-- Card header -->
+						<div class="card-header p-4 border-bottom">
+							<!-- Title -->
+							<h3 class="mb-0"><i class="fa-solid fa-car me-2"></i>Booking Information</h3>
+						</div>
+
+						<!-- Card body START -->
+						<div class="card-body p-4">
+							<!-- Card list START -->
+							<div class="card mb-4">
+								<div class="row align-items-center">
+									<!-- Image -->
+									<div class="col-sm-6 col-md-3">
+                                        {% for image in cart.car.carimages_set.all|slice:":1" %}
+										<img src="{{image.car_images.url}}" class="card-img" alt="{{image.car_images_id}}">
+                                        {% endfor %}
+									</div>
+
+									<!-- Card Body -->
+									<div class="col-sm-6 col-md-9">
+										<div class="card-body pt-3 pt-sm-0 p-0">
+											<!-- Title -->
+											<h5 class="card-title"><a href="hotel-booking.html#">{{cart.car.brand}}, {{cart.car.year}}</a></h5>
+											<p class="small mb-2"><i class="bi bi-geo-alt me-2"></i>Dubai, UAE</p>
+
+											<!-- Rating star -->
+											<ul class="list-inline mb-0">
+												<li class="list-inline-item me-0 small"><i class="fa-solid fa-star text-warning"></i></li>
+												<li class="list-inline-item me-0 small"><i class="fa-solid fa-star text-warning"></i></li>
+												<li class="list-inline-item me-0 small"><i class="fa-solid fa-star text-warning"></i></li>
+												<li class="list-inline-item me-0 small"><i class="fa-solid fa-star text-warning"></i></li>
+												<li class="list-inline-item me-0 small"><i class="fa-solid fa-star-half-alt text-warning"></i></li>
+												<li class="list-inline-item ms-2 h6 small fw-bold mb-0">4.5/5.0</li>
+											</ul>
+										</div>
+									</div>
+
+								</div>
+							</div>
+							<!-- Card list END -->
+
+							<!-- Card START -->
+							<div class="card border mt-4">
+								<!-- Card header -->
+								<div class="card-header border-bottom d-md-flex justify-content-md-between">
+									<h5 class="card-title mb-0">{{cart.car.car_type.car_types}}</h5>
+									<a href="#" class="btn btn-link p-0 mb-0">View Cancellation Policy</a>
+								</div>
+
+								<!-- Card body -->
+								<div class="card-body">
+									<h6>Price Included</h6>
+									<!-- List -->
+									<ul class="list-group list-group-borderless mb-0">
+                                        <div class="row">
+                                            {% for feature in cart.car.carfeatures_set.all %}
+                                            <div class="col-md-6 col-lg-6">
+                                            <li class="list-group-item h6 fw-light d-flex mb-0">
+                                                <i class="bi bi-patch-check-fill text-success me-2"></i>{{feature.features}}</li>
+                                            </div>
+                                            {% endfor %}
+                                        </div>
+									</ul>
+								</div>
+							</div>
+							<!-- Card END -->
+						</div>
+						<!-- Card body END -->
+					</div>
+					<!-- Car information END -->
+
+					<!-- Payment Options START -->
+					<div class="card shadow">
+						<!-- Card header -->
+						<div class="card-header border-bottom p-4">
+							<!-- Title -->
+							<h4 class="card-title mb-0"><i class="bi bi-wallet-fill me-2"></i>Payment Options</h4>
+						</div>
+						
+						<!-- Card body START -->
+						<div class="card-body p-4 pb-0">
+							<!-- Action box START -->
+							<div class="bg-primary bg-opacity-10 rounded-3 mb-4 p-3">
+								<div class="d-md-flex justify-content-md-between align-items-center">
+									<!-- Image and title -->
+									<div class="d-sm-flex align-items-center mb-2 mb-md-0">
+										<!-- Image -->
+										<img src="/media/assets/images/element/16.svg" class="h-50px" alt="">
+										<!-- Title -->
+										<div class="ms-sm-3 mt-2 mt-sm-0">
+											<h5 class="card-title mb-0">Get Additional Discount</h5>
+											<p class="mb-0">Login to access saved payments and discounts!</p>
+										</div>
+									</div>
+
+									<!-- Button -->
+                                    {% if not request.user.is_authenticated %}
+									<a href="{% url 'login' %}" class="btn btn-primary mb-0">Login now</a>
+                                    {% endif %}
+								</div>
+							</div>
+							<!-- Action box END -->
+
+							<!-- Accordion START -->
+							<div class="accordion accordion-icon accordion-bg-light" id="accordioncircle">
+								<!-- Credit or debit card START -->
+								<div class="accordion-item mb-3">
+									<h6 class="accordion-header" id="heading-1">
+										<button class="accordion-button rounded collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-1" aria-expanded="true" aria-controls="collapse-1">
+											<i class="bi bi-credit-card text-primary me-2"></i>	<span class="me-5">Transfer to Bank</span>
+										</button>
+									</h6>
+									<div id="collapse-1" class="accordion-collapse collapse show" aria-labelledby="heading-1" data-bs-parent="#accordioncircle">
+										<!-- Accordion body -->
+										<div class="accordion-body">
+
+											<!-- Card list -->     
+											<div class="d-sm-flex justify-content-sm-between my-3">
+												<h6 class="mb-2 mb-sm-0">Transfer to Direct Bank Account</h6>
+
+											</div>
+										</div>
+									</div>
+								</div>
+								<!-- Credit or debit card END -->
+
+								<!-- Net banking START -->
+								<div class="accordion-item mb-3">
+									<h6 class="accordion-header" id="heading-2">
+										<button class="accordion-button collapsed rounded" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-2" aria-expanded="false" aria-controls="collapse-2">
+											<i class="bi bi-globe2 text-primary me-2"></i> <span class="me-5">Cash in Hand</span>
+										</button>
+									</h6>
+									<div id="collapse-2" class="accordion-collapse collapse" aria-labelledby="heading-2" data-bs-parent="#accordioncircle">
+										<!-- Accordion body -->
+										<div class="accordion-body">
+
+										</div>
+									</div>
+								</div>
+								<!-- Net banking END -->
+
+							</div>
+							<!-- Accordion END -->
+						</div>	
+						<!-- Card body END -->
+
+						<div class="card-footer p-4 pt-0">
+							<!-- Condition link -->
+							<p class="mb-0">By processing, You accept Booking <a href="#">Terms of Services</a> and <a href="#">Policy</a></p>
+						</div>
+					</div>
+					<!-- Payment Options END -->
+				</div>	
+			</div>
+			<!-- Left side content END -->
+
+			<!-- Right side content START -->
+			<aside class="col-xl-4">
+				<div class="row g-4">
+
+					<!-- Price summary START -->
+					<div class="col-md-6 col-xl-12">
+						<div class="card shadow rounded-2">
+							<!-- card header -->
+							<div class="card-header border-bottom">
+								<h5 class="card-title mb-0">Price Summary</h5>
+							</div>
+	
+							<!-- Card body -->
+							<div class="card-body">
+								<ul class="list-group list-group-borderless">
+									<li class="list-group-item d-flex justify-content-between align-items-center">
+										<span class="h6 fw-light mb-0">Rent Charges</span>
+										<span class="fs-5">AED {{cart.total_price}}</span>
+									</li>
+									{% comment %} <li class="list-group-item d-flex justify-content-between align-items-center">
+										<span class="h6 fw-light mb-0">Total Discount<span class="badge text-bg-danger smaller mb-0 ms-2">10% off</span></span>
+										<span class="fs-5 text-success">-$2,560</span>	
+									</li>
+									<li class="list-group-item d-flex justify-content-between align-items-center">
+										<span class="h6 fw-light mb-0">Price after discount</span>
+										<span class="fs-5">$1852</span>
+									</li>
+									<li class="list-group-item d-flex justify-content-between align-items-center">
+										<span class="h6 fw-light mb-0">Taxes % Fees</span>
+										<span class="fs-5">$350</span>
+									</li> {% endcomment %}
+								</ul>
+							</div>
+	
+							<!-- Card footer -->
+							<div class="card-footer border-top">
+								<div class="d-flex justify-content-between align-items-center">
+									<span class="mb-0 text-danger fw-bold">Payable Now</span>
+									<span class="mb-0 text-danger fw-bold">AED {{cart.total_price}}</span>
+								</div>
+							</div>
+						</div>
+					</div>
+					<!-- Price summary END -->
+
+					<!-- Offer and discount START -->
+					<div class="col-md-6 col-xl-12">
+						<div class="card shadow">
+							<!-- Card header -->
+							<div class="card-header border-bottom">
+								<div class="cardt-title">
+									<h5 class="mb-0">Offer &amp; Discount</h5>
+								</div>
+							</div>
+							<!-- Card body -->
+							<div class="card-body">
+
+								<!-- Radio -->
+								{% comment %} <div class="bg-light rounded-2 p-3">
+									<div class="form-check form-check-inline mb-0">
+										<input class="form-check-input" type="radio" name="discountOptions" id="discount1" value="option1" checked>
+										<label class="form-check-label h5 mb-0" for="discount1">GSTBOOK</label>
+										<p class="mb-1 small">Congratulations! You have saved $230 with GSTBOOK.</p>
+										<h6 class="mb-0 text-success">-$230</h6>
+									</div>
+								</div> {% endcomment %}
+
+								<!-- Input group -->
+								<div class="input-group mt-3">
+									<input class="form-control form-control" placeholder="Coupon code">
+									<button type="button" class="btn btn-primary">Apply</button>
+								</div>
+							</div>	
+						</div>
+					</div>
+					<!-- Offer and discount END -->
+
+				</div>
+			</aside>
+			<!-- Right side content END -->
+		</div> <!-- Row END -->
+	</div>
+</section>
+<!-- =======================
+Page content START -->
+{% endblock content %}
