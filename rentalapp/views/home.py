@@ -164,30 +164,11 @@ def cart(request):
         cart_obj = Booking.objects.get(is_paid=False, user=user)
     except Exception as e:
         print(e)
-    
-    if cart_obj:
-        client = razorpay.Client(auth=(settings.KEY, settings.SECRET))
-        amount = int(cart_obj.get_cart_total())*100
-        payment = None
-        if amount == 0:
-            payment = None
-        elif amount > 0:
-            payment = client.order.create({'amount': amount, 'currency': 'INR', 'payment_capture': 1})
-            cart_obj.razor_pay_order_id = payment['id']
-            cart_obj.save()
-    
-    # if cart_obj is None:
-    #     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-    
-    per_price = percentage_price(cart_obj.get_discount_price(), cart_obj.get_original_price())
 
     context = {
         'cart' : cart_obj,
-        'payment' : payment,
-        'course' : CourseSection.objects.all(),
-        'per_price': per_price
     }
-    return render(request, template_name="frontend/cart.html")
+    return render(request, template_name="frontend/cart.html", context=context)
 
 def contact_us(request):
     if request.method == "POST":
