@@ -77,8 +77,6 @@ def car_category(request, slug):
         min_price = request.GET.get('min_price')
         max_price = request.GET.get('max_price')
 
-        store_category(category.car_types)
-
         filtered_cars = category.cars_set.all()
         min_price = str(min_price).split('.')[0]
         max_price = str(max_price).split('.')[0]
