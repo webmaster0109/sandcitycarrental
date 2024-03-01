@@ -105,14 +105,11 @@ AUTO_LOGOUT = {'IDLE_TIME': 6000} # logout after 100 minutes of downtime
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
-STATIC_ROOT = '/opt/render/project/src/staticfiles/'
-STATIC_URL = '/static/'
-
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATIC_URL = '/static/'
 
 STATICFILES_DIR = {
-    '/opt/render/project/src/public/static/'
+    os.path.join(BASE_DIR, 'staticfiles')
 }
 
 MEDIA_ROOT = os.path.join(BASE_DIR, "public/static")
