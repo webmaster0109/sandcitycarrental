@@ -9,7 +9,7 @@ TEMPLATE_DIR = os.path.join(BASE_DIR, "templates")
 SECRET_KEY = 'django-insecure-n5#r08q+9-v$udogj&obzl$y_0-*=_dt$^@y(i-i*v-6-akicb'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
@@ -23,7 +23,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'rentalapp',
+    'rentalapp.apps.RentalappConfig',
 ]
 
 MIDDLEWARE = [
