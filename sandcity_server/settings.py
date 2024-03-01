@@ -108,9 +108,9 @@ AUTO_LOGOUT = {'IDLE_TIME': 6000} # logout after 100 minutes of downtime
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATIC_URL = '/static/'
 
-STATICFILES_DIR = {
-    os.path.join(BASE_DIR, 'staticfiles')
-}
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static'),
+]
 
 MEDIA_ROOT = os.path.join(BASE_DIR, "public/static")
 MEDIA_URL = '/media/'
