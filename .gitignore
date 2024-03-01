@@ -10,7 +10,3 @@ __pycache__/
 *.pyc
 *.pyo
 *.pyd
-
-public/static/
-db.sqlite3
-media/
