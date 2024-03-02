@@ -6,6 +6,10 @@ from .models.newsletter import EmailNewsletters
 from .models.blogs import BlogsDetail
 # Register your models here.
 
+admin.site.site_header = "SandCity Car Rental"
+admin.site.site_title = "SandCity Portal"
+admin.site.index_title = "Welcome to SandCity Portal"
+
 admin.site.register(UserNotification)
 admin.site.register(EmailNewsletters)
 
