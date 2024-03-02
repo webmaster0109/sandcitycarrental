@@ -7,6 +7,8 @@ from django.db.models import Q
 from datetime import datetime
 from django.utils import timezone
 from django.contrib.auth.decorators import login_required
+from django.core.exceptions import ValidationError
+from django.utils.translation import gettext_lazy as _
 
 
 def home_page(request):
@@ -19,8 +21,9 @@ def booking_search(request):
         pickup_date = request.GET.get('pickup_date')
         return_date = request.GET.get('return_date')
 
-        if (selected_category or pickup_date or return_date) == None:
+        if not all([selected_category, pickup_date, return_date]):
             return redirect('homepage')
+        
 
         request.session['car_type'] = selected_category
 
@@ -33,9 +36,11 @@ def booking_search(request):
             Q(booking__pickup_date__lte=pickup_date, booking__return_date__gte=return_date)
         ).filter(car_type__car_types=selected_category)
 
-        
-        pickup_date = datetime.strptime(pickup_date, '%Y-%m-%d').date()
-        return_date = datetime.strptime(return_date, '%Y-%m-%d').date()
+        try:
+            pickup_date = datetime.strptime(pickup_date, '%Y-%m-%d').date()
+            return_date = datetime.strptime(return_date, '%Y-%m-%d').date()
+        except ValueError:
+            raise ValidationError(_('Invalid date format. Please use YYYY-MM-DD format.'))
 
         # Filter by category
         if selected_category:
