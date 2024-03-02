@@ -19,6 +19,9 @@ def booking_search(request):
         pickup_date = request.GET.get('pickup_date')
         return_date = request.GET.get('return_date')
 
+        if (selected_category or pickup_date or return_date) == None:
+            return redirect('homepage')
+
         request.session['car_type'] = selected_category
 
         # Start with all bookings
@@ -63,9 +66,6 @@ def booking_search(request):
             'total_days': total_days,
             'car_type': request.session['car_type']
         }
-    else:
-        if not request.method == "GET":
-            return redirect('homepage')
 
     return render(request, 'frontend/booking_search.html', context=context)
 

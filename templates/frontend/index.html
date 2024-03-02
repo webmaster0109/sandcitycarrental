@@ -98,7 +98,7 @@
                         <div class="form-border-transparent form-fs-lg bg-light rounded-3 h-100 p-3">
                             <!-- Input field -->
                             <label class="mb-1"><i class="bi bi-geo-alt me-2"></i>Pickup Location</label>
-                            <select class="form-select js-choice">
+                            <select class="form-select js-choice" required>
                             <option selected>Dubai, Downtown</option>
                             </select>
                         </div>
@@ -114,8 +114,7 @@
                         <div class="form-border-transparent form-fs-lg bg-light rounded-3 h-100 p-3">
                             <!-- Input field -->
                             <label class="mb-1"><i class="bi bi-send me-2"></i>Return Location</label>
-                            <select class="form-select js-choice">
-                            <option value="">Select location</option>
+                            <select class="form-select js-choice" required>
                             <option selected>Dubai, Downtown</option>
                             </select>
                         </div>
@@ -125,7 +124,7 @@
                         <div class="col-md-6 col-xl-3">
                         <div class="form-border-transparent form-fs-lg bg-light rounded-3 h-100 p-3">
                             <label class="mb-1"><i class="bi bi-calendar me-2"></i>Pickup Date</label>
-                            <input type="text" class="form-control flatpickr" name="pickup_date" data-date-format="Y-m-d" placeholder="Select date">
+                            <input type="text" class="form-control flatpickr" name="pickup_date" data-date-format="Y-m-d" placeholder="Select date" required>
                         </div>
                         </div>
 
@@ -133,7 +132,7 @@
                         <div class="col-md-6 col-xl-3">
                         <div class="form-border-transparent form-fs-lg bg-light rounded-3 h-100 p-3">
                             <label class="mb-1"><i class="bi bi-calendar me-2"></i>Return Date</label>
-                            <input type="text" class="form-control flatpickr" name="return_date" data-date-format="Y-m-d" placeholder="Select date">
+                            <input type="text" class="form-control flatpickr" name="return_date" data-date-format="Y-m-d" placeholder="Select date" required>
                         </div>
                         </div>
 
