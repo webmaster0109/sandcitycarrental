@@ -1,6 +1,6 @@
 from django.urls import path
 from rentalapp.views.admin_dashboard import admin_dashboard_home, admin_cars_lists, signout, update_profile, upload_image, remove_image, user_lists, delete_user, read_notification, delete_notification_view
-from rentalapp.views.home import home_page, contact_us, faqs, about_us, help_center, car_category, booking_search, car_details, cart, add_to_cart, blogs_page, signup_newsletter, terms_condititon, privacy_policy, PostDetailView
+from rentalapp.views.home import home_page, contact_us, faqs, all_cars, about_us, help_center, car_category, booking_search, car_details, cart, add_to_cart, blogs_page, signup_newsletter, terms_condititon, privacy_policy, PostDetailView
 from rentalapp.views.credentials import login_attempt, signup_attempt, forgot_password, verify_account, forgot_username, change_password
 
 urlpatterns = [
@@ -19,6 +19,7 @@ urlpatterns = [
     path('cart', cart, name="cart"),
     path('blogs', blogs_page, name="blogs_page"),
     path('blog/<str:slug>', PostDetailView.as_view(), name="blog_detail"),
+    path('our-cars', all_cars, name="all_cars"),
 
     # authentication urls
     path('auth/login', login_attempt, name="login"),

@@ -95,8 +95,11 @@ def booking_search(request):
 
     return render(request, 'frontend/booking_search.html', context=context)
 
-def about_us(request):
+def all_cars(request):
+    context={'cars': Cars.objects.all()}
+    return render(request, template_name="frontend/cars.html", context=context)
 
+def about_us(request):
     return render(request, template_name="frontend/about_us.html")
 
 def car_category(request, slug):
@@ -240,7 +243,6 @@ def help_center(request):
     return render(request, template_name="frontend/help_center.html")
 
 def faqs(request):
-
     return render(request, template_name="frontend/faqs.html")
 
 def blogs_page(request):
