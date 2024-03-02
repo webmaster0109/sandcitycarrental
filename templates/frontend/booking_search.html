@@ -130,7 +130,7 @@
 
 						<!-- Title -->
                         <span class="small mb-2"><i class="far fa-calendar-alt me-2"></i>{{total_days}} days Trip</span>
-						<h5 class="card-title"><a href="hotel-detail.html">{{car.brand}}</a></h5>
+						<h5 class="card-title"><a href="{% url 'car_details' car.slug %}">{{car.brand}}</a></h5>
 
 						<!-- List -->
 						<ul class="nav nav-divider mb-2 mb-sm-3">
