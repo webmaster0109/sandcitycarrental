@@ -1,7 +1,20 @@
 {% extends "base/base.html" %}
 
 {% block content %}
-<section class="my-md-5" style="background-image:url(/media/assets/images/illustrations/about-us.png); background-position: center center; background-size: cover;">
+<style>
+	.hero-section-sandcity {
+		background-image:url(/media/assets/images/illustrations/about-us.png); 
+		background-position: center center; 
+		background-size: cover;
+	}
+	@media screen and (max-width: 660px) {
+		.hero-section-sandcity {
+			background-position: left center; 
+		}
+	}
+</style>
+
+<section class="my-md-5 hero-section-sandcity">
 	<div class="container">
 		<div class="row py-lg-7">
 			<div class="col-lg-6 me-auto">

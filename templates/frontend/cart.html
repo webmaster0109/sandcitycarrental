@@ -16,7 +16,7 @@ Page banner START -->
 						<nav aria-label="breadcrumb">
 							<ol class="breadcrumb breadcrumb-dots mb-0">
 								<li class="breadcrumb-item"><a href="/"><i class="bi bi-house me-1"></i> Home</a></li>
-								<li class="breadcrumb-item">{{cart.car.brand}}, {{cart.car.year}} Detail</li>
+								<li class="breadcrumb-item"><a href="{% url 'car_details' cart.car.slug  %}">{{cart.car.brand}}, {{cart.car.year}} </a></li>
 								<li class="breadcrumb-item active">Booking</li>
 							</ol>
 						</nav>
