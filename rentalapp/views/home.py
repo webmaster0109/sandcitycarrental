@@ -96,7 +96,7 @@ def booking_search(request):
     return render(request, 'frontend/booking_search.html', context=context)
 
 def all_cars(request):
-    context={'cars': Cars.objects.all()}
+    context={'cars': Cars.objects.all(),}
     return render(request, template_name="frontend/cars.html", context=context)
 
 def about_us(request):

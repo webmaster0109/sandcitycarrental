@@ -26,7 +26,7 @@
                             <div class="form-control-bg-light form-fs-md">
                                 <select class="form-select js-choice" data-search-enabled="true" name="car_category">
                                     <option value="" >Select Car Category</option>
-                                    {% for cat in categories %}
+                                    {% for cat in car_types %}
                                     <option name="car_category" {% if car_type in cat.car_types %}selected{% endif %} value="{{cat.car_types}}">{{cat.car_types}}</option>
                                     {% endfor %}
                                 </select>
