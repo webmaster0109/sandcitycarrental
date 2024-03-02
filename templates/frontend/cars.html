@@ -144,11 +144,12 @@
 					<!-- Card footer START-->
 					<div class="card-footer pt-0">
 						<!-- Price and Button -->
+                        <div><small class="fw-bold fs-6 text-dark">Starting from*</small></div>
 						<div class="d-sm-flex justify-content-sm-between align-items-center">
 							<!-- Price -->
 							<div class="d-flex align-items-center">
 								<h5 class="fw-normal text-danger mb-0 me-1">AED {{car.discounted_price}}</h5>
-								<span class="mb-0 me-2">for {% if total_days %}{{total_days}} days{% else %}per day{% endif %} </span>
+								<span class="mb-0 me-2">{% if total_days %}for {{total_days}} days{% else %}per day{% endif %} </span>
 							</div>
 							<!-- Button -->
 							<div class="mt-2 mt-sm-0">

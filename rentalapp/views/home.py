@@ -36,6 +36,18 @@ def menu_items(request):
     car_types = CarTypes.objects.all()
     return {'car_detail': cars, 'car_types': car_types}
 
+def calculate_dynamic_price(discounted_price, total_days):
+    if total_days == 1:
+        return discounted_price
+    elif total_days == 2:
+        return discounted_price - 50
+    elif 3 <= total_days <= 6:
+        return discounted_price - 100
+    elif 7 <= total_days <= 29:
+        return discounted_price - 150
+    else:
+        return discounted_price - 180
+
 def booking_search(request):
     if request.method == 'GET':
         selected_category = request.GET.get('car_category')
@@ -79,8 +91,9 @@ def booking_search(request):
 
         car_prices = {}
         for car in available_cars:
-            car.total_price = total_days * car.discounted_price
-            total_price = total_days * car.discounted_price
+            dynamic_price = calculate_dynamic_price(car.discounted_price, total_days)
+            car.total_price = total_days * dynamic_price
+            total_price = total_days * dynamic_price
             car_prices[car.slug] = {'total_price': total_price, 'total_days': total_days}
         
         request.session['car_prices'] = car_prices
