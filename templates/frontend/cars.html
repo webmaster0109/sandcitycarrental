@@ -129,7 +129,7 @@
 					<div class="card-body px-3 pb-0">
 
 						<!-- Title -->
-                        <span class="small mb-2"><i class="far fa-calendar-alt me-2"></i>{{total_days}} days Trip</span>
+                        <span class="small mb-2"><i class="far fa-calendar-alt me-2"></i>{% if total_days %}{{total_days}} days{% else %}1 day{% endif %} Trip</span>
 						<h5 class="card-title"><a href="hotel-detail.html">{{car.brand}}</a></h5>
 
 						<!-- List -->
@@ -147,8 +147,8 @@
 						<div class="d-sm-flex justify-content-sm-between align-items-center">
 							<!-- Price -->
 							<div class="d-flex align-items-center">
-								<h5 class="fw-normal text-danger mb-0 me-1">AED {{car.total_price}}</h5>
-								<span class="mb-0 me-2">for {{total_days}} days</span>
+								<h5 class="fw-normal text-danger mb-0 me-1">AED {{car.discounted_price}}</h5>
+								<span class="mb-0 me-2">for {% if total_days %}{{total_days}} days{% else %}per day{% endif %} </span>
 							</div>
 							<!-- Button -->
 							<div class="mt-2 mt-sm-0">
