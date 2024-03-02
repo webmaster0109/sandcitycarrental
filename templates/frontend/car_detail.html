@@ -106,7 +106,7 @@ Tabs START -->
 					<!-- Tab item -->
 					<li class="nav-item" role="presentation">
 						<button class="nav-link mb-0" id="tour-pills-tab-3" data-bs-toggle="pill" data-bs-target="#tour-pills-tab3" 
-                        type="button" role="tab" aria-controls="tour-pills-tab3" aria-selected="false">Reviews</button>
+                        type="button" role="tab" aria-controls="tour-pills-tab3" aria-selected="false">Requirements</button>
 					</li>
 				</ul> 
 				<!-- Outer tabs END -->
@@ -197,13 +197,42 @@ Tabs-content START -->
 						<div class="card bg-transparent p-0">
 							<!-- Card header -->
 							<div class="card-header bg-transparent border-bottom p-0 pb-3">
-								<h3 class="mb-0">Reviews</h3>
+								<h4 class="mb-0">Important Requirements for Renting Cars</h4>
 							</div>
 
 							<!-- Card body START -->
 							<div class="card-body p-0 pt-3">
+								<h5>Requirements for UAE Residents</h5>
+								<ul class="list-group list-group-borderless mb-0">
+									<li class="list-group-item h6 fw-light d-flex mb-0">
+										<i class="fa-solid fa-check-circle text-success me-2"></i>Copy of Passport
+									</li>
+									<li class="list-group-item h6 fw-light d-flex mb-0">
+										<i class="fa-solid fa-check-circle text-success me-2"></i>Copy of Residential Visa
+									</li>
+									<li class="list-group-item h6 fw-light d-flex mb-0">
+										<i class="fa-solid fa-check-circle text-success me-2"></i>UAE Driving License
+									</li>
+									<li class="list-group-item h6 fw-light d-flex mb-0">
+										<i class="fa-solid fa-check-circle text-success me-2"></i>Copy of Emirates ID
+									</li>
+								</ul>
+
+								<h5 class="mt-3">Requirements for Tourists</h5>
+								<ul class="list-group list-group-borderless mb-0">
+									<li class="list-group-item h6 fw-light d-flex mb-0">
+										<i class="fa-solid fa-check-circle text-success me-2"></i>Copy of Passport
+									</li>
+									<li class="list-group-item h6 fw-light d-flex mb-0">
+										<i class="fa-solid fa-check-circle text-success me-2"></i>Copy of Visit Visa
+									</li>
+									<li class="list-group-item h6 fw-light d-flex mb-0">
+										<i class="fa-solid fa-check-circle text-success me-2"></i>US, Canada, EU, GCC or International Driving License
+									</li>
+								</ul>
 							</div>
 							<!-- Card body END -->
+
 						</div>
 					</div>	
 					<!-- Content item END -->
@@ -219,12 +248,14 @@ Tabs-content START -->
 					<div class="col-md-6 col-xl-12">
 						<div class="card card-body border bg-transparent">
 							<!-- Title -->
+							{% if not total_days %}
+							<div><small class="fw-bold fs-6 text-dark">Starting from*</small></div>
+							{% endif %}
 							<div class="hstack gap-2 mb-1">
                                 {% if total_days > 1 %}
                                 <h3 class="card-title mb-0">AED {{total_price}}</h3>
 								<span class="fs-5">{{total_days}} Days</span>
                                 {% else %}
-                                
 								<h3 class="card-title mb-0">AED {{cars.discounted_price}}</h3>
 								<span class="fs-5">per Day</span>
                                 {% endif %}

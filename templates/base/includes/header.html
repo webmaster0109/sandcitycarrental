@@ -17,6 +17,9 @@
 					<!-- Navbar top Right-->
 					<div class="align-items-center justify-content-end d-none d-lg-flex">
 						<ul class="nav border-bottom">
+							<li class="nav-item"> <a href="{% url 'all_cars' %}" class="nav-link small pb-2"><i class="fa-solid fa-car me-2"></i>BOOK A CAR</a> </li>
+							<li class="nav-item"> <a href="mailto:info@sandcitycarrental.ae" class="nav-link small pb-2"><i class="bi bi-envelope me-2"></i>EMAIL US</a></li>
+							<li class="nav-item"> <a href="tel:+971 50 194 8128" class="nav-link small pb-2"><i class="bi bi-telephone me-2"></i>CALL US</a> </li>
 							<li class="dropdown nav-item">
 								<a class="nav-link small pb-2" href="index-hotel-chain.html#" role="button" id="languageDropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="bi bi-globe fa-fw me-2"></i>Language</a>
 								<ul class="dropdown-menu dropdown-animation dropdown-menu-end min-w-auto" aria-labelledby="languageDropdown">
@@ -90,9 +93,11 @@
 													<h6 class="mb-3"><i class="bi bi-grid-3x3-gap text-primary me-2"></i>Main Menu</h6>
 													<hr class="my-2">
 													<ul class="list-unstyled">
-														<li> <a class="dropdown-item" href="/"><i class="fa-solid fa-home fa-fw me-2"></i>Home</a> </li>
-														<li> <a class="dropdown-item" href="{% url "about_us" %}"><i class="fa-solid fa-address-card fa-fw me-2"></i>About Us</a> </li>
-														<li> <a class="dropdown-item" href="{% url "faqs" %}"><i class="fa-solid fa-clipboard-question fa-fw me-2"></i>FAQ's</a> </li>
+														<li> <a class="dropdown-item" href='{% url "about_us" %}'><i class="fa-solid fa-address-card fa-fw me-2"></i>About Us</a> </li>
+														<li><a class="dropdown-item" href='{% url "all_cars" %}'><i class="fa-solid fa-car fa-fw me-2"></i>Cars for Rent</a></li>
+														<li> <a class="dropdown-item" href='{% url "faqs" %}'><i class="fa-solid fa-clipboard-question fa-fw me-2"></i>FAQ's</a></li>
+														<li><a class="dropdown-item" href='{% url "contact_us" %}'><i class="fa-solid fa-file-contract fa-fw me-2"></i>Contact Us</a></li>
+														
 													</ul>
 												</div>
 												
@@ -159,7 +164,7 @@
 									data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Connect with us</a>
 									<ul class="dropdown-menu" aria-labelledby="pagesFacilities">
 	
-										<li> <a class="dropdown-item" href="{% url "contact_us" %}">Contact us</a></li>
+										<li><a class="dropdown-item" href="{% url "contact_us" %}">Contact us</a></li>
 										<li> <a class="dropdown-item" href="{% url "blogs_page" %}">Blogs</a></li>
 										<li> <a class="dropdown-item" href="{% url "terms_condititon" %}">Terms and Conditions</a></li>
 										<li> <a class="dropdown-item" href="{% url "privacy_policy" %}">Privacy Policy</a></li>
