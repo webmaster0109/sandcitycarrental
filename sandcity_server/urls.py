@@ -4,15 +4,11 @@ from django.urls import path, include, re_path
 from django.conf.urls.static import static
 from django.conf import settings
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
-from rentalapp.views.home import handle_unmatched
 from django.views.generic import TemplateView
-
-handler404 = 'rentalapp.views.home.handle_unmatched'
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include("rentalapp.urls")),
-    path('<str:unmatched_path>/', handle_unmatched, name='handle_unmatched'),
 ]
 
 if settings.DEBUG:

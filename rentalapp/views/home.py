@@ -212,9 +212,3 @@ def help_center(request):
 def faqs(request):
 
     return render(request, template_name="frontend/faqs.html")
-
-def handle_unmatched(request, unmatched_path):
-    context={
-        'unmatched_path': unmatched_path
-    }
-    return HttpResponseNotFound(HttpResponseNotFound(render(request, template_name='frontend/not_found.html', context=context)))
