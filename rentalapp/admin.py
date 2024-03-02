@@ -2,9 +2,17 @@ from django.contrib import admin
 from .models.cars import CarImages, Cars, CarTypes, Booking
 from .models.users import Profile, Country, UserNotification
 from .models.car_features import CarFeatures
+from .models.newsletter import EmailNewsletters
+from .models.blogs import BlogsDetail
 # Register your models here.
 
 admin.site.register(UserNotification)
+admin.site.register(EmailNewsletters)
+
+@admin.register(BlogsDetail)
+class BlogsDetailAdmin(admin.ModelAdmin):
+    list_display = ['title', 'slug']
+    prepopulated_fields = {'slug': ('title',)}
 
 @admin.register(CarTypes)
 class CarTypesAdmin(admin.ModelAdmin):

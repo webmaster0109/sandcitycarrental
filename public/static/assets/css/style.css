@@ -17850,8 +17850,8 @@ a.badge:hover {
 }
 .nav.nav-bottom-line .nav-link.active {
   background: transparent;
-  color: var(--bs-primary);
-  border-bottom: 3px solid var(--bs-primary);
+  color: var(--bs-orange);
+  border-bottom: 3px solid var(--bs-orange);
 }
 
 .nav-pills-shadow .nav-item {
@@ -21703,7 +21703,7 @@ html[dir=rtl] .choices__input {
           box-shadow: none;
 }
 .dots-primary [data-nav]:after {
-  background-color: var(--bs-primary);
+  background-color: var(--bs-orange);
 }
 
 .stepper-outline .step-trigger:hover {

@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.http import HttpResponseNotFound, HttpResponseRedirect
+from django.http import HttpResponseRedirect
 from rentalapp.models.users import ContactUs, send_contact_form_email
 from rentalapp.models.cars import CarTypes, Cars, Booking
 from django.contrib import messages
@@ -9,11 +9,32 @@ from django.utils import timezone
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
-
+from rentalapp.models.newsletter import EmailNewsletters, send_newsletter_email
+from rentalapp.models.blogs import BlogsDetail
+from hitcount.views import HitCountDetailView
 
 def home_page(request):
     category = CarTypes.objects.all()
     return render(request, template_name="frontend/index.html", context={'category':category})
+
+def signup_newsletter(request):
+    if request.method == "POST":
+        email = request.POST.get('email')
+        email_obj = EmailNewsletters.objects.filter(email=email).first()
+
+        if email_obj and email_obj.is_subscribe:
+            messages.warning(request, "Your email address has already been registered")
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+        
+        email_obj = EmailNewsletters.objects.create(email=email)
+        send_newsletter_email(email_obj)
+        messages.success(request, "You've successfully registered newsletter signup.")
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+def menu_items(request):
+    cars = Cars.objects.all()
+    car_types = CarTypes.objects.all()
+    return {'car_detail': cars, 'car_types': car_types}
 
 def booking_search(request):
     if request.method == 'GET':
@@ -103,7 +124,7 @@ def car_category(request, slug):
     context = {
         'car_types': CarTypes.objects.all(),
         'category': category,
-        'filtered_cars': filtered_cars
+        'filtered_cars': filtered_cars,
     }
 
     return render(request, template_name="frontend/car_category.html", context=context)
@@ -146,7 +167,8 @@ def car_details(request, slug):
     context = {
         'cars' : cars,
         'total_days': total_days,
-        'total_price': total_price
+        'total_price': total_price,
+        'car_detail': Cars.objects.all()
     }
 
     return render(request, template_name="frontend/car_detail.html", context=context)
@@ -206,9 +228,38 @@ def contact_us(request):
 
     return render(request, template_name="frontend/contact_us.html")
 
+def privacy_policy(request):
+
+    return render(request, template_name="frontend/privacy_policy.html")
+
+def terms_condititon(request):
+
+    return render(request, template_name="frontend/terms_condititon.html")
+
 def help_center(request):
     return render(request, template_name="frontend/help_center.html")
 
 def faqs(request):
 
     return render(request, template_name="frontend/faqs.html")
+
+def blogs_page(request):
+    context = {
+        'blogs' : BlogsDetail.objects.all(),
+    }
+    return render(request, template_name="frontend/blog_site/blogs.html", context=context)
+
+class PostDetailView(HitCountDetailView):
+    model = BlogsDetail
+    template_name = 'frontend/blog_site/blog_detail.html'
+    context_object_name = 'blog'
+    slug_field = 'slug'
+    # set to True to count the hit
+    count_hit = True
+
+    def get_context_data(self, **kwargs):
+        context = super(PostDetailView, self).get_context_data(**kwargs)
+        context.update({
+        'popular_posts': BlogsDetail.objects.order_by('-hit_count_generic__hits')[:3],
+        })
+        return context
