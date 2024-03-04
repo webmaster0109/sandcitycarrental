@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponseRedirect
 from rentalapp.models.users import ContactUs, send_contact_form_email
-from rentalapp.models.cars import CarTypes, Cars, Booking
+from rentalapp.models.cars import CarTypes, Cars, Booking, CarReviews
 from django.contrib import messages
 from django.db.models import Q
 from datetime import datetime
@@ -12,6 +12,7 @@ from django.utils.translation import gettext_lazy as _
 from rentalapp.models.newsletter import EmailNewsletters, send_newsletter_email
 from rentalapp.models.blogs import BlogsDetail
 from hitcount.views import HitCountDetailView
+from django.db.models import Avg
 
 def home_page(request):
     category = CarTypes.objects.all()
@@ -180,14 +181,31 @@ def car_details(request, slug):
     total_days = car_info.get('total_days')
     total_price = car_info.get('total_price')
 
+    reviews = CarReviews.objects.filter(cars=cars).order_by('-created_at')
+    rating_choices = CarReviews.RATING_CHOICES
+
+    average_review = CarReviews.objects.filter(cars=cars).aggregate(rating=Avg('rating'))
+
     context = {
         'cars' : cars,
         'total_days': total_days,
         'total_price': total_price,
-        'car_detail': Cars.objects.all()
+        'car_detail': Cars.objects.all(),
+        'reviews': reviews,
+        'rating_choices': rating_choices,
+        'average_review': average_review
     }
 
     return render(request, template_name="frontend/car_detail.html", context=context)
+
+def car_review_by_user(request, slug):
+    cars = Cars.objects.get(slug=slug)
+    user = request.user
+    if request.method == "POST":
+        review = request.POST.get('review')
+        rating = request.POST.get('rating')
+        CarReviews.objects.create(user=user, cars=cars, reviews=review, rating=rating)
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 @login_required(login_url='/auth/login')
 def add_to_cart(request, slug):

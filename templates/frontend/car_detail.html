@@ -258,16 +258,54 @@ Tabs-content START -->
 												<div class="col-md-4">
 													<div class="text-center">
 														<!-- Info -->
-														<h2 class="mb-0">4.5</h2>
-														<p class="mb-2">Based on 120 Reviews</p>
+														{% if average_review.rating %}
+														<h2 class="mb-0">{{average_review.rating|floatformat:1}}</h2>
+														<p class="mb-2">Based on {% if reviews.count == 1 %}{{reviews.count}} Review{% elif reviews.count > 1 %}{{reviews.count}} Reviews{% else %}0 Review{% endif %}</p>
 														<!-- Star -->
 														<ul class="list-inline mb-0">
+															{% if average_review.rating == 5.0 %}
+															<li class="list-inline-item me-0"><i class="fa-solid fa-star text-warning"></i></li>
+															<li class="list-inline-item me-0"><i class="fa-solid fa-star text-warning"></i></li>
+															<li class="list-inline-item me-0"><i class="fa-solid fa-star text-warning"></i></li>
+															<li class="list-inline-item me-0"><i class="fa-solid fa-star text-warning"></i></li>
+															<li class="list-inline-item me-0"><i class="fa-solid fa-star text-warning"></i></li>
+															{% elif average_review.rating > 4.0 and average_review.rating < 5.0 %}
 															<li class="list-inline-item me-0"><i class="fa-solid fa-star text-warning"></i></li>
 															<li class="list-inline-item me-0"><i class="fa-solid fa-star text-warning"></i></li>
 															<li class="list-inline-item me-0"><i class="fa-solid fa-star text-warning"></i></li>
 															<li class="list-inline-item me-0"><i class="fa-solid fa-star text-warning"></i></li>
 															<li class="list-inline-item me-0"><i class="fa-solid fa-star-half-alt text-warning"></i></li>
+															{% elif average_review.rating == 4.0  %}
+															<li class="list-inline-item me-0"><i class="fa-solid fa-star text-warning"></i></li>
+															<li class="list-inline-item me-0"><i class="fa-solid fa-star text-warning"></i></li>
+															<li class="list-inline-item me-0"><i class="fa-solid fa-star text-warning"></i></li>
+															<li class="list-inline-item me-0"><i class="fa-solid fa-star text-warning"></i></li>
+															{% elif average_review.rating > 3.0 and average_review.rating < 4.0  %}
+															<li class="list-inline-item me-0"><i class="fa-solid fa-star text-warning"></i></li>
+															<li class="list-inline-item me-0"><i class="fa-solid fa-star text-warning"></i></li>
+															<li class="list-inline-item me-0"><i class="fa-solid fa-star text-warning"></i></li>
+															<li class="list-inline-item me-0"><i class="fa-solid fa-star-half-alt text-warning"></i></li>
+															{% elif average_review.rating == 3.0  %}
+															<li class="list-inline-item me-0"><i class="fa-solid fa-star text-warning"></i></li>
+															<li class="list-inline-item me-0"><i class="fa-solid fa-star text-warning"></i></li>
+															<li class="list-inline-item me-0"><i class="fa-solid fa-star text-warning"></i></li>
+															{% elif average_review.rating > 2.0 and average_review.rating < 3.0  %}
+															<li class="list-inline-item me-0"><i class="fa-solid fa-star text-warning"></i></li>
+															<li class="list-inline-item me-0"><i class="fa-solid fa-star text-warning"></i></li>
+															<li class="list-inline-item me-0"><i class="fa-solid fa-star-half-alt text-warning"></i></li>
+															{% elif average_review.rating == 2.0  %}
+															<li class="list-inline-item me-0"><i class="fa-solid fa-star text-warning"></i></li>
+															<li class="list-inline-item me-0"><i class="fa-solid fa-star text-warning"></i></li>
+															{% elif average_review.rating > 1.0 and average_review.rating < 2.0  %}
+															<li class="list-inline-item me-0"><i class="fa-solid fa-star text-warning"></i></li>
+															<li class="list-inline-item me-0"><i class="fa-solid fa-star-half-alt text-warning"></i></li>
+															{% elif average_review.rating == 1.0  %}
+															<li class="list-inline-item me-0"><i class="fa-solid fa-star text-warning"></i></li>
+															{% endif %}
 														</ul>
+														{% else %}
+														<p class="mb-2">No Review</p>
+														{% endif %}
 													</div>
 												</div>
 			
@@ -279,13 +317,13 @@ Tabs-content START -->
 															<div class="col-9 col-sm-10">
 																<!-- Progress item -->
 																<div class="progress progress-sm bg-warning bg-opacity-15">
-																	<div class="progress-bar bg-warning" role="progressbar" style="width: 95%" aria-valuenow="95" aria-valuemin="0" aria-valuemax="100">
+																	<div class="progress-bar bg-warning" role="progressbar" style="width: 100%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
 																	</div>
 																</div>
 															</div>
 															<!-- Percentage -->
 															<div class="col-3 col-sm-2 text-end">
-																<span class="h6 fw-light mb-0">85%</span>
+																<span class="h6 fw-light mb-0">5 Stars</span>
 															</div>
 			
 															<!-- Progress bar and Rating -->
@@ -298,48 +336,48 @@ Tabs-content START -->
 															</div>
 															<!-- Percentage -->
 															<div class="col-3 col-sm-2 text-end">
-																<span class="h6 fw-light mb-0">75%</span>
+																<span class="h6 fw-light mb-0">4 Stars</span>
 															</div>
 			
 															<!-- Progress bar and Rating -->
 															<div class="col-9 col-sm-10">
 																<!-- Progress item -->
 																<div class="progress progress-sm bg-warning bg-opacity-15">
-																	<div class="progress-bar bg-warning" role="progressbar" style="width: 60%" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100">
+																	<div class="progress-bar bg-warning" role="progressbar" style="width: 50%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100">
 																	</div>
 																</div>
 															</div>
 															<!-- Percentage -->
 															<div class="col-3 col-sm-2 text-end">
-																<span class="h6 fw-light mb-0">60%</span>
+																<span class="h6 fw-light mb-0">3 Stars</span>
 															</div>
 			
 															<!-- Progress bar and Rating -->
 															<div class="col-9 col-sm-10">
 																<!-- Progress item -->
 																<div class="progress progress-sm bg-warning bg-opacity-15">
-																	<div class="progress-bar bg-warning" role="progressbar" style="width: 35%" aria-valuenow="35" aria-valuemin="0" aria-valuemax="100">
+																	<div class="progress-bar bg-warning" role="progressbar" style="width: 25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
 																	</div>
 																</div>
 															</div>
 															<!-- Percentage -->
 															<div class="col-3 col-sm-2 text-end">
-																<span class="h6 fw-light mb-0">35%</span>
+																<span class="h6 fw-light mb-0">2 Stars</span>
 															</div>
 			
 															<!-- Progress bar and Rating -->
 															<div class="col-9 col-sm-10">
 																<!-- Progress item -->
 																<div class="progress progress-sm bg-warning bg-opacity-15">
-																	<div class="progress-bar bg-warning" role="progressbar" style="width: 20%" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">
+																	<div class="progress-bar bg-warning" role="progressbar" style="width: 5%" aria-valuenow="5" aria-valuemin="0" aria-valuemax="100">
 																	</div>
 																</div>
 															</div>
 															<!-- Percentage -->
 															<div class="col-3 col-sm-2 text-end">
-																<span class="h6 fw-light mb-0">15%</span>
+																<span class="h6 fw-light mb-0">1 Star</span>
 															</div>
-														</div> <!-- Row END -->
+														</div>
 													</div>
 												</div>
 												<!-- Progress-bar END -->
@@ -349,20 +387,19 @@ Tabs-content START -->
 										<!-- Progress bar and rating END -->
 			
 										<!-- Leave review START -->
-										<form class="mb-5" {% if request.user.is_authenticated %}method="post"{% endif %}>
+										<form class="mb-5" {% if request.user.is_authenticated %}method="post" action="{% url 'car_review_by_user' cars.slug %}"{% endif %}>
+											{% csrf_token %}
 											<!-- Rating -->
 											<div class="form-control-bg-light mb-3">
-												<select class="form-select js-choice">
-													<option selected="">★★★★★ (5/5)</option>
-													<option>★★★★☆ (4/5)</option>
-													<option>★★★☆☆ (3/5)</option>
-													<option>★★☆☆☆ (2/5)</option>
-													<option>★☆☆☆☆ (1/5)</option>
+												<select class="form-select js-choice" name="rating">
+													{% for rating in rating_choices %}
+													<option value="{{rating.0}}">{{rating.1}}</option>
+													{% endfor %}
 												</select>
 											</div>
 											<!-- Message -->
 											<div class="form-control-bg-light mb-3">
-												<textarea class="form-control" id="exampleFormControlTextarea1" placeholder="Your review" rows="3"></textarea>
+												<textarea class="form-control" name="review" id="exampleFormControlTextarea1" placeholder="Your review" rows="3"></textarea>
 											</div> 
 											<!-- Button -->
 											{% if request.user.is_authenticated %}
@@ -372,94 +409,37 @@ Tabs-content START -->
 											{% endif %}
 										</form>
 										<!-- Leave review END -->
-			
+
 										<!-- Review item START -->
+										{% for review in reviews %}
 										<div class="d-md-flex my-4">
 											<!-- Avatar -->
 											<div class="avatar avatar-lg me-3 flex-shrink-0">
-												<img class="avatar-img rounded-circle" src="assets/images/avatar/09.jpg" alt="avatar">
+												<img class="avatar-img rounded-circle" src="{{review.user.profile.profile_image.url}}" alt="avatar">
 											</div>
 											<!-- Text -->
 											<div>
 												<div class="d-flex justify-content-between mt-1 mt-md-0">
 													<div>
-														<h6 class="me-3 mb-0">Jacqueline Miller</h6>
+														<h6 class="me-3 mb-0">{{review.user.username}}</h6>
 														<!-- Info -->
 														<ul class="nav nav-divider small mb-2">
-															<li class="nav-item">Stayed 13 Nov 2022</li>
-															<li class="nav-item">4 Reviews written</li>
+															<li class="nav-item">{{review.created_at|date:"m F, Y"}}</li>
 														</ul>
 													</div>
 													<!-- Review star -->
-													<div class="icon-md rounded text-bg-warning fs-6">4.5</div>
+													<div class="icon-md rounded text-bg-warning fs-6">{{review.rating}}</div>
 												</div>
 												
-												<p class="mb-2">Handsome met debating sir dwelling age material. As style lived he worse dried. Offered related so visitors we private removed. Moderate do subjects to distance. </p>
-												
-												<!-- Images -->
-												<div class="row g-4">
-													<div class="col-4 col-sm-3 col-lg-2">
-														<img src="assets/images/category/hotel/4by3/07.jpg" class="rounded" alt="">
-													</div>
-													<div class="col-4 col-sm-3 col-lg-2">
-														<img src="assets/images/category/hotel/4by3/08.jpg" class="rounded" alt="">
-													</div>
-													<div class="col-4 col-sm-3 col-lg-2">
-														<img src="assets/images/category/hotel/4by3/05.jpg" class="rounded" alt="">
-													</div>
-												</div>
+												<p class="mb-0">
+													{{review.reviews}}
+												</p>
 											</div>
 										</div>
-			
-										<!-- Child review START -->
-										<div class="my-4 ps-2 ps-md-3">
-											<div class="d-md-flex p-3 bg-light rounded-3">
-												<img class="avatar avatar-sm rounded-circle me-3" src="assets/images/avatar/02.jpg" alt="avatar">
-												<div class="mt-2 mt-md-0">
-													<h6 class="mb-1">Manager</h6>
-													<p class="mb-0">But discretion frequently sir she instruments unaffected admiration everything. </p>
-												</div>
-											</div>
-										</div>
-										<!-- Child review END -->
-			
 										<!-- Divider -->
 										<hr>
 										<!-- Review item END -->
-			
-										<!-- Review item START -->
-										<div class="d-md-flex my-4">
-											<!-- Avatar -->
-											<div class="avatar avatar-lg me-3 flex-shrink-0">
-												<img class="avatar-img rounded-circle" src="assets/images/avatar/08.jpg" alt="avatar">
-											</div>
-											<!-- Text -->
-											<div>
-												<div class="d-flex justify-content-between mt-1 mt-md-0">
-													<div>
-														<h6 class="me-3 mb-0">Dennis Barrett</h6>
-														<!-- Info -->
-														<ul class="nav nav-divider small mb-2">
-															<li class="nav-item">Stayed 02 Nov 2022</li>
-															<li class="nav-item">2 Reviews written</li>
-														</ul>
-													</div>
-													<!-- Review star -->
-													<div class="icon-md rounded text-bg-warning fs-6">4.0</div>
-												</div>
-												
-												<p class="mb-0">Delivered dejection necessary objection do Mr prevailed. Mr feeling does chiefly cordial in do. Water timed folly right aware if oh truth. Large above be to means. Dashwood does provide stronger is.</p>
-											</div>
-										</div>
-			
-										<!-- Divider -->
-										<hr>
-										<!-- Review item END -->
-			
-										<!-- Button -->
-										<div class="text-center">
-											<a href="hotel-detail.html#" class="btn btn-primary-soft mb-0">Load more</a>
-										</div>
+										{% endfor %}
 									</div>
 									<!-- Card body END -->
 								</div>
@@ -490,18 +470,53 @@ Tabs-content START -->
 								<span class="fs-5">per Day</span>
                                 {% endif %}
 							</div>
-
 							<div class="d-flex justify-content-between mb-4">
 								<!-- Rating -->
+								{% if average_review.rating %}
 								<ul class="list-inline mb-0">
-									<li class="list-inline-item me-1 h6 mb-0">4.5</li>
-									<li class="list-inline-item me-0 small"><i class="fa-solid fa-star text-warning"></i></li>
-									<li class="list-inline-item me-0 small"><i class="fa-solid fa-star text-warning"></i></li>
-									<li class="list-inline-item me-0 small"><i class="fa-solid fa-star text-warning"></i></li>
-									<li class="list-inline-item me-0 small"><i class="fa-solid fa-star text-warning"></i></li>
-									<li class="list-inline-item me-0 small"><i class="fa-solid fa-star-half-alt text-warning"></i></li>
+									<li class="list-inline-item me-1 h6 mb-0">{{average_review.rating|floatformat:1}}</li>
+									{% if average_review.rating == 5.0 %}
+									<li class="list-inline-item me-0"><i class="fa-solid fa-star text-warning"></i></li>
+									<li class="list-inline-item me-0"><i class="fa-solid fa-star text-warning"></i></li>
+									<li class="list-inline-item me-0"><i class="fa-solid fa-star text-warning"></i></li>
+									<li class="list-inline-item me-0"><i class="fa-solid fa-star text-warning"></i></li>
+									<li class="list-inline-item me-0"><i class="fa-solid fa-star text-warning"></i></li>
+									{% elif average_review.rating > 4.0 and average_review.rating < 5.0 %}
+									<li class="list-inline-item me-0"><i class="fa-solid fa-star text-warning"></i></li>
+									<li class="list-inline-item me-0"><i class="fa-solid fa-star text-warning"></i></li>
+									<li class="list-inline-item me-0"><i class="fa-solid fa-star text-warning"></i></li>
+									<li class="list-inline-item me-0"><i class="fa-solid fa-star text-warning"></i></li>
+									<li class="list-inline-item me-0"><i class="fa-solid fa-star-half-alt text-warning"></i></li>
+									{% elif average_review.rating == 4.0  %}
+									<li class="list-inline-item me-0"><i class="fa-solid fa-star text-warning"></i></li>
+									<li class="list-inline-item me-0"><i class="fa-solid fa-star text-warning"></i></li>
+									<li class="list-inline-item me-0"><i class="fa-solid fa-star text-warning"></i></li>
+									<li class="list-inline-item me-0"><i class="fa-solid fa-star text-warning"></i></li>
+									{% elif average_review.rating > 3.0 and average_review.rating < 4.0  %}
+									<li class="list-inline-item me-0"><i class="fa-solid fa-star text-warning"></i></li>
+									<li class="list-inline-item me-0"><i class="fa-solid fa-star text-warning"></i></li>
+									<li class="list-inline-item me-0"><i class="fa-solid fa-star text-warning"></i></li>
+									<li class="list-inline-item me-0"><i class="fa-solid fa-star-half-alt text-warning"></i></li>
+									{% elif average_review.rating == 3.0  %}
+									<li class="list-inline-item me-0"><i class="fa-solid fa-star text-warning"></i></li>
+									<li class="list-inline-item me-0"><i class="fa-solid fa-star text-warning"></i></li>
+									<li class="list-inline-item me-0"><i class="fa-solid fa-star text-warning"></i></li>
+									{% elif average_review.rating > 2.0 and average_review.rating < 3.0  %}
+									<li class="list-inline-item me-0"><i class="fa-solid fa-star text-warning"></i></li>
+									<li class="list-inline-item me-0"><i class="fa-solid fa-star text-warning"></i></li>
+									<li class="list-inline-item me-0"><i class="fa-solid fa-star-half-alt text-warning"></i></li>
+									{% elif average_review.rating == 2.0  %}
+									<li class="list-inline-item me-0"><i class="fa-solid fa-star text-warning"></i></li>
+									<li class="list-inline-item me-0"><i class="fa-solid fa-star text-warning"></i></li>
+									{% elif average_review.rating > 1.0 and average_review.rating < 2.0  %}
+									<li class="list-inline-item me-0"><i class="fa-solid fa-star text-warning"></i></li>
+									<li class="list-inline-item me-0"><i class="fa-solid fa-star-half-alt text-warning"></i></li>
+									{% elif average_review.rating == 1.0  %}
+									<li class="list-inline-item me-0"><i class="fa-solid fa-star text-warning"></i></li>
+									{% endif %}
 								</ul>
-								<a href="#" class="mb-0 m-0 text-reset text-primary-hover">(reviews)</a>
+								{% endif %}
+								<a href="#" class="mb-0 m-0 text-reset text-primary-hover">({% if reviews.count == 1 %}{{reviews.count}} review{% elif reviews.count > 1 %}{{reviews.count}} reviews{% else %}No review{% endif %})</a>
 							</div>
                             <!-- Button -->
 							<div class="d-grid gap-2">

@@ -55,16 +55,21 @@ class Booking(models.Model):
         return self.car.brand
 
 class CarReviews(models.Model):
+    RATING_CHOICES = (
+        (5, '★★★★★ - 5 Stars'),
+        (4, '★★★★☆ - 4 Stars'),
+        (3, '★★★☆☆ - 3 Stars'),
+        (2, '★★☆☆☆ - 2 Stars'),
+        (1, '★☆☆☆☆ - 1 Stars'),
+    )
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     cars = models.ForeignKey(Cars, on_delete=models.CASCADE, related_name="reviews")
     reviews = models.TextField(default="", null=True, blank=True)
-    rating = models.CharField(max_length=20, null=True, blank=True)
+    rating = models.PositiveIntegerField(choices=RATING_CHOICES, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True, blank=True, null=True)
 
     def __str__(self):
         return f"{self.user.username} [{self.cars.brand}]"
-    
-
 
 class CarImages(models.Model):
     car_images_id = models.UUIDField(primary_key=True, unique=True, editable=False, default=uuid.uuid4)

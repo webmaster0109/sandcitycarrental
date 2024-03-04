@@ -75,13 +75,31 @@
 							</li>
 							<!-- Dark mode option END -->
 						</ul>
-					</div>	
+					</div>
 
 					<div class="d-sm-flex align-items-center justify-content-end">
 						<!-- Main navbar START -->
 						<div class="navbar-collapse collapse" id="navbarCollapse">
 							<ul class="navbar-nav navbar-nav-scroll ms-auto">
-								<!-- Nav item Find hotel -->
+								<li class="nav-item dropdown dropdown-fullwidth">
+									<a class="nav-link dropdown-toggle" href="#" id="pagesFindCars" 
+									data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Cars for Rent</a>
+									<ul class="dropdown-menu pagesFindCars" aria-labelledby="pagesFindCars">
+										<div class="row">
+											<div class="col-lg-6">
+												{% for car in car_detail|slice:":4" %}
+												<li><a class="dropdown-item" href="{% url 'car_details' car.slug %}">{{car.brand}}</a></li>
+												{% endfor %}
+											</div>
+											<div class="col-lg-6">
+												{% for car in car_detail|slice:"4:" %}
+												<li><a class="dropdown-item" href="{% url 'car_details' car.slug %}">{{car.brand}}</a></li>
+												{% endfor %}
+											</div>
+										</div>
+									</ul>
+								</li>
+								<!-- Nav item Find Cars -->
 								<li class="nav-item dropdown dropdown-fullwidth">
 									<a class="nav-link dropdown-toggle" href="index-hotel-chain.html#" 
 									id="hotelMenu" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Rental Cars</a>
@@ -160,7 +178,7 @@
 	
 								<!-- Nav item Facilities -->
 								<li class="nav-item dropdown">
-									<a class="nav-link dropdown-toggle" href="index-hotel-chain.html#" id="pagesFacilities" 
+									<a class="nav-link dropdown-toggle" href="#" id="pagesFacilities" 
 									data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Connect with us</a>
 									<ul class="dropdown-menu" aria-labelledby="pagesFacilities">
 	
