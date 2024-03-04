@@ -117,6 +117,10 @@ def forgot_password(request):
             
             profile_obj = Profile.objects.get(user=user_obj)
 
+            if not profile_obj.is_verified:
+                messages.warning(request, "Your account is not verified yet. Please verify the account first.")
+                return redirect('login')
+
             last_sent_time = profile_obj.modified_at
             if last_sent_time and (timezone.now() - last_sent_time) < timedelta(minutes=10) and profile_obj.forgot_password_token != None:
                 time_difference = timezone.now() - last_sent_time
@@ -206,6 +210,10 @@ def forgot_username(request):
                 return redirect('register')
             
             profile_obj = Profile.objects.get(user=user_obj)
+
+            if not profile_obj.is_verified:
+                messages.warning(request, "Your account is not verified yet. Please verify the account first.")
+                return redirect('login')
 
             last_sent_time = profile_obj.modified_at
             if last_sent_time and (timezone.now() - last_sent_time) < timedelta(minutes=10):

@@ -13,6 +13,8 @@ from rentalapp.models.newsletter import EmailNewsletters, send_newsletter_email
 from rentalapp.models.blogs import BlogsDetail
 from hitcount.views import HitCountDetailView
 from django.db.models import Avg, Count
+from django.template.defaultfilters import striptags
+import math
 
 def home_page(request):
     category = CarTypes.objects.all()
@@ -300,7 +302,11 @@ class PostDetailView(HitCountDetailView):
 
     def get_context_data(self, **kwargs):
         context = super(PostDetailView, self).get_context_data(**kwargs)
+        stripped_body = striptags(self.object.body)
+        total_word_count = len(stripped_body.split())
+        total_word_count_per_minutes = math.ceil(total_word_count / 200)
         context.update({
         'popular_posts': BlogsDetail.objects.order_by('-hit_count_generic__hits')[:3],
+        'total_time': total_word_count_per_minutes,
         })
         return context

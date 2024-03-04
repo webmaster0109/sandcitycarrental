@@ -20,7 +20,7 @@ urlpatterns = [
     path('blogs', blogs_page, name="blogs_page"),
     path('blog/<str:slug>', PostDetailView.as_view(), name="blog_detail"),
     path('our-cars', all_cars, name="all_cars"),
-    path('write-review/<str:slug>', car_review_by_user, name="car_review_by_user"),
+    path('write-review/<slug>', car_review_by_user, name="car_review_by_user"),
 
     # authentication urls
     path('auth/login', login_attempt, name="login"),
