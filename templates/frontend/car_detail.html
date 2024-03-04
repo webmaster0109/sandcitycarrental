@@ -108,6 +108,10 @@ Tabs START -->
 						<button class="nav-link mb-0" id="tour-pills-tab-3" data-bs-toggle="pill" data-bs-target="#tour-pills-tab3" 
                         type="button" role="tab" aria-controls="tour-pills-tab3" aria-selected="false">Requirements</button>
 					</li>
+					<li class="nav-item" role="presentation">
+						<button class="nav-link mb-0" id="tour-pills-tab-4" data-bs-toggle="pill" data-bs-target="#tour-pills-tab4" 
+						type="button" role="tab" aria-controls="tour-pills-tab4" aria-selected="false">Reviews</button>
+					</li>
 				</ul> 
 				<!-- Outer tabs END -->
 			</div>
@@ -236,6 +240,232 @@ Tabs-content START -->
 						</div>
 					</div>	
 					<!-- Content item END -->
+
+					<!-- Content item start -->
+					<div class="tab-pane fade" id="tour-pills-tab4" role="tabpanel" aria-labelledby="tour-pills-tab-4">
+						<div class="card bg-transparent p-0">
+							<div class="card-header bg-transparent border-bottom p-0 pb-3">
+								<h3 class="mb-0">Customer Reviews</h3>
+							</div>
+							<div class="card-body p-0 pt-3">
+								<div class="card bg-transparent">			
+									<!-- Card body START -->
+									<div class="card-body pt-4 p-0">
+										<!-- Progress bar and rating START -->
+										<div class="card bg-light p-4 mb-4">
+											<div class="row g-4 align-items-center">
+												<!-- Rating info -->
+												<div class="col-md-4">
+													<div class="text-center">
+														<!-- Info -->
+														<h2 class="mb-0">4.5</h2>
+														<p class="mb-2">Based on 120 Reviews</p>
+														<!-- Star -->
+														<ul class="list-inline mb-0">
+															<li class="list-inline-item me-0"><i class="fa-solid fa-star text-warning"></i></li>
+															<li class="list-inline-item me-0"><i class="fa-solid fa-star text-warning"></i></li>
+															<li class="list-inline-item me-0"><i class="fa-solid fa-star text-warning"></i></li>
+															<li class="list-inline-item me-0"><i class="fa-solid fa-star text-warning"></i></li>
+															<li class="list-inline-item me-0"><i class="fa-solid fa-star-half-alt text-warning"></i></li>
+														</ul>
+													</div>
+												</div>
+			
+												<!-- Progress-bar START -->
+												<div class="col-md-8">
+													<div class="card-body p-0">
+														<div class="row gx-3 g-2 align-items-center">
+															<!-- Progress bar and Rating -->
+															<div class="col-9 col-sm-10">
+																<!-- Progress item -->
+																<div class="progress progress-sm bg-warning bg-opacity-15">
+																	<div class="progress-bar bg-warning" role="progressbar" style="width: 95%" aria-valuenow="95" aria-valuemin="0" aria-valuemax="100">
+																	</div>
+																</div>
+															</div>
+															<!-- Percentage -->
+															<div class="col-3 col-sm-2 text-end">
+																<span class="h6 fw-light mb-0">85%</span>
+															</div>
+			
+															<!-- Progress bar and Rating -->
+															<div class="col-9 col-sm-10">
+																<!-- Progress item -->
+																<div class="progress progress-sm bg-warning bg-opacity-15">
+																	<div class="progress-bar bg-warning" role="progressbar" style="width: 75%" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100">
+																	</div>
+																</div>
+															</div>
+															<!-- Percentage -->
+															<div class="col-3 col-sm-2 text-end">
+																<span class="h6 fw-light mb-0">75%</span>
+															</div>
+			
+															<!-- Progress bar and Rating -->
+															<div class="col-9 col-sm-10">
+																<!-- Progress item -->
+																<div class="progress progress-sm bg-warning bg-opacity-15">
+																	<div class="progress-bar bg-warning" role="progressbar" style="width: 60%" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100">
+																	</div>
+																</div>
+															</div>
+															<!-- Percentage -->
+															<div class="col-3 col-sm-2 text-end">
+																<span class="h6 fw-light mb-0">60%</span>
+															</div>
+			
+															<!-- Progress bar and Rating -->
+															<div class="col-9 col-sm-10">
+																<!-- Progress item -->
+																<div class="progress progress-sm bg-warning bg-opacity-15">
+																	<div class="progress-bar bg-warning" role="progressbar" style="width: 35%" aria-valuenow="35" aria-valuemin="0" aria-valuemax="100">
+																	</div>
+																</div>
+															</div>
+															<!-- Percentage -->
+															<div class="col-3 col-sm-2 text-end">
+																<span class="h6 fw-light mb-0">35%</span>
+															</div>
+			
+															<!-- Progress bar and Rating -->
+															<div class="col-9 col-sm-10">
+																<!-- Progress item -->
+																<div class="progress progress-sm bg-warning bg-opacity-15">
+																	<div class="progress-bar bg-warning" role="progressbar" style="width: 20%" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">
+																	</div>
+																</div>
+															</div>
+															<!-- Percentage -->
+															<div class="col-3 col-sm-2 text-end">
+																<span class="h6 fw-light mb-0">15%</span>
+															</div>
+														</div> <!-- Row END -->
+													</div>
+												</div>
+												<!-- Progress-bar END -->
+			
+											</div>
+										</div>
+										<!-- Progress bar and rating END -->
+			
+										<!-- Leave review START -->
+										<form class="mb-5" {% if request.user.is_authenticated %}method="post"{% endif %}>
+											<!-- Rating -->
+											<div class="form-control-bg-light mb-3">
+												<select class="form-select js-choice">
+													<option selected="">★★★★★ (5/5)</option>
+													<option>★★★★☆ (4/5)</option>
+													<option>★★★☆☆ (3/5)</option>
+													<option>★★☆☆☆ (2/5)</option>
+													<option>★☆☆☆☆ (1/5)</option>
+												</select>
+											</div>
+											<!-- Message -->
+											<div class="form-control-bg-light mb-3">
+												<textarea class="form-control" id="exampleFormControlTextarea1" placeholder="Your review" rows="3"></textarea>
+											</div> 
+											<!-- Button -->
+											{% if request.user.is_authenticated %}
+											<button type="submit" class="btn btn-lg btn-orange mb-0">Post review <i class="bi fa-fw bi-arrow-right ms-2"></i></button>
+											{% else %}
+												<a href="{% url 'login' %}" class="btn btn-lg btn-orange mb-0">Login for Review</a>
+											{% endif %}
+										</form>
+										<!-- Leave review END -->
+			
+										<!-- Review item START -->
+										<div class="d-md-flex my-4">
+											<!-- Avatar -->
+											<div class="avatar avatar-lg me-3 flex-shrink-0">
+												<img class="avatar-img rounded-circle" src="assets/images/avatar/09.jpg" alt="avatar">
+											</div>
+											<!-- Text -->
+											<div>
+												<div class="d-flex justify-content-between mt-1 mt-md-0">
+													<div>
+														<h6 class="me-3 mb-0">Jacqueline Miller</h6>
+														<!-- Info -->
+														<ul class="nav nav-divider small mb-2">
+															<li class="nav-item">Stayed 13 Nov 2022</li>
+															<li class="nav-item">4 Reviews written</li>
+														</ul>
+													</div>
+													<!-- Review star -->
+													<div class="icon-md rounded text-bg-warning fs-6">4.5</div>
+												</div>
+												
+												<p class="mb-2">Handsome met debating sir dwelling age material. As style lived he worse dried. Offered related so visitors we private removed. Moderate do subjects to distance. </p>
+												
+												<!-- Images -->
+												<div class="row g-4">
+													<div class="col-4 col-sm-3 col-lg-2">
+														<img src="assets/images/category/hotel/4by3/07.jpg" class="rounded" alt="">
+													</div>
+													<div class="col-4 col-sm-3 col-lg-2">
+														<img src="assets/images/category/hotel/4by3/08.jpg" class="rounded" alt="">
+													</div>
+													<div class="col-4 col-sm-3 col-lg-2">
+														<img src="assets/images/category/hotel/4by3/05.jpg" class="rounded" alt="">
+													</div>
+												</div>
+											</div>
+										</div>
+			
+										<!-- Child review START -->
+										<div class="my-4 ps-2 ps-md-3">
+											<div class="d-md-flex p-3 bg-light rounded-3">
+												<img class="avatar avatar-sm rounded-circle me-3" src="assets/images/avatar/02.jpg" alt="avatar">
+												<div class="mt-2 mt-md-0">
+													<h6 class="mb-1">Manager</h6>
+													<p class="mb-0">But discretion frequently sir she instruments unaffected admiration everything. </p>
+												</div>
+											</div>
+										</div>
+										<!-- Child review END -->
+			
+										<!-- Divider -->
+										<hr>
+										<!-- Review item END -->
+			
+										<!-- Review item START -->
+										<div class="d-md-flex my-4">
+											<!-- Avatar -->
+											<div class="avatar avatar-lg me-3 flex-shrink-0">
+												<img class="avatar-img rounded-circle" src="assets/images/avatar/08.jpg" alt="avatar">
+											</div>
+											<!-- Text -->
+											<div>
+												<div class="d-flex justify-content-between mt-1 mt-md-0">
+													<div>
+														<h6 class="me-3 mb-0">Dennis Barrett</h6>
+														<!-- Info -->
+														<ul class="nav nav-divider small mb-2">
+															<li class="nav-item">Stayed 02 Nov 2022</li>
+															<li class="nav-item">2 Reviews written</li>
+														</ul>
+													</div>
+													<!-- Review star -->
+													<div class="icon-md rounded text-bg-warning fs-6">4.0</div>
+												</div>
+												
+												<p class="mb-0">Delivered dejection necessary objection do Mr prevailed. Mr feeling does chiefly cordial in do. Water timed folly right aware if oh truth. Large above be to means. Dashwood does provide stronger is.</p>
+											</div>
+										</div>
+			
+										<!-- Divider -->
+										<hr>
+										<!-- Review item END -->
+			
+										<!-- Button -->
+										<div class="text-center">
+											<a href="hotel-detail.html#" class="btn btn-primary-soft mb-0">Load more</a>
+										</div>
+									</div>
+									<!-- Card body END -->
+								</div>
+							</div>
+						</div>
+					</div>
 
 				</div>	
 			</div>

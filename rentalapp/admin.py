@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models.cars import CarImages, Cars, CarTypes, Booking
+from .models.cars import CarImages, Cars, CarTypes, Booking, CarReviews
 from .models.users import Profile, Country, UserNotification
 from .models.car_features import CarFeatures
 from .models.newsletter import EmailNewsletters
@@ -12,6 +12,7 @@ admin.site.index_title = "Welcome to SandCity Portal"
 
 admin.site.register(UserNotification)
 admin.site.register(EmailNewsletters)
+admin.site.register(CarReviews)
 
 @admin.register(BlogsDetail)
 class BlogsDetailAdmin(admin.ModelAdmin):
