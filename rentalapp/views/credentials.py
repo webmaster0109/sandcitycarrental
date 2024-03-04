@@ -22,7 +22,7 @@ def login_attempt(request):
         if user_obj:
             profile_obj = Profile.objects.get(user=user_obj)
             if not profile_obj.is_verified and not user_obj.is_staff:
-                messages.warning(request, 'Your account is not verified. Please check your email for the verification link.')
+                messages.warning(request, f'Your account is not verified. Please check your email for the verification link.')
                 return redirect('login')
             
             profile_obj.online_status = True
