@@ -12,7 +12,7 @@ from django.utils.translation import gettext_lazy as _
 from rentalapp.models.newsletter import EmailNewsletters, send_newsletter_email
 from rentalapp.models.blogs import BlogsDetail
 from hitcount.views import HitCountDetailView
-from django.db.models import Avg
+from django.db.models import Avg, Count
 
 def home_page(request):
     category = CarTypes.objects.all()
@@ -185,6 +185,13 @@ def car_details(request, slug):
     rating_choices = CarReviews.RATING_CHOICES
 
     average_review = CarReviews.objects.filter(cars=cars).aggregate(rating=Avg('rating'))
+    ratings_count = CarReviews.objects.filter(cars=cars).values('rating').annotate(count=Count('rating')).order_by('-rating')
+
+    ratings_counts = []
+    for i in range(len(ratings_count)):
+        ratings_counts.append([ratings_count[i]['rating'], ratings_count[i]['count'], int(ratings_count[i]['count'] * 100 / len(reviews))])
+    
+    print(ratings_counts)
 
     context = {
         'cars' : cars,
@@ -193,7 +200,8 @@ def car_details(request, slug):
         'car_detail': Cars.objects.all(),
         'reviews': reviews,
         'rating_choices': rating_choices,
-        'average_review': average_review
+        'average_review': average_review,
+        'ratings_count': ratings_counts,
     }
 
     return render(request, template_name="frontend/car_detail.html", context=context)
