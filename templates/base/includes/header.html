@@ -81,51 +81,24 @@
 						<!-- Main navbar START -->
 						<div class="navbar-collapse collapse" id="navbarCollapse">
 							<ul class="navbar-nav navbar-nav-scroll ms-auto">
-								<li class="nav-item dropdown dropdown-fullwidth">
-									<a class="nav-link dropdown-toggle" href="#" id="pagesFindCars" 
-									data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Cars for Rent</a>
-									<ul class="dropdown-menu pagesFindCars" aria-labelledby="pagesFindCars">
-										<div class="row">
-											<div class="col-lg-6">
-												{% for car in car_detail|slice:":4" %}
-												<li><a class="dropdown-item" href="{% url 'car_details' car.slug %}">{{car.brand}}</a></li>
-												{% endfor %}
-											</div>
-											<div class="col-lg-6">
-												{% for car in car_detail|slice:"4:" %}
-												<li><a class="dropdown-item" href="{% url 'car_details' car.slug %}">{{car.brand}}</a></li>
-												{% endfor %}
-											</div>
-										</div>
-									</ul>
+								<li class="nav-item">
+									<a class="nav-link" href="{% url 'about_us' %}">About Us</a>
 								</li>
 								<!-- Nav item Find Cars -->
 								<li class="nav-item dropdown dropdown-fullwidth">
 									<a class="nav-link dropdown-toggle" href="index-hotel-chain.html#" 
-									id="hotelMenu" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Rental Cars</a>
+									id="hotelMenu" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Cars for Rent</a>
 									<div class="dropdown-menu" aria-labelledby="hotelMenu">
 										<div class="container">
-											<div class="row g-4 justify-content-between p-lg-3">
-												<!-- Category -->
-												<div class="col-lg-3">
-													<h6 class="mb-3"><i class="bi bi-grid-3x3-gap text-primary me-2"></i>Main Menu</h6>
-													<hr class="my-2">
-													<ul class="list-unstyled">
-														<li> <a class="dropdown-item" href='{% url "about_us" %}'><i class="fa-solid fa-address-card fa-fw me-2"></i>About Us</a> </li>
-														<li><a class="dropdown-item" href='{% url "all_cars" %}'><i class="fa-solid fa-car fa-fw me-2"></i>Cars for Rent</a></li>
-														<li> <a class="dropdown-item" href='{% url "faqs" %}'><i class="fa-solid fa-clipboard-question fa-fw me-2"></i>FAQ's</a></li>
-														<li><a class="dropdown-item" href='{% url "contact_us" %}'><i class="fa-solid fa-file-contract fa-fw me-2"></i>Contact Us</a></li>
-														
-													</ul>
-												</div>
-												
+											<div class="row g-4 justify-content-between p-lg-3">												
 												<!-- Destination -->
-												<div class="col-lg-5">
+												<div class="col-lg-8">
 													<h6 class="mb-3"><i class="bi bi-ev-front-fill text-primary me-2"></i>Cars</h6>
 													<hr class="my-2">
 													<div class="row">
 														<div class="col-lg-6">
 															<ul class="list-unstyled">
+																<li> <a class="dropdown-item text-orange" href="{% url 'all_cars' %}">All Cars</a> </li>
 																{% for car in car_detail|slice:":4" %}
 																<li> <a class="dropdown-item" href="{% url 'car_details' car.slug %}">{{car.brand}}</a> </li>
 																{% endfor %}
@@ -143,12 +116,25 @@
 												</div>
 	
 												<!-- Hotel type -->
-												<div class="col-lg-3">
-													<h6 class="mb-3"><i class="bi bi-list-ul text-primary me-2"></i>Car types</h6>
-													<hr class="my-2">
+												<div class="col-lg-2 col-6">
 													<ul class="list-unstyled">
-														{% for car_type in car_types %}
-														<li> <a class="dropdown-item" href="{% url 'car_category' car_type.slug %}">{{car_type.car_types}}</a> </li>
+														{% for image in car_types|slice:":2" %}
+														<li class="mb-2">
+															<a class="nav-item text-center mb-2" href="{% url 'car_category' image.slug %}">
+																<img class="img-fluid rounded-3" width="160px" src="{{image.category_images.url}}" alt="{{image.car_types}}" />
+															</a>
+														</li>
+														{% endfor %}
+													</ul>
+												</div>
+												<div class="col-lg-2 col-6">
+													<ul class="list-unstyled">
+														{% for image in car_types|slice:"2:" %}
+														<li class="mb-2">
+															<a class="nav-item text-center mb-2" href="{% url 'car_category' image.slug %}">
+																<img class="img-fluid rounded-3" width="160px" src="{{image.category_images.url}}" alt="{{image.car_types}}" />
+															</a>
+														</li>
 														{% endfor %}
 													</ul>
 												</div>
@@ -167,7 +153,7 @@
 																</ul>
 															</div>
 															<!-- Button -->
-															<a href="#" class="btn btn-white mb-0">Rent Your Cars</a>
+															<a href="{% url 'all_cars' %}" class="btn btn-white mb-0">Rent Your Cars</a>
 														</div>
 													</div>
 												</div>
@@ -175,15 +161,27 @@
 										</div>
 									</div>
 								</li>
-	
-								<!-- Nav item Facilities -->
+								<li class="nav-item dropdown">
+									<a class="nav-link dropdown-toggle" href="#" id="pagesFacilities" 
+									data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Category</a>
+									<ul class="dropdown-menu" aria-labelledby="pagesFacilities">
+										{% for car_type in car_types %}
+										<li> <a class="dropdown-item" href="{% url 'car_category' car_type.slug %}">{{car_type.car_types}}</a> </li>
+										{% endfor %}
+									</ul>
+								</li>
+								<li class="nav-item">
+									<a href="{% url 'blogs_page' %}" class="nav-link">Blogs</a>
+								</li>
+								<li class="nav-item">
+									<a href="{% url 'faqs' %}" class="nav-link">FAQs</a>
+								</li>
 								<li class="nav-item dropdown">
 									<a class="nav-link dropdown-toggle" href="#" id="pagesFacilities" 
 									data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Connect with us</a>
 									<ul class="dropdown-menu" aria-labelledby="pagesFacilities">
 	
 										<li><a class="dropdown-item" href="{% url "contact_us" %}">Contact us</a></li>
-										<li> <a class="dropdown-item" href="{% url "blogs_page" %}">Blogs</a></li>
 										<li> <a class="dropdown-item" href="{% url "terms_condititon" %}">Terms and Conditions</a></li>
 										<li> <a class="dropdown-item" href="{% url "privacy_policy" %}">Privacy Policy</a></li>
 									</ul>
