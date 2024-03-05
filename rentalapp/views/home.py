@@ -192,8 +192,6 @@ def car_details(request, slug):
     ratings_counts = []
     for i in range(len(ratings_count)):
         ratings_counts.append([ratings_count[i]['rating'], ratings_count[i]['count'], int(ratings_count[i]['count'] * 100 / len(reviews))])
-    
-    print(ratings_counts)
 
     context = {
         'cars' : cars,
@@ -216,6 +214,19 @@ def car_review_by_user(request, slug):
         rating = request.POST.get('rating')
         CarReviews.objects.create(user=user, cars=cars, reviews=review, rating=rating)
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+@login_required(login_url='/auth/login')
+def car_like_by_user(request, id):
+    cars = CarReviews.objects.get(id=id)
+    user = request.user
+    if request.method == "POST":
+        if cars.likes.filter(id=user.id).exists():
+            cars.likes.remove(user)
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+        else:
+            cars.likes.add(user)
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
 
 @login_required(login_url='/auth/login')
 def add_to_cart(request, slug):

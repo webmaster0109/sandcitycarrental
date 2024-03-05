@@ -379,12 +379,22 @@ Tabs-content START -->
 														</ul>
 													</div>
 													<!-- Review star -->
-													<div class="icon-md rounded text-bg-warning fs-6">{{review.rating}}</div>
+													<div class="icon-md rounded text-bg-warning" style="font-weight: 600;">
+														{{review.rating}}
+													</div>
 												</div>
 												
-												<p class="mb-0">
+												<p class="mb-2">
 													{{review.reviews}}
 												</p>
+												<form action="{% url 'car_like_by_user' review.id %}" method="post">
+													{% csrf_token %}
+													<button type="submit" class="btn btn-sm btn-outline-light">
+														<i class="bi {% if review.likes.exists %}bi-heart-fill{% else %}bi bi-heart{% endif %} 
+														{% if request.user in review.likes.all %}text-danger{% endif %}"></i> 
+														Like {{review.get_total_likes}}
+													</button>	
+												</form>
 											</div>
 										</div>
 										<!-- Divider -->

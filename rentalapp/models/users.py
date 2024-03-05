@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django.utils import timezone
 from django.core.mail import send_mail
 from django.conf import settings
+from .cars import Cars
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="profile")
@@ -22,6 +23,10 @@ class Profile(models.Model):
     online_status = models.BooleanField(default=False)
     last_activity_time = models.DateTimeField(null=True, blank=True)
     total_active_time = models.DurationField(default=timezone.timedelta())
+    wishlists = models.ManyToManyField(Cars, related_name="wishlists", null=True, blank=True)
+
+    def get_total_wishlists(self):
+        return self.wishlists.count()
     
     def __str__(self):
         return f'{self.user.first_name} {self.user.last_name}'

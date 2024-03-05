@@ -22,9 +22,15 @@ def admin_dashboard_home(request):
 
     country = Country.objects.all()
 
+    country_sort = []
+    for c in country:
+        country_sort.append(c.name)
+    
+    country_sort = sorted(country_sort)
+
     context = {
         'date_object' : date_of_birth,
-        'country': country,
+        'country': country_sort,
     }
     return render(request, template_name="backend/dashboard/profile.html", context=context)
 

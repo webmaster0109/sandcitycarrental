@@ -66,8 +66,11 @@ class CarReviews(models.Model):
     cars = models.ForeignKey(Cars, on_delete=models.CASCADE, related_name="reviews")
     reviews = models.TextField(default="", null=True, blank=True)
     rating = models.PositiveIntegerField(choices=RATING_CHOICES, null=True, blank=True)
+    likes = models.ManyToManyField(User, related_name="liked_posts")
     created_at = models.DateTimeField(auto_now_add=True, blank=True, null=True)
-    
+
+    def get_total_likes(self):
+        return self.likes.count()
 
     def __str__(self):
         return f"{self.user.username} [{self.cars.brand}]"
