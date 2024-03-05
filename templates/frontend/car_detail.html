@@ -379,7 +379,8 @@ Tabs-content START -->
 														</ul>
 													</div>
 													<!-- Review star -->
-													<div class="icon-md rounded text-bg-warning" style="font-weight: 600;">
+													<div style="background: radial-gradient(circle at 10% 20%, rgb(255, 200, 124) 0%, rgb(252, 251, 121) 90%);" 
+													class="icon-md rounded text-dark" style="font-weight: 600;">
 														{{review.rating}}
 													</div>
 												</div>
@@ -389,7 +390,7 @@ Tabs-content START -->
 												</p>
 												<form action="{% url 'car_like_by_user' review.id %}" method="post">
 													{% csrf_token %}
-													<button type="submit" class="btn btn-sm btn-outline-light">
+													<button type="submit" class="btn btn-xs btn-outline-light">
 														<i class="bi {% if review.likes.exists %}bi-heart-fill{% else %}bi bi-heart{% endif %} 
 														{% if request.user in review.likes.all %}text-danger{% endif %}"></i> 
 														Like {{review.get_total_likes}}
