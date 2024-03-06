@@ -32,7 +32,7 @@ class CarFeaturesAdmin(admin.StackedInline):
 
 @admin.register(Cars)
 class CarsAdmin(admin.ModelAdmin):
-    list_display = ['brand', 'year']
+    list_display = ['brand', 'car_number', 'year']
     inlines = [CarImagesAdmin, CarFeaturesAdmin]
     prepopulated_fields = {'slug': ('brand',)}
 

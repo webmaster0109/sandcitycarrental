@@ -1,5 +1,7 @@
 {% extends "base/base.html" %}
 
+
+
 {% block content %}
 <section class="pt-4 pt-lg-5">
 	<div class="container position-relative">
@@ -9,6 +11,7 @@
 			<div class="col-12">
 
 				<!-- Meta -->
+				{% include 'base/includes/alerts.html' %}
 				<div class="d-md-flex justify-content-md-between">
 					<!-- Title -->
 					<div>
@@ -23,21 +26,34 @@
 					<ul class="list-inline text-end">
 							<!-- Heart icon -->
 						<li class="list-inline-item">
-							<a href="#" class="btn btn-sm btn-light px-2"><i class="fa-solid fa-fw fa-heart"></i></a>
+							{% with user_wishlists=request.user.profile.wishlists.all %}
+							<a href="{% if cars in user_wishlists %}{% url 'remove_to_wishlists' cars.slug %}{% else %}{% url 'add_to_wishlists' cars.slug %}{% endif %}" class="btn btn-light px-2">
+								<i class="{% if cars in user_wishlists %}fa-solid{% else %}fa-regular{% endif %} fa-bookmark"></i>
+							</a>
+							{% endwith %}
 						</li>
 						<!-- Share icon -->
 						<li class="list-inline-item dropdown">
 							<!-- Share button -->
-							<a href="#" class="btn btn-sm btn-light px-2" role="button" id="dropdownShare" data-bs-toggle="dropdown" aria-expanded="false">
+							<a href="#" class="btn btn-light px-2" role="button" id="dropdownShare" data-bs-toggle="dropdown" aria-expanded="false">
 								<i class="fa-solid fa-fw fa-share-alt"></i>
 							</a>
 							<!-- dropdown button -->
+							{% with base_url="https://sandcitycarrental.ae" %}
 							<ul class="dropdown-menu dropdown-menu-end min-w-auto shadow rounded" aria-labelledby="dropdownShare">
-								<li><a class="dropdown-item" href="#"><i class="fab fa-twitter-square me-2"></i>Twitter</a></li>
-								<li><a class="dropdown-item" href="#"><i class="fab fa-facebook-square me-2"></i>Facebook</a></li>
-								<li><a class="dropdown-item" href="#"><i class="fab fa-linkedin me-2"></i>LinkedIn</a></li>
-								<li><a class="dropdown-item" href="#"><i class="fa-solid fa-copy me-2"></i>Copy link</a></li>
+								<li><a class="dropdown-item" href="https://api.whatsapp.com/send/?text={{cars.brand}}, {{cars.year}} {{base_url|urlencode}}{{request.get_full_path|urlencode}}">
+									<i class="fab fa-whatsapp me-2"></i>WhatsApp</a></li>
+								<li><a class="dropdown-item" href="https://twitter.com/intent/tweet?text={{cars.brand}}, {{cars.year}} {{base_url|urlencode }}{{ request.get_full_path|urlencode }}&related=">
+									<i class="fab fa-twitter-square me-2"></i>Twitter</a></li>
+								<li><a class="dropdown-item" target="_blank" href="https://m.facebook.com/sharer/sharer.php?u={{base_url|urlencode}}{{request.get_full_path|urlencode}}&t={{cars.brand}}, {{cars.year}}">
+									<i class="fab fa-facebook-square me-2"></i>Facebook</a></li>
+								<li><a class="dropdown-item" href="https://www.linkedin.com/sharing/share-offsite/?url={{base_url|urlencode}}{{request.get_full_path|urlencode}}">
+									<i class="fab fa-linkedin me-2"></i>LinkedIn</a></li>
+								<li><a class="dropdown-item" href="https://telegram.me/share/url?url={{base_url|urlencode}}{{request.get_full_path|urlencode}}&text={{cars.brand}}, {{cars.year}}">
+									<i class="fab fa-telegram me-2"></i>Telegram</a></li>
+								<li><a class="dropdown-item" href="#" onclick="copyLink()"><i class="fa-solid fa-copy me-2"></i>Copy link</a></li>
 							</ul>
+							{% endwith %}
 						</li>
 					</ul>
 				</div>
@@ -315,7 +331,10 @@ Tabs-content START -->
 														<div class="row gx-3 g-2 align-items-center">
 															<!-- Progress bar and Rating -->
 															{% for rating_count in ratings_count %}
-															<div class="col-9 col-sm-10">
+															<div class="col-2 col-sm-2 text-end">
+																<span class="h6 fw-light mb-0">{{rating_count.2}}%</span>
+															</div>
+															<div class="col-7 col-sm-8">
 																<!-- Progress item -->
 																<div class="progress progress-sm bg-warning bg-opacity-15">
 																	<div class="progress-bar bg-warning" role="progressbar" 
@@ -325,7 +344,7 @@ Tabs-content START -->
 															</div>
 															<!-- Percentage -->
 															<div class="col-3 col-sm-2 text-end">
-																<span class="h6 fw-light mb-0">{% if rating_count.0 == 1 %}{{rating_count.0}} Star{% elif rating_count.0 > 1 %}{{rating_count.0}} Stars{% endif %}</span>
+																<span class="h6 fw-light mb-0">{% if rating_count.0 == 1 %}{{rating_count.0}} Star{% elif rating_count.0 > 1 %}{{rating_count.0}} star{% endif %}</span>
 															</div>
 															{% endfor %}
 														</div>
@@ -375,7 +394,7 @@ Tabs-content START -->
 														<h6 class="me-3 mb-0">{{review.user.username}}</h6>
 														<!-- Info -->
 														<ul class="nav nav-divider small mb-2">
-															<li class="nav-item">{{review.created_at|date:"m F, Y"}}</li>
+															<li class="nav-item">{{review.created_at|date:"d F, Y"}}</li>
 														</ul>
 													</div>
 													<!-- Review star -->
@@ -390,11 +409,13 @@ Tabs-content START -->
 												</p>
 												<form action="{% url 'car_like_by_user' review.id %}" method="post">
 													{% csrf_token %}
-													<button type="submit" class="btn btn-xs btn-outline-light">
-														<i class="bi {% if review.likes.exists %}bi-heart-fill{% else %}bi bi-heart{% endif %} 
-														{% if request.user in review.likes.all %}text-danger{% endif %}"></i> 
-														Like {{review.get_total_likes}}
-													</button>	
+													<button type="submit" class="btn btn-xs {% if request.user in review.likes.all %}btn-danger{% else %}btn-outline-danger{% endif %}">
+														<i class="bi {% if review.likes.exists %}bi-heart-fill{% else %}bi bi-heart{% endif %}"></i> 
+														Like {% if review.likes.exists %}{{review.get_total_likes}}{% endif %}
+													</button>
+													{% if request.user.username in review.user.username %}
+													<a href="{% url 'delete_reviews' review.id %}" class="btn btn-xs btn-outline-light"><i class="bi bi-trash3"></i> Delete</a>
+													{% endif %}	
 												</form>
 											</div>
 										</div>
@@ -488,7 +509,6 @@ Tabs-content START -->
 							</div>
                             <p style="text-decoration:underline;">Select Date to Book Ride More Than A Day</p>
                             <form method="GET" action="{% url 'car_details' cars.slug %}">
-                                {% include 'base/includes/alerts.html' %}
                                 <div class="row">
                                 <div class="col-md-6 col-xl-6">
                                     <div class="mb-2">
@@ -623,5 +643,32 @@ Tabs-content END -->
 		</div>
 	</div>
 </div>
+
+<script>
+	function copyLink() {
+		// Get the current URL
+		var currentUrl = window.location.href;
+
+		// Create a temporary input element
+		var tempInput = document.createElement("input");
+		tempInput.value = currentUrl;
+
+		// Append the input element to the document
+		document.body.appendChild(tempInput);
+
+		// Select the input's content
+		tempInput.select();
+		tempInput.setSelectionRange(0, 99999); // For mobile devices
+
+		// Copy the selected text to the clipboard
+		document.execCommand("copy");
+
+		// Remove the temporary input element
+		document.body.removeChild(tempInput);
+
+		// Optionally, you can provide feedback to the user
+		alert("Link copied");
+	}
+</script>
 
 {% endblock content %}

@@ -1,5 +1,4 @@
 from django.db import models
-import random
 import uuid
 import os
 from django.core.files.storage import default_storage
@@ -19,8 +18,9 @@ class Cars(models.Model):
     car_id = models.UUIDField(primary_key=True, unique=True, editable=False, default=uuid.uuid4)
     car_type = models.ForeignKey(CarTypes, on_delete=models.CASCADE, null=True, blank=True)
     brand = models.CharField(max_length=255, null=True, blank=True)
+    car_number = models.CharField(max_length=50, null=True, blank=True)
     slug = models.SlugField(max_length=255, unique=True, null=True, blank=True)
-    year = models.PositiveIntegerField(default=random.randint(2000, 3000), null=True, blank=True)
+    year = models.PositiveIntegerField(default=0, null=True, blank=True)
     desc = models.TextField(default="", null=True, blank=True)
 
     body_type = models.CharField(max_length=100, null=True, blank=True)
@@ -44,7 +44,17 @@ class Booking(models.Model):
     return_date = models.DateField(null=True, blank=True)
     total_days = models.PositiveIntegerField(default=0, null=True, blank=True)
     total_price = models.PositiveIntegerField(default=0, null=True, blank=True)
+    payment_mode = models.CharField(max_length=50, null=True, blank=True)
     is_paid = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
+
+    def security_amount(self):
+        amount = 2000
+        return amount
+    
+    def total_amount(self):
+        total = self.total_price + self.security_amount()
+        return total
 
     def total_days(self):
         if self.pickup_date and self.return_date:

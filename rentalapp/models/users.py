@@ -23,7 +23,7 @@ class Profile(models.Model):
     online_status = models.BooleanField(default=False)
     last_activity_time = models.DateTimeField(null=True, blank=True)
     total_active_time = models.DurationField(default=timezone.timedelta())
-    wishlists = models.ManyToManyField(Cars, related_name="wishlists", null=True, blank=True)
+    wishlists = models.ManyToManyField(Cars, related_name="wishlists")
 
     def get_total_wishlists(self):
         return self.wishlists.count()

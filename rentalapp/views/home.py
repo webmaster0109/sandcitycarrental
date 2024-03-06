@@ -15,10 +15,25 @@ from hitcount.views import HitCountDetailView
 from django.db.models import Avg, Count
 from django.template.defaultfilters import striptags
 import math
+from rentalapp.models.users import Profile
 
 def home_page(request):
     category = CarTypes.objects.all()
     return render(request, template_name="frontend/index.html", context={'category':category})
+
+def add_to_wishlists(request, slug):
+    car = Cars.objects.get(slug=slug)
+    user_obj = request.user.profile
+    user_obj.wishlists.add(car)
+    messages.success(request, "Successfully added in wishlist")
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+def remove_to_wishlists(request, slug):
+    car = Cars.objects.get(slug=slug)
+    user_obj = request.user.profile
+    user_obj.wishlists.remove(car)
+    messages.warning(request, "Oops! Removed item from wishlist")
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 def signup_newsletter(request):
     if request.method == "POST":
@@ -216,6 +231,18 @@ def car_review_by_user(request, slug):
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 @login_required(login_url='/auth/login')
+def delete_reviews(request, id):
+    try:
+        car_review = CarReviews.objects.get(id=id)
+        user = request.user
+        if car_review.user == user:
+            car_review.delete()
+            messages.success(request, f"Successfully delete {car_review.reviews} reviews")
+    except CarReviews.DoesNotExist:
+        messages.warning(request, "review not found")
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+@login_required(login_url='/auth/login')
 def car_like_by_user(request, id):
     cars = CarReviews.objects.get(id=id)
     user = request.user
@@ -259,11 +286,15 @@ def cart(request):
     
     try:
         cart_obj = Booking.objects.get(is_paid=False, user=user)
+        cars = cart_obj.car
+        average_review = CarReviews.objects.filter(cars=cars).aggregate(rating=Avg('rating'))
+        print(average_review)
     except Exception as e:
         print(e)
 
     context = {
         'cart' : cart_obj,
+        'average_review': average_review,
     }
     return render(request, template_name="frontend/cart.html", context=context)
 
@@ -284,11 +315,9 @@ def contact_us(request):
     return render(request, template_name="frontend/contact_us.html")
 
 def privacy_policy(request):
-
     return render(request, template_name="frontend/privacy_policy.html")
 
 def terms_condititon(request):
-
     return render(request, template_name="frontend/terms_condititon.html")
 
 def help_center(request):

@@ -244,7 +244,9 @@
 										<ul class="list-inline mb-0 z-index-2">
 											<!-- Heart icon -->
 											<li class="list-inline-item">
-												<a href="#" class="btn btn-sm btn-round btn-light"><i class="fa-solid fa-fw fa-heart"></i></a>
+												<a href="{% url 'add_to_wishlists' car.slug %}" class="btn btn-light px-2">
+													<i class="{% if request.user.profile.wishlists.exists %}fa-solid{% else %}fa-regular{% endif %} fa-bookmark"></i>
+												</a>
 											</li>
 											<!-- Share icon -->
 											<li class="list-inline-item dropdown">
