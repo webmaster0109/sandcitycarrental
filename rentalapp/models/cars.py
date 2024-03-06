@@ -45,6 +45,7 @@ class Booking(models.Model):
     total_days = models.PositiveIntegerField(default=0, null=True, blank=True)
     total_price = models.PositiveIntegerField(default=0, null=True, blank=True)
     payment_mode = models.CharField(max_length=50, null=True, blank=True)
+    transaction_id = models.CharField(max_length=255, null=True, blank=True)
     is_paid = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
 
