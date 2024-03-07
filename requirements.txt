@@ -4,3 +4,4 @@ django-ckeditor-5
 social-auth-app-django
 gunicorn
 whitenoise
+reportlab
