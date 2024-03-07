@@ -301,34 +301,24 @@ def add_to_cart(request, slug):
         return redirect('cart')
 
 def cart(request):    
-    cart_obj = None
-    user = request.user
-    average_review = None
-    
     try:
-        cart_obj = Booking.objects.get(is_paid=False, user=user)
+        cart_obj = Booking.objects.get(is_paid=False, user=request.user)
         cars = cart_obj.car
         average_review = CarReviews.objects.filter(cars=cars).aggregate(rating=Avg('rating'))
-    except Exception as e:
-        print(e)
+    except Booking.DoesNotExist:
+        cart_obj = None
+        average_review = None
 
     if request.method == "POST":
         payment_mode = request.POST.get('payment_method')
         transaction_id = request.POST.get('transaction_id')
         transaction_pdf = request.FILES.get('transaction_copy_pdf')
 
-        if payment_mode == "Cash in Hand":
+        if payment_mode in ["Cash in Hand", "Transfer to Bank"]:
             cart_obj.payment_mode = payment_mode
-            cart_obj.booking_id = "S-" + str(random.randint(10000000, 99999999))
-            cart_obj.is_paid = True
-            cart_obj.total_price = cart_obj.total_amount()
-            cart_obj.save()
-            return redirect('success_payment')
-        elif payment_mode == "Transfer to Bank":
-            cart_obj.payment_mode = payment_mode
-            cart_obj.transaction_id = transaction_id
-            cart_obj.transaction_pdf = transaction_pdf
-            cart_obj.booking_id = "S-" + str(random.randint(10000000, 99999999))
+            cart_obj.transaction_id = transaction_id if payment_mode == "Transfer to Bank" else None
+            cart_obj.transaction_pdf = transaction_pdf if payment_mode == "Transfer to Bank" else None
+            cart_obj.booking_id = f"S-{random.randint(10000000, 99999999)}"
             cart_obj.is_paid = True
             cart_obj.total_price = cart_obj.total_amount()
             cart_obj.save()
@@ -341,13 +331,12 @@ def cart(request):
     return render(request, template_name="frontend/cart.html", context=context)
 
 def success_payment(request):
-    cart_obj = None
-    user = request.user
     try:
-        cart_obj = Booking.objects.get(is_paid=True, user=user)
-    except Exception as e:
-        print(e)
-    return render(request, template_name="frontend/success_payment.html", context={'cart_obj' : cart_obj,})
+        latest_paid_booking = Booking.objects.filter(is_paid=True, user=request.user).latest('created_at')
+    except Booking.DoesNotExist:
+        messages.error(request, 'No paid bookings found.')
+        return redirect('cart')
+    return render(request, template_name="frontend/success_payment.html", context={'cart_obj' : latest_paid_booking})
 
 def contact_us(request):
     if request.method == "POST":

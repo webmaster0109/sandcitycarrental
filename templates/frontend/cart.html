@@ -3,7 +3,7 @@
 {% block content %}
 <!-- =======================
 Page content START -->
-{% if not cart_obj.is_paid is True %}
+{% if cart and not cat.is_paid %}
 <section>
 	<div class="container">
 		<div class="row g-3 g-lg-4">
