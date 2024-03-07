@@ -1,6 +1,6 @@
 import random
 from django.shortcuts import render, redirect, get_object_or_404
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 from rentalapp.models.users import ContactUs, send_contact_form_email
 from rentalapp.models.cars import CarTypes, Cars, Booking, CarReviews
 from django.contrib import messages
@@ -15,6 +15,8 @@ from rentalapp.models.blogs import BlogsDetail
 from hitcount.views import HitCountDetailView
 from django.template.defaultfilters import striptags
 import math
+from django.template.loader import get_template
+from xhtml2pdf import pisa
 
 def home_page(request):
     category = CarTypes.objects.all()
@@ -328,6 +330,14 @@ def cart(request):
         'average_review': average_review,
     }
     return render(request, template_name="frontend/cart.html", context=context)
+
+def render_to_pdf(template_path, context_dict):
+    template = get_template(template_path)
+    html = template.render(context_dict)
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = 'filename=sandcity_booking_confirmation.pdf'
+
+    # pisa_status = pisa.
 
 def success_payment(request):
     try:
