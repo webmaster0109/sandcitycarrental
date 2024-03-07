@@ -15,7 +15,6 @@ from rentalapp.models.blogs import BlogsDetail
 from hitcount.views import HitCountDetailView
 from django.template.defaultfilters import striptags
 import math
-from rentalapp.models.users import Profile
 
 def home_page(request):
     category = CarTypes.objects.all()

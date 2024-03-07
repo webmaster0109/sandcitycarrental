@@ -5,3 +5,4 @@ social-auth-app-django
 gunicorn
 whitenoise
 reportlab
+xhtml2pdf
