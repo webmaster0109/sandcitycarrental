@@ -4,7 +4,7 @@ from django.http import HttpResponseRedirect
 from rentalapp.models.users import ContactUs, send_contact_form_email
 from rentalapp.models.cars import CarTypes, Cars, Booking, CarReviews
 from django.contrib import messages
-from django.db.models import Q
+from django.db.models import Q, Avg, Count
 from datetime import datetime
 from django.utils import timezone
 from django.contrib.auth.decorators import login_required
@@ -13,7 +13,6 @@ from django.utils.translation import gettext_lazy as _
 from rentalapp.models.newsletter import EmailNewsletters, send_newsletter_email
 from rentalapp.models.blogs import BlogsDetail
 from hitcount.views import HitCountDetailView
-from django.db.models import Avg, Count
 from django.template.defaultfilters import striptags
 import math
 from rentalapp.models.users import Profile
