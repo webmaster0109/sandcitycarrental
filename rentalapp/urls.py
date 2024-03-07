@@ -25,6 +25,7 @@ urlpatterns = [
     path('add-to-wishlist/<slug>', add_to_wishlists, name="add_to_wishlists"),
     path('delete-reviews/<id>', delete_reviews, name="delete_reviews"),
     path('remove-to-wishlist/<slug>', remove_to_wishlists, name="remove_to_wishlists"),
+    path('booking-confirm', success_payment, name="success_payment"),
 
     # authentication urls
     path('auth/login', login_attempt, name="login"),

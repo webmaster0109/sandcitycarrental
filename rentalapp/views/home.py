@@ -1,3 +1,4 @@
+import random
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponseRedirect
 from rentalapp.models.users import ContactUs, send_contact_form_email
@@ -69,10 +70,10 @@ def calculate_dynamic_price(discounted_price, total_days):
 def booking_search(request):
     if request.method == 'GET':
         selected_category = request.GET.get('car_category')
-        pickup_date = request.GET.get('pickup_date')
-        return_date = request.GET.get('return_date')
+        pickup_date_str = request.GET.get('pickup_date')
+        return_date_str = request.GET.get('return_date')
 
-        if not all([selected_category, pickup_date, return_date]):
+        if not all([selected_category, pickup_date_str, return_date_str]):
             return redirect('homepage')
         
 
@@ -82,14 +83,14 @@ def booking_search(request):
         filtered_bookings = Booking.objects.all()
 
         available_cars = Cars.objects.exclude(
-            Q(booking__pickup_date__lte=return_date, booking__return_date__gte=pickup_date) |
-            Q(booking__pickup_date__gte=pickup_date, booking__return_date__lte=return_date) |
-            Q(booking__pickup_date__lte=pickup_date, booking__return_date__gte=return_date)
+            Q(booking__pickup_date__lte=return_date_str, booking__return_date__gte=pickup_date_str) |
+            Q(booking__pickup_date__gte=pickup_date_str, booking__return_date__lte=return_date_str) |
+            Q(booking__pickup_date__lte=pickup_date_str, booking__return_date__gte=return_date_str)
         ).filter(car_type__car_types=selected_category)
 
         try:
-            pickup_date = datetime.strptime(pickup_date, '%Y-%m-%d').date()
-            return_date = datetime.strptime(return_date, '%Y-%m-%d').date()
+            pickup_date = datetime.strptime(pickup_date_str, '%Y-%m-%d').date()
+            return_date = datetime.strptime(return_date_str, '%Y-%m-%d').date()
         except ValueError:
             raise ValidationError(_('Invalid date format. Please use YYYY-MM-DD format.'))
 
@@ -107,12 +108,15 @@ def booking_search(request):
 
         total_days = (return_date - pickup_date).days
 
+        request.session['pickup_date'] = pickup_date
+        request.session['return_date'] = return_date
+
         car_prices = {}
         for car in available_cars:
             dynamic_price = calculate_dynamic_price(car.discounted_price, total_days)
             car.total_price = total_days * dynamic_price
             total_price = total_days * dynamic_price
-            car_prices[car.slug] = {'total_price': total_price, 'total_days': total_days}
+            car_prices[car.slug] = {'total_price': total_price, 'total_days': total_days, 'pickup_date': pickup_date_str, 'return_date': return_date_str}
         
         request.session['car_prices'] = car_prices
 
@@ -168,12 +172,12 @@ def car_details(request, slug):
     car_id = cars.slug
 
     if request.method == 'GET':
-        pickup_date = request.GET.get('pickup_date')
-        return_date = request.GET.get('return_date')
+        pickup_date_str = request.GET.get('pickup_date')
+        return_date_str = request.GET.get('return_date')
 
-        if pickup_date and return_date:
-            pickup_date = datetime.strptime(pickup_date, '%Y-%m-%d').date()
-            return_date = datetime.strptime(return_date, '%Y-%m-%d').date()
+        if pickup_date_str and return_date_str:
+            pickup_date = datetime.strptime(pickup_date_str, '%Y-%m-%d').date()
+            return_date = datetime.strptime(return_date_str, '%Y-%m-%d').date()
 
             if pickup_date < datetime.now().date():
                 messages.warning(request, "Pickup date should be not less than today")
@@ -189,7 +193,7 @@ def car_details(request, slug):
 
             car_prices = {}
             if booking_days > 1:
-                car_prices[car_id] = {'total_price': total_price, 'total_days': booking_days}
+                car_prices[car_id] = {'total_price': total_price, 'total_days': booking_days, 'pickup_date': pickup_date_str, 'return_date': return_date_str}
             request.session['car_prices'] = car_prices
             return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     
@@ -260,43 +264,91 @@ def add_to_cart(request, slug):
     car_obj = Cars.objects.get(slug=slug)
     user_obj = request.user
 
-    old_cart_items = Booking.objects.filter(user=user_obj)
-
-    old_cart_items.delete()
+    old_cart_items = Booking.objects.filter(user=user_obj, car=car_obj).first()
 
     car_prices = request.session.get('car_prices', {})
     car_info = car_prices.get(car_obj.slug, {})
     total_days = car_info.get('total_days')
     total_price = car_info.get('total_price')
+    pickup_date = car_info.get('pickup_date')
+    return_date = car_info.get('return_date')
+
+    if old_cart_items:
+        if old_cart_items.is_paid:
+            messages.success(request, 'Already booked this car')
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+        else:
+            messages.success(request, 'Already added to cart')
+            return redirect('cart')
+
     cart_item = Booking.objects.create(car=car_obj, user=user_obj)
+
     if total_days and total_price:
         cart_item.total_day = total_days
         cart_item.total_price = total_price
-        cart_item.save()
+        cart_item.pickup_date = datetime.strptime(pickup_date, '%Y-%m-%d').date()
+        cart_item.return_date = datetime.strptime(return_date, '%Y-%m-%d').date()
     else:
         cart_item.total_day = 1
         cart_item.total_price = car_obj.discounted_price
-        cart_item.save()
-    messages.success(request, 'Added to cart, make your payment now...')
-    return redirect('cart')
+
+    cart_item.save()
+
+    if cart_item:
+        messages.success(request, 'Added to cart, make your payment now...')
+        return redirect('cart')
+    else:
+        messages.error(request, 'Failed to add to cart. Please try again.')
+        return redirect('cart')
 
 def cart(request):    
     cart_obj = None
     user = request.user
+    average_review = None
     
     try:
         cart_obj = Booking.objects.get(is_paid=False, user=user)
         cars = cart_obj.car
         average_review = CarReviews.objects.filter(cars=cars).aggregate(rating=Avg('rating'))
-        print(average_review)
     except Exception as e:
         print(e)
+
+    if request.method == "POST":
+        payment_mode = request.POST.get('payment_method')
+        transaction_id = request.POST.get('transaction_id')
+        transaction_pdf = request.FILES.get('transaction_copy_pdf')
+
+        if payment_mode == "Cash in Hand":
+            cart_obj.payment_mode = payment_mode
+            cart_obj.booking_id = "S-" + str(random.randint(10000000, 99999999))
+            cart_obj.is_paid = True
+            cart_obj.total_price = cart_obj.total_amount()
+            cart_obj.save()
+            return redirect('success_payment')
+        elif payment_mode == "Transfer to Bank":
+            cart_obj.payment_mode = payment_mode
+            cart_obj.transaction_id = transaction_id
+            cart_obj.transaction_pdf = transaction_pdf
+            cart_obj.booking_id = "S-" + str(random.randint(10000000, 99999999))
+            cart_obj.is_paid = True
+            cart_obj.total_price = cart_obj.total_amount()
+            cart_obj.save()
+            return redirect('success_payment')
 
     context = {
         'cart' : cart_obj,
         'average_review': average_review,
     }
     return render(request, template_name="frontend/cart.html", context=context)
+
+def success_payment(request):
+    cart_obj = None
+    user = request.user
+    try:
+        cart_obj = Booking.objects.get(is_paid=True, user=user)
+    except Exception as e:
+        print(e)
+    return render(request, template_name="frontend/success_payment.html", context={'cart_obj' : cart_obj,})
 
 def contact_us(request):
     if request.method == "POST":
