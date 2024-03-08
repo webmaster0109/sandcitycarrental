@@ -5,10 +5,10 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.http import HttpResponse, HttpResponseRedirect
-from rentalapp.models.cars import Cars
-import requests
+from rentalapp.models.cars import Cars, CarReviews
 from rentalapp.models.users import Country, Profile, UserNotification
 from django.utils import timezone
+from django.db.models import Avg
 
 @login_required(login_url='/auth/login')
 def admin_dashboard_home(request):
@@ -167,3 +167,14 @@ def read_notification(request):
         notification.mark_as_read()
 
     return render(request, template_name="backend/dashboard/notification.html", context={'notifications': notifications})
+
+@login_required(login_url='/authentication/login')
+def user_all_wishlists(request):
+    try:
+        wishlists = request.user.profile.wishlists.all()
+        # Calculate average review for each car
+        average_review = CarReviews.objects.filter(reviews__isnull=False).annotate(avg_rating=Avg('rating')).distinct()
+    except Cars.DoesNotExist:
+        average_review = None
+    context = { 'wishlists' : wishlists, 'average_review': average_review }
+    return render(request, template_name="backend/dashboard/wishlists.html", context=context)

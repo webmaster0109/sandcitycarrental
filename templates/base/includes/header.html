@@ -298,7 +298,7 @@
 										<li><a class="dropdown-item" href="{% url "dashboard" %}"><i class="bi bi-person-fill-gear fa-fw me-2"></i>Profile</a></li>
 										<li><a class="dropdown-item" href="index.html#"><i class="bi bi-bookmark-check fa-fw me-2"></i>My Bookings</a></li>
 										{% endif %}
-                                        <li><a class="dropdown-item" href="index.html#"><i class="bi bi-heart fa-fw me-2"></i>My Wishlist</a></li>
+                                        <li><a class="dropdown-item" href="{% url "user_all_wishlists" %}"><i class="bi bi-heart fa-fw me-2"></i>My Wishlist</a></li>
                                         <li><a class="dropdown-item" href="index.html#"><i class="bi bi-gear fa-fw me-2"></i>Settings</a></li>
 										{% if not request.user.is_staff %}
                                         <li><a class="dropdown-item" href="index.html#"><i class="bi bi-info-circle fa-fw me-2"></i>Help Center</a></li>

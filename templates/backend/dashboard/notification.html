@@ -20,13 +20,14 @@
                             <div class="card border">
                                 <!-- Card header -->
                                 <div class="card-header border-bottom">
-                                    <h5 class="card-header-title">Recent Activities</h5>
+                                    <h4 class="card-header-title">Recent Notifications</ha>
                                 </div>
             
                                 <!-- Card body START -->
                                 <div class="card-body">
                                     {% include 'base/includes/alerts.html' %}
                                     <!-- Activity item START -->
+                                    {% if notifications %}
                                     {% for notification in notifications %}
                                     <div class="d-sm-flex justify-content-between align-items-center">
                                         <div class="d-flex align-items-sm-center me-4 ms-sm-0">
@@ -51,7 +52,9 @@
                                     <hr> <!-- Divider -->
                                     {% endfor %}
                                     <!-- Activity item END -->
-            
+                                    {% else %}
+                                    <h6 class="fw-light">There is no notification</h6>
+                                    {% endif %}
             
                                 </div>
                                 <!-- Card body END -->

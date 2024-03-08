@@ -6,7 +6,6 @@ from rentalapp.models.cars import CarTypes, Cars, Booking, CarReviews
 from django.contrib import messages
 from django.db.models import Q, Avg, Count
 from datetime import datetime
-from django.utils import timezone
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
@@ -284,12 +283,12 @@ def add_to_cart(request, slug):
     cart_item = Booking.objects.create(car=car_obj, user=user_obj)
 
     if total_days and total_price:
-        cart_item.total_day = total_days
+        cart_item.total_days = total_days
         cart_item.total_price = total_price
         cart_item.pickup_date = datetime.strptime(pickup_date, '%Y-%m-%d').date()
         cart_item.return_date = datetime.strptime(return_date, '%Y-%m-%d').date()
     else:
-        cart_item.total_day = 1
+        cart_item.total_days = 1
         cart_item.total_price = car_obj.discounted_price
 
     cart_item.save()
@@ -321,7 +320,6 @@ def cart(request):
             cart_obj.transaction_pdf = transaction_pdf if payment_mode == "Transfer to Bank" else None
             cart_obj.booking_id = f"S-{random.randint(10000000, 99999999)}"
             cart_obj.is_paid = True
-            cart_obj.total_price = cart_obj.total_amount()
             cart_obj.save()
             return redirect('success_payment')
 
@@ -331,13 +329,22 @@ def cart(request):
     }
     return render(request, template_name="frontend/cart.html", context=context)
 
-def render_to_pdf(template_path, context_dict):
-    template = get_template(template_path)
-    html = template.render(context_dict)
+def generate_pdf(request):
+    try:
+        latest_paid_booking = Booking.objects.filter(is_paid=True, user=request.user).latest('created_at')
+    except Booking.DoesNotExist:
+        return HttpResponse("No paid bookings found for the user.")
+    context={'cart' : latest_paid_booking}
+    template = get_template('frontend/invoice.html')
+    html_content = template.render(context)
+    # Create a response with the PDF content for download
     response = HttpResponse(content_type='application/pdf')
-    response['Content-Disposition'] = 'filename=sandcity_booking_confirmation.pdf'
+    response['Content-Disposition'] = f'filename="sandcity_booking_{latest_paid_booking.car.brand}-{latest_paid_booking.user.username}.pdf"'
+    pisa_status = pisa.CreatePDF(html_content, dest=response, encoding='utf-8')
+    if pisa_status.err:
+        return HttpResponse("Error during PDF generation.")
 
-    # pisa_status = pisa.
+    return response
 
 def success_payment(request):
     try:
@@ -345,7 +352,8 @@ def success_payment(request):
     except Booking.DoesNotExist:
         messages.error(request, 'No paid bookings found.')
         return redirect('cart')
-    return render(request, template_name="frontend/success_payment.html", context={'cart_obj' : latest_paid_booking})
+    context={'cart_obj' : latest_paid_booking}
+    return render(request, template_name="frontend/success_payment.html", context=context)
 
 def contact_us(request):
     if request.method == "POST":

@@ -58,11 +58,6 @@ class Booking(models.Model):
         total = self.total_price + self.security_amount()
         return total
 
-    def total_days(self):
-        if self.pickup_date and self.return_date:
-            return (self.pickup_date - self.return_date).days
-        return None
-
     def __str__(self):
         return self.car.brand
 

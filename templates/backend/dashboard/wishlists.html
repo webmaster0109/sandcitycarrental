@@ -1,0 +1,153 @@
+{% extends "base/base.html" %}
+
+{% block content %}
+<section class="pt-3">
+	<div class="container">
+		<div class="row">
+
+			<!-- Sidebar START -->
+			{% include "./profile_menu.html" %}
+			<!-- Sidebar END -->
+
+			<!-- Main content START -->
+			<div class="col-lg-8 col-xl-9">
+
+				<!-- Offcanvas menu button -->
+				<div class="d-grid mb-0 d-lg-none w-100">
+					<button class="btn btn-primary mb-4" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasSidebar" aria-controls="offcanvasSidebar">
+						<i class="fas fa-sliders-h"></i> Menu
+					</button>
+				</div>
+
+				<!-- Wishlist START -->
+				<div class="card border bg-transparent">
+					<!-- Card header -->
+					<div class="card-header bg-transparent border-bottom">
+						<h4 class="card-header-title">My Wishlist</h4>
+					</div>
+
+					<!-- Card body START -->
+					<div class="card-body vstack gap-4">
+						<!-- Wishlist item START -->
+                        {% if wishlists %}
+                        {% for wishlist in wishlists %}
+                        {% include 'base/includes/alerts.html' %}
+						<div class="card shadow p-2">
+							<div class="row g-0">
+								<!-- Card img -->
+								<div class="col-md-3">
+                                    {% for image in wishlist.carimages_set.all|slice:":1" %}
+									<img src="{{image.car_images.url}}" class="card-img rounded-2" alt="{{wishlist.car.brand}}_{{image.car_images_id}}">
+                                    {% endfor %}
+								</div>
+								<!-- Card body -->
+								<div class="col-md-9">
+									<div class="card-body py-md-2 d-flex flex-column h-100">
+	
+										<!-- Rating and buttons -->
+										<div class="d-flex justify-content-between align-items-center">
+											<ul class="list-inline small mb-0">
+                                            {% for average_review in average_review %}
+                                            {% if wishlist.brand in average_review.cars.brand %}
+												{% if average_review.avg_rating == 5.0 %}
+												<li class="list-inline-item me-0"><i class="fa-solid fa-star text-warning"></i></li>
+												<li class="list-inline-item me-0"><i class="fa-solid fa-star text-warning"></i></li>
+												<li class="list-inline-item me-0"><i class="fa-solid fa-star text-warning"></i></li>
+												<li class="list-inline-item me-0"><i class="fa-solid fa-star text-warning"></i></li>
+												<li class="list-inline-item me-0"><i class="fa-solid fa-star text-warning"></i></li>
+												<li class="list-inline-item ms-2 h6 small fw-light mb-0">{{average_review.avg_rating}} star</li>
+												{% elif average_review.avg_rating > 4.0 and average_review.avg_rating < 5.0 %}
+												<li class="list-inline-item me-0"><i class="fa-solid fa-star text-warning"></i></li>
+												<li class="list-inline-item me-0"><i class="fa-solid fa-star text-warning"></i></li>
+												<li class="list-inline-item me-0"><i class="fa-solid fa-star text-warning"></i></li>
+												<li class="list-inline-item me-0"><i class="fa-solid fa-star text-warning"></i></li>
+												<li class="list-inline-item me-0"><i class="fa-solid fa-star-half-alt text-warning"></i></li>
+												<li class="list-inline-item ms-2 h6 small fw-light mb-0">{{average_review.avg_rating}} star</li>
+												{% elif average_review.avg_rating == 4.0  %}
+												<li class="list-inline-item me-0"><i class="fa-solid fa-star text-warning"></i></li>
+												<li class="list-inline-item me-0"><i class="fa-solid fa-star text-warning"></i></li>
+												<li class="list-inline-item me-0"><i class="fa-solid fa-star text-warning"></i></li>
+												<li class="list-inline-item me-0"><i class="fa-solid fa-star text-warning"></i></li>
+												<li class="list-inline-item ms-2 h6 small fw-light mb-0">{{average_review.avg_rating}} star</li>
+												{% elif average_review.avg_rating > 3.0 and average_review.avg_rating < 4.0  %}
+												<li class="list-inline-item me-0"><i class="fa-solid fa-star text-warning"></i></li>
+												<li class="list-inline-item me-0"><i class="fa-solid fa-star text-warning"></i></li>
+												<li class="list-inline-item me-0"><i class="fa-solid fa-star text-warning"></i></li>
+												<li class="list-inline-item me-0"><i class="fa-solid fa-star-half-alt text-warning"></i></li>
+												<li class="list-inline-item ms-2 h6 small fw-light mb-0">{{average_review.avg_rating}} star</li>
+												{% elif average_review.avg_rating == 3.0  %}
+												<li class="list-inline-item me-0"><i class="fa-solid fa-star text-warning"></i></li>
+												<li class="list-inline-item me-0"><i class="fa-solid fa-star text-warning"></i></li>
+												<li class="list-inline-item me-0"><i class="fa-solid fa-star text-warning"></i></li>
+												<li class="list-inline-item ms-2 h6 small fw-light mb-0">{{average_review.avg_rating}} star</li>
+												{% elif average_review.avg_rating > 2.0 and average_review.avg_rating < 3.0  %}
+												<li class="list-inline-item me-0"><i class="fa-solid fa-star text-warning"></i></li>
+												<li class="list-inline-item me-0"><i class="fa-solid fa-star text-warning"></i></li>
+												<li class="list-inline-item me-0"><i class="fa-solid fa-star-half-alt text-warning"></i></li>
+												<li class="list-inline-item ms-2 h6 small fw-light mb-0">{{average_review.avg_rating}} star</li>
+												{% elif average_review.avg_rating == 2.0  %}
+												<li class="list-inline-item me-0"><i class="fa-solid fa-star text-warning"></i></li>
+												<li class="list-inline-item me-0"><i class="fa-solid fa-star text-warning"></i></li>
+												<li class="list-inline-item ms-2 h6 small fw-light mb-0">{{average_review.avg_rating}} star</li>
+												{% elif average_review.avg_rating > 1.0 and average_review.avg_rating < 2.0  %}
+												<li class="list-inline-item me-0"><i class="fa-solid fa-star text-warning"></i></li>
+												<li class="list-inline-item me-0"><i class="fa-solid fa-star-half-alt text-warning"></i></li>
+												<li class="list-inline-item ms-2 h6 small fw-light mb-0">{{average_review.avg_rating}} star</li>
+												{% elif average_review.avg_rating == 1.0  %}
+												<li class="list-inline-item me-0"><i class="fa-solid fa-star text-warning"></i></li>
+												<li class="list-inline-item ms-2 h6 small fw-light mb-0">{{average_review.avg_rating}} star</li>
+                                                {% else %}
+                                                <li class="list-inline-item h5 small fw-light mb-0">No Review</li>
+                                                {% endif %}
+                                            {% else %}
+                                            <li class="list-inline-item h5 small fw-light mb-0">No Review</li>
+                                            {% endif %}
+                                            {% endfor %}
+											</ul>
+	
+											<ul class="list-inline mb-0">
+												<!-- Heart icon -->
+												<li class="list-inline-item">
+                                                    {% with user_wishlists=request.user.profile.wishlists.all %}
+													<a href="{% if wishlist in user_wishlists %}{% url 'remove_to_wishlists' wishlist.slug %}{% else %}{% url 'add_to_wishlists' wishlist.slug %}{% endif %}" class="btn btn-sm btn-round btn-orange mb-0"><i class="{% if wishlist in user_wishlists %}fa-solid{% else %}fa-regular{% endif %} fa-bookmark"></i></a>
+                                                    {% endwith %}
+												</li>
+											</ul>
+										</div>
+	
+										<!-- Title -->
+										<h5 class="card-title mb-1"><a href="{% url 'car_details' wishlist.slug %}">{{wishlist.brand}}</a></h5>
+										<small><i class="bi bi-geo-alt me-2"></i>Dubai Downtown, UAE</small>
+										
+										<!-- Price and Button -->
+										<div class="d-sm-flex justify-content-sm-between align-items-center mt-3 mt-md-auto">
+											<!-- Button -->
+											<div class="d-flex align-items-center">
+												<h5 class="fw-bold mb-0 me-1">AED {{wishlist.discounted_price}}</h5>
+												<span class="mb-0 me-2">/day</span>
+											</div>                 
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+                        {% endfor %}
+                        {% else %}
+                        {% include 'base/includes/alerts.html' %}
+                        <div class="card p-2">
+                            <h1 class="h6 fw-light">Empty Wishlist</h1>
+                        </div>
+                        {% endif %}
+						<!-- Wishlist item END -->
+					</div>
+					<!-- Card body END -->
+				</div>
+				<!-- Wishlist END -->
+
+			</div>
+			<!-- Main content END -->
+
+		</div>
+	</div>
+</section>
+{% endblock %}

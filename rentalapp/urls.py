@@ -1,5 +1,5 @@
 from django.urls import path
-from rentalapp.views.admin_dashboard import admin_dashboard_home, admin_cars_lists, signout, update_profile, upload_image, remove_image, user_lists, delete_user, read_notification, delete_notification_view
+from rentalapp.views.admin_dashboard import *
 from rentalapp.views.home import *
 from rentalapp.views.credentials import login_attempt, signup_attempt, forgot_password, verify_account, forgot_username, change_password
 
@@ -26,6 +26,7 @@ urlpatterns = [
     path('delete-reviews/<id>', delete_reviews, name="delete_reviews"),
     path('remove-to-wishlist/<slug>', remove_to_wishlists, name="remove_to_wishlists"),
     path('booking-confirm', success_payment, name="success_payment"),
+    path('download-pdf', generate_pdf, name="generate_pdf"),
 
     # authentication urls
     path('auth/login', login_attempt, name="login"),
@@ -35,6 +36,7 @@ urlpatterns = [
     path('dashboard/car-lists', admin_cars_lists, name="car_lists"),
     path('dashboard/notifications', read_notification, name="notification"),
     path('dashboard/user-lists', user_lists, name="user_lists"),
+    path('dashboard/wishlists', user_all_wishlists, name="user_all_wishlists"),
     path('logout', signout, name="logout"),
     path('verify-account/<token>', verify_account, name="verify_account"),
     path('forgot-username', forgot_username, name="forgot_username"),
