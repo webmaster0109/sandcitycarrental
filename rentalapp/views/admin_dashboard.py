@@ -178,3 +178,8 @@ def user_all_wishlists(request):
         average_review = None
     context = { 'wishlists' : wishlists, 'average_review': average_review }
     return render(request, template_name="backend/dashboard/wishlists.html", context=context)
+
+@login_required(login_url='/authentication/login')
+def user_all_bookings(request):
+
+    return render(request, template_name="backend/dashboard/booking.html")

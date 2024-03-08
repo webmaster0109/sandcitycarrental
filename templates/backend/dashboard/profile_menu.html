@@ -40,18 +40,20 @@
             <li class="nav-item">
               <a class="nav-link {% if request.path == url %}active{% endif %}" href="{{url}}"><i class="bi bi-person fa-fw me-2"></i>My Profile</a>
             </li>
+            {% url "user_all_bookings" as url %}
             <li class="nav-item">
-              <a class="nav-link" href="account-bookings.html"><i class="bi bi-ticket-perforated fa-fw me-2"></i>My Bookings</a>
+              <a class="nav-link {% if request.path == url %}active{% endif %}" href="{{url}}"><i class="bi bi-ticket-perforated fa-fw me-2"></i>My Bookings</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="account-payment-details.html"><i class="bi bi-wallet fa-fw me-2"></i>Payment Details</a>
+              <a class="nav-link" href="#"><i class="bi bi-wallet fa-fw me-2"></i>Payment Details</a>
             </li>
             {% url 'notification' as url %}
             <li class="nav-item">
               <a class="nav-link {% if request.path == url %}active{% endif %}" href="{{url}}"><i class="bi bi-bell fa-fw me-2"></i>Notifications</a>
             </li>
+            {% url "user_all_wishlists" as url %}
             <li class="nav-item">
-              <a class="nav-link" href="{% url "user_all_wishlists" %}"><i class="bi bi-heart fa-fw me-2"></i>Wishlist</a>
+              <a class="nav-link {% if request.path == url %}active{% endif %}" href="{{url}}"><i class="bi bi-heart fa-fw me-2"></i>Wishlist</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="account-settings.html"><i class="bi bi-gear fa-fw me-2"></i>Settings</a>

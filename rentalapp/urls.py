@@ -37,6 +37,7 @@ urlpatterns = [
     path('dashboard/notifications', read_notification, name="notification"),
     path('dashboard/user-lists', user_lists, name="user_lists"),
     path('dashboard/wishlists', user_all_wishlists, name="user_all_wishlists"),
+    path('dashboard/booking-lists', user_all_bookings, name="user_all_bookings"),
     path('logout', signout, name="logout"),
     path('verify-account/<token>', verify_account, name="verify_account"),
     path('forgot-username', forgot_username, name="forgot_username"),
