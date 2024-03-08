@@ -26,6 +26,7 @@ INSTALLED_APPS = [
     'rentalapp.apps.RentalappConfig',
     'django_ckeditor_5',
     'hitcount',
+    'simple_history'
 ]
 
 MIDDLEWARE = [
@@ -37,6 +38,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
+    'simple_history.middleware.HistoryRequestMiddleware',
 ]
 
 ROOT_URLCONF = 'sandcity_server.urls'
