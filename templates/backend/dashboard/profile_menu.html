@@ -30,7 +30,7 @@
               {% endif %}
             </div>
             <h6 class="mb-0">{{request.user.first_name}} {{request.user.last_name}}</h6>
-            <a href="account-profile.html#" class="text-reset text-primary-hover small">{{request.user.email}}</a>
+            <a href="mailto:{{request.user.email}}" class="text-reset text-primary-hover small">{{request.user.email}}</a>
             <hr>
           </div>
 
@@ -44,9 +44,6 @@
             <li class="nav-item">
               <a class="nav-link {% if request.path == url %}active{% endif %}" href="{{url}}"><i class="bi bi-ticket-perforated fa-fw me-2"></i>My Bookings</a>
             </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#"><i class="bi bi-wallet fa-fw me-2"></i>Payment Details</a>
-            </li>
             {% url 'notification' as url %}
             <li class="nav-item">
               <a class="nav-link {% if request.path == url %}active{% endif %}" href="{{url}}"><i class="bi bi-bell fa-fw me-2"></i>Notifications</a>
@@ -54,9 +51,6 @@
             {% url "user_all_wishlists" as url %}
             <li class="nav-item">
               <a class="nav-link {% if request.path == url %}active{% endif %}" href="{{url}}"><i class="bi bi-heart fa-fw me-2"></i>Wishlist</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="account-settings.html"><i class="bi bi-gear fa-fw me-2"></i>Settings</a>
             </li>
             <li class="nav-item">
               <a class="nav-link text-danger bg-danger-soft-hover" href="{% url "logout" %}"><i class="fas fa-sign-out-alt fa-fw me-2"></i>Sign Out</a>

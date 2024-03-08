@@ -181,5 +181,4 @@ def user_all_wishlists(request):
 
 @login_required(login_url='/authentication/login')
 def user_all_bookings(request):
-
     return render(request, template_name="backend/dashboard/booking.html")
