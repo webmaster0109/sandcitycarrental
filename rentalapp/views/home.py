@@ -3,6 +3,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponseRedirect, HttpResponse
 from rentalapp.models.users import ContactUs, send_contact_form_email
 from rentalapp.models.cars import CarTypes, Cars, Booking, CarReviews
+from rentalapp.models.faqs import Faq
 from django.contrib import messages
 from django.db.models import Q, Avg, Count
 from datetime import datetime
@@ -15,6 +16,7 @@ from hitcount.views import HitCountDetailView
 from django.template.defaultfilters import striptags
 import math
 from django.template.loader import get_template
+from rentalapp.models.custom_page import CustomPage
 from xhtml2pdf import pisa
 
 def home_page(request):
@@ -381,7 +383,16 @@ def help_center(request):
     return render(request, template_name="frontend/help_center.html")
 
 def faqs(request):
-    return render(request, template_name="frontend/faqs.html")
+    context={
+        'faqs': Faq.objects.all()
+    }
+    return render(request, template_name="frontend/faqs.html", context=context)
+
+def custom_page(request, slug):
+    context = {
+        'custompage': CustomPage.objects.get(slug=slug, is_published=True)
+    }
+    return render(request, template_name="frontend/custom_page.html", context=context)
 
 def blogs_page(request):
     context = {

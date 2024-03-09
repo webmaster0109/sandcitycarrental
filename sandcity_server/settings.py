@@ -24,6 +24,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rentalapp.apps.RentalappConfig',
+    'sandcity_adminpanel.apps.SandcityAdminpanelConfig',
     'django_ckeditor_5',
     'hitcount',
     'simple_history'

@@ -12,7 +12,6 @@ from django.db.models import Avg
 
 @login_required(login_url='/auth/login')
 def admin_dashboard_home(request):
-    user = request.user
     dob = request.user.profile.dob
     date_of_birth = ""
     if dob is not None:

@@ -27,7 +27,7 @@ urlpatterns = [
     path('remove-to-wishlist/<slug>', remove_to_wishlists, name="remove_to_wishlists"),
     path('booking-confirm', success_payment, name="success_payment"),
     path('download-pdf', generate_pdf, name="generate_pdf"),
-
+    path('<str:slug>', custom_page, name="custom_page"),
     # authentication urls
     path('auth/login', login_attempt, name="login"),
     path('auth/register', signup_attempt, name="register"),

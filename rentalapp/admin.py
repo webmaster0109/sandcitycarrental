@@ -4,6 +4,8 @@ from .models.users import Profile, Country, UserNotification
 from .models.car_features import CarFeatures
 from .models.newsletter import EmailNewsletters
 from .models.blogs import BlogsDetail
+from .models.faqs import Faq
+from .models.custom_page import CustomPage
 # Register your models here.
 
 admin.site.site_header = "SandCity Car Rental"
@@ -13,6 +15,13 @@ admin.site.index_title = "Welcome to SandCity Portal"
 admin.site.register(UserNotification)
 admin.site.register(EmailNewsletters)
 admin.site.register(CarReviews)
+
+admin.site.register(Faq)
+
+@admin.register(CustomPage)
+class CustomPageAdmin(admin.ModelAdmin):
+    list_display = ['title', 'slug']
+    prepopulated_fields = {'slug': ('title',)}
 
 @admin.register(BlogsDetail)
 class BlogsDetailAdmin(admin.ModelAdmin):
