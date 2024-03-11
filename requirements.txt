@@ -7,3 +7,4 @@ whitenoise
 reportlab
 xhtml2pdf
 django-simple-history
+rasa
