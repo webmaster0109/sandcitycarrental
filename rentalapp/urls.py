@@ -26,8 +26,6 @@ urlpatterns = [
     path('delete-reviews/<id>', delete_reviews, name="delete_reviews"),
     path('remove-to-wishlist/<slug>', remove_to_wishlists, name="remove_to_wishlists"),
     path('booking-confirm', success_payment, name="success_payment"),
-    path('download-pdf', generate_pdf, name="generate_pdf"),
-    path('<str:slug>', custom_page, name="custom_page"),
     # authentication urls
     path('auth/login', login_attempt, name="login"),
     path('auth/register', signup_attempt, name="register"),
@@ -38,10 +36,10 @@ urlpatterns = [
     path('dashboard/user-lists', user_lists, name="user_lists"),
     path('dashboard/wishlists', user_all_wishlists, name="user_all_wishlists"),
     path('dashboard/booking-lists', user_all_bookings, name="user_all_bookings"),
-    path('logout', signout, name="logout"),
-    path('verify-account/<token>', verify_account, name="verify_account"),
-    path('forgot-username', forgot_username, name="forgot_username"),
-    path('change-password/<token>', change_password, name="change_password"),
+    path('auth/logout', signout, name="logout"),
+    path('auth/verify-account/<token>', verify_account, name="verify_account"),
+    path('auth/forgot-username', forgot_username, name="forgot_username"),
+    path('auth/change-password/<token>', change_password, name="change_password"),
     path('delete-notification/<notification_id>', delete_notification_view, name="delete_notification_view"),
 
     # user-profile urls
@@ -49,4 +47,7 @@ urlpatterns = [
     path('upload-image/<user_id>', upload_image, name="upload_image"),
     path('remove-image/<user_id>', remove_image, name="remove_image"),
     path('delete-user/<user_id>/', delete_user, name="delete_user"),
+
+    # custom page
+    path('<str:slug>', custom_page, name="custom_page"),
 ]

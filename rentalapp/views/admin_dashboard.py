@@ -70,8 +70,12 @@ def signout(request):
     profile_obj.total_active_time = timezone.now() - profile_obj.last_activity_time
     profile_obj.last_activity_time = timezone.now()
     profile_obj.save()
-    logout(request)
-    return redirect("dashboard")
+    if request.user.is_authenticated and request.user.is_staff:
+        logout(request)
+        return redirect("admin_login")
+    else:
+        logout(request)
+        return redirect("dashboard")
 
 @login_required(login_url='/auth/login')
 def update_profile(request, user_id):

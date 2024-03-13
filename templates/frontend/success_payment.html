@@ -1,7 +1,25 @@
 {% extends "base/base.html" %}
 
 {% block content %}
-<section class="pt-3" id="invoice">
+<style>
+	@media print {
+		body * {
+			visibility: hidden;
+		}
+		.print-area, .print-area * {
+			visibility: visible;
+		}
+		.print-area {
+			position: absolute;
+			left: 0;
+			top: 0;
+		}
+		.print-area button {
+			display: none;
+		}
+	}
+</style>
+<section class="pt-3 print-area" id="booking-content">
 	<div class="container">
 		<div class="row">
 			<div class="col-md-10 col-xl-8 mx-auto">
@@ -44,7 +62,7 @@
 								<ul class="list-group list-group-borderless">
                                     <li class="list-group-item d-sm-flex justify-content-between align-items-center">
                                         <span class="mb-0"><i class="bi bi-cash fa-fw me-2"></i>Total Price:</span>
-                                        <span class="h6 fw-normal mb-0">AED {{cart_obj.total_price}}</span>
+                                        <span class="h6 fw-normal mb-0">AED {{cart_obj.total_amount}}</span>
                                     </li>
 									<li class="list-group-item d-sm-flex justify-content-between align-items-center">
 										<span class="mb-0"><i class="bi bi-calendar fa-fw me-2"></i>Pickup Date:</span>
@@ -60,22 +78,8 @@
 
 						<!-- Button -->
 						<div class="d-sm-flex justify-content-sm-end d-grid">
-							<!-- Share button with dropdown -->
-							<div class="dropdown me-sm-2 mb-2 mb-sm-0">
-								<a href="booking-confirm.html#" class="btn btn-light mb-0 w-100" role="button" id="dropdownShare" data-bs-toggle="dropdown" aria-expanded="false">
-									<i class="bi bi-share me-2"></i>Share
-								</a>
-								<!-- dropdown button -->
-								<ul class="dropdown-menu dropdown-menu-end min-w-auto shadow rounded" aria-labelledby="dropdownShare">
-									<li><a class="dropdown-item" href="booking-confirm.html#"><i class="fab fa-twitter-square me-2"></i>Twitter</a></li>
-									<li><a class="dropdown-item" href="booking-confirm.html#"><i class="fab fa-facebook-square me-2"></i>Facebook</a></li>
-									<li><a class="dropdown-item" href="booking-confirm.html#"><i class="fab fa-linkedin me-2"></i>LinkedIn</a></li>
-									<li><a class="dropdown-item" href="booking-confirm.html#"><i class="fas fa-copy me-2"></i>Copy link</a></li>
-								</ul>
-							</div>
-							<!-- Download button -->
-							<!-- <a href="{% url "generate_pdf" %}" class="btn btn-primary mb-0"><i class="bi bi-file-pdf me-2"></i>Download PDF</a> -->
-							<button type="button" class="btn btn-primary mb-0" id="download-button"><i class="bi bi-file-pdf me-2"></i>Download</button>
+							<button type="button" onclick="window.print()" class="btn btn-primary mb-0"><i class="bi bi-printer me-2"></i>Print this</button>
+							<!-- <button onclick="downloadPDF()" class="btn btn-primary mb-0"><i class="bi bi-printer me-2"></i>Download PDF</button> -->
 						</div>
 					</div>
 				</div>
@@ -86,18 +90,25 @@
 </section>
 
 <script>
-	const button = document.getElementById('download-button');
-	function generatePDF() {
-		const element = document.getElementById('invoice');
-		var opt = {
-			margin:			1,
-			filename:		'Sandcity_{{cart_obj.user.username}}_{{cart_obj.car.brand}}.pdf',
-			image:			{ quality: 0.75 },
-			html2canvas:	{ scale: 2 },
-			jsPDF:			{ unit: 'in', format: 'letter', orientation: 'portrait' }
-		};
-		html2pdf().set(opt).from(element).save();
+	function downloadPDF() {
+		const { jsPDF } = window.jspdf;
+		const pdf = new jsPDF('l', 'mm', [1200, 1080]);
+
+		// Capture the specific area you want to convert to PDF
+		const content = document.getElementById('booking-content');
+	
+		// const doc = new jsPDF({
+		// 	unit: 'px',
+		// 	format: this.pdfOptions.value.pageFormat === 'A4' ? [595, 842] : [842, 1191]
+		// });
+	
+		// Add HTML content to the PDF
+		pdf.html(content, {
+			callback: function (pdf) {
+				// Trigger the download of the PDF
+				pdf.save('sandcity_{{cart_obj.car.brand}}_{{cart_obj.user.username}}.pdf');
+			}
+		});
 	}
-	button.addEventListener('click', generatePDF);
 </script>
 {% endblock content %}

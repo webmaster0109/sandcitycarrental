@@ -14,7 +14,7 @@ import random
 
 def login_attempt(request):
     if request.user.is_authenticated:
-        return redirect(reverse('dashboard'))
+        return redirect('homepage')
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')

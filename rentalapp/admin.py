@@ -50,4 +50,7 @@ admin.site.register(CarImages)
 admin.site.register(Profile)
 admin.site.register(CarFeatures)
 admin.site.register(Country)
-admin.site.register(Booking)
+
+@admin.register(Booking)
+class BookingAdmin(admin.ModelAdmin):
+    list_display = ['__str__', 'created_at']

@@ -9,6 +9,7 @@ from django.views.generic import TemplateView
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include("rentalapp.urls")),
+    path('secure-admin/', include("admin_panel.urls")),
     path('ckeditor5/', include('django_ckeditor_5.urls')),
 ]
 

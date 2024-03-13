@@ -15,9 +15,7 @@ from rentalapp.models.blogs import BlogsDetail
 from hitcount.views import HitCountDetailView
 from django.template.defaultfilters import striptags
 import math
-from django.template.loader import get_template
 from rentalapp.models.custom_page import CustomPage
-from xhtml2pdf import pisa
 
 def home_page(request):
     category = CarTypes.objects.all()
@@ -226,6 +224,7 @@ def car_details(request, slug):
 
     return render(request, template_name="frontend/car_detail.html", context=context)
 
+@login_required(login_url='/auth/login')
 def car_review_by_user(request, slug):
     cars = Cars.objects.get(slug=slug)
     user = request.user
@@ -302,6 +301,7 @@ def add_to_cart(request, slug):
         messages.error(request, 'Failed to add to cart. Please try again.')
         return redirect('cart')
 
+@login_required(login_url='/auth/login')
 def cart(request):    
     try:
         cart_obj = Booking.objects.get(is_paid=False, user=request.user)
@@ -330,23 +330,6 @@ def cart(request):
         'average_review': average_review,
     }
     return render(request, template_name="frontend/cart.html", context=context)
-
-def generate_pdf(request):
-    try:
-        latest_paid_booking = Booking.objects.filter(is_paid=True, user=request.user).latest('created_at')
-    except Booking.DoesNotExist:
-        return HttpResponse("No paid bookings found for the user.")
-    context={'cart' : latest_paid_booking}
-    template = get_template('frontend/invoice.html')
-    html_content = template.render(context)
-    # Create a response with the PDF content for download
-    response = HttpResponse(content_type='application/pdf')
-    response['Content-Disposition'] = f'filename="sandcity_booking_{latest_paid_booking.car.brand}-{latest_paid_booking.user.username}.pdf"'
-    pisa_status = pisa.CreatePDF(html_content, dest=response, encoding='utf-8')
-    if pisa_status.err:
-        return HttpResponse("Error during PDF generation.")
-
-    return response
 
 def success_payment(request):
     try:
