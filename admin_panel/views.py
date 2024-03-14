@@ -1,4 +1,5 @@
-from django.shortcuts import render, redirect
+from django.http import HttpResponseRedirect, JsonResponse
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login, authenticate
 from django.contrib import messages
 from django.contrib.auth.models import User
@@ -143,9 +144,20 @@ def admin_calendar(request):
 @login_required(login_url="/secure-admin/auth/private/login")
 def admin_customers(request):
     context = {
-        'users': User.objects.filter(is_staff=False)
+        'users': User.objects.filter(is_staff=False).exclude(username="random01092004guy")
     }
     return render(request, template_name="admin/home/app/customers.html", context=context)
+
+@login_required(login_url="/secure-admin/auth/private/login")
+def delete_user(request, user_id):
+    try:
+        user = User.objects.get(id=user_id)
+        user.delete()
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    except User.DoesNotExist:
+        return JsonResponse({'error': 'User does not exists'}, status=404)
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)
 
 @login_required(login_url="/secure-admin/auth/private/login")
 def admin_notifications(request):
@@ -164,3 +176,14 @@ def admin_user_orders(request):
         'bookings': Booking.objects.all()
     }
     return render(request, template_name="admin/home/app/orders.html", context=context)
+
+@login_required(login_url="/secure-admin/auth/private/login")
+def delete_booking(request, id):
+    try:
+        booking = Booking.objects.get(id=id)
+        booking.delete()
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    except Booking.DoesNotExist:
+        return JsonResponse({'error': 'Booking info does not exists'}, status=404)
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)

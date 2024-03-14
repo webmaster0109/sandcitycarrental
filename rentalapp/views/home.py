@@ -6,7 +6,7 @@ from rentalapp.models.cars import CarTypes, Cars, Booking, CarReviews
 from rentalapp.models.faqs import Faq
 from django.contrib import messages
 from django.db.models import Q, Avg, Count
-from datetime import datetime
+from datetime import datetime, timedelta
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
@@ -325,6 +325,12 @@ def cart(request):
             cart_obj.booking_id = f"S-{random.randint(10000000, 99999999)}"
             cart_obj.is_paid = True
             cart_obj.save()
+
+            cars.in_stock = False
+            cars.save()
+
+            return_date = cart_obj.return_date + timedelta(hours=6)
+            Cars.objects.filter(slug=cars.slug).update(in_stock=False)
             
             user_notification = UserNotification.objects.create(
                 user=request.user,

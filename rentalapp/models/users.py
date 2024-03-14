@@ -82,7 +82,7 @@ def send_verification_mail(request, email, token, otp):
     try:
         website_url = request.build_absolute_uri('/')[:-1]
         forgot_password_subject = "Your registered account needs to be verified."
-        forgot_password_message = f"Hi {email}\nYour one time password is {otp}\n\nClick on the link to verify your account {website_url}/verify-account/{token}\n{user_signature}"
+        forgot_password_message = f"Hi {email}\nYour one time password is {otp}\n\nClick on the link to verify your account {website_url}/auth/verify-account/{token}\n{user_signature}"
         recipient_email = email
         send_mail(subject=forgot_password_subject, message=forgot_password_message, from_email=settings.EMAIL_HOST_USER, recipient_list=[recipient_email])
     except Exception as e:
