@@ -96,7 +96,7 @@ def get_daily_sales():
     daily_sales = Booking.objects.filter(created_at__gte=five_days_ago, created_at__lte=today, is_paid=True).values('created_at__date').annotate(total_sales=Sum('total_price')).order_by('-created_at__date')[:5]
     return daily_sales
 
-login_required(login_url="/secure-admin/auth/private/login")
+@login_required(login_url="/secure-admin/auth/private/login")
 def admin_dashboard(request):
     total_users_count = get_total_users()
     total_users = get_total_users_details()
@@ -130,6 +130,37 @@ def admin_dashboard(request):
         'get_cash_amount': int(get_cash_amount().replace(',', '')),
         'get_bank_amount': int(get_bank_amount().replace(',','')),
         'get_security_amount': int(get_security_amount().replace(',','')),
-        'booking_percentage': booking_percentage
+        'booking_percentage': booking_percentage,
+        'copyrights_year': date.today()
     }
     return render(request, template_name="admin/home/dashboard.html", context=context)
+
+@login_required(login_url="/secure-admin/auth/private/login")
+def admin_calendar(request):
+
+    return render(request, template_name="admin/home/app/calender.html", context={'copyrights_year': date.today()})
+
+@login_required(login_url="/secure-admin/auth/private/login")
+def admin_customers(request):
+    context = {
+        'users': User.objects.filter(is_staff=False)
+    }
+    return render(request, template_name="admin/home/app/customers.html", context=context)
+
+@login_required(login_url="/secure-admin/auth/private/login")
+def admin_notifications(request):
+    notifications = request.user.usernotification_set.all()
+    # Mark notifications as read
+    for notification in notifications:
+        notification.mark_as_read()
+    context = {
+        'notifications': notifications
+    }
+    return render(request, template_name="admin/home/app/notifications.html", context=context)
+
+@login_required(login_url="/secure-admin/auth/private/login")
+def admin_user_orders(request):
+    context ={
+        'bookings': Booking.objects.all()
+    }
+    return render(request, template_name="admin/home/app/orders.html", context=context)

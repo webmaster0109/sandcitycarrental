@@ -98,6 +98,8 @@ def verify_account(request, token):
                 if 'next' in request.POST:
                     return redirect(request.POST['next'])
                 UserNotification.objects.create(user=user_obj, title=f"Welcome {user_obj.first_name}🎉, Thanks for registering", message="Sandcity Car Rental! We're a passionate family-run business in Dubai, dedicated to making your exploration of this vibrant city as convenient and enjoyable as possible.")
+                admin_user = User.objects.get(is_superuser=True)  # Adjust this to get your admin user
+                UserNotification.objects.create(user=admin_user, title="New User Registration", message=f"<b>{user_obj.first_name} {user_obj.last_name}</b> has registered.")
                 return redirect('/')
     
     except Exception as e:

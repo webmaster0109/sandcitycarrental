@@ -1,0 +1,228 @@
+{% extends 'admin/base/base.html' %}
+
+{% block content %}
+<div class="pc-container">
+    <div class="pc-content">
+      <!-- [ breadcrumb ] start -->
+      <div class="page-header">
+        <div class="page-block">
+          <div class="row align-items-center">
+            <div class="col-md-12">
+              <ul class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'admin_dashboard' %}">Home</a></li>
+                <li class="breadcrumb-item"><a href="javascript: void(0)">CRM Application</a></li>
+                <li class="breadcrumb-item" aria-current="page">Customers</li>
+              </ul>
+            </div>
+            <div class="col-md-12">
+              <div class="page-header-title">
+                <h2 class="mb-0">Customers List</h2>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- [ breadcrumb ] end -->
+
+      <!-- [ Main Content ] start -->
+      <div class="row">
+        <!-- [ sample-page ] start -->
+        <div class="col-sm-12">
+          <div class="card table-card">
+            <div class="card-body">
+              <div class="table-responsive my-3">
+                <table class="table table-hover" id="pc-dt-simple">
+                  <thead>
+                    <tr>
+                      <th>#</th>
+                      <th>Customer Name</th>
+                      <th>Contact</th>
+                      <th>Country</th>
+                      <th>Joining Date & Time</th>
+                      <th>Status</th>
+                      <th class="text-center">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for user in users %}
+                    <tr>
+                      <td>{{ forloop.counter }}</td>
+                      <td>
+                        <div class="row">
+                          <div class="col-auto">
+                            {% if user.profile.profile_image %}
+                            <img src="{{user.profile.profile_image.url}}" alt="sandcity_profile_{{user.username}}" class="wid-40 rounded-circle">
+                            {% else %}
+                            <img src="/media/assets/images/favicon.png" alt="sandcity_profile_{{user.username}}" class="wid-40 rounded-circle">
+                            {% endif %}
+                          </div>
+                          <div class="col">
+                            <h6 class="mb-0">{{user.first_name}} {{user.last_name}}</h6>
+                            <p class="text-muted f-12 mb-0">{{user.email}}</p>
+                          </div>
+                        </div>
+                      </td>
+                      {% if user.profile.number %}
+                      <td>{{user.profile.number}}</td>
+                      {% else %}
+                      <td>No Contact Number</td>
+                      {% endif %}
+                      {% if user.profile.country %}
+                      <td>{{user.profile.country}}</td>
+                      {% else %}
+                      <td>Not mentioned</td>
+                      {% endif %}
+                      <td>{{user.date_joined|date:"d M' y"}} {{user.date_joined|time:"g:i A"}}</td>
+                      {% if user.profile.is_verified %}
+                      <td><span class="badge bg-light-success rounded-pill f-12">Verified</span> </td>
+                      {% else %}
+                      <td><span class="badge bg-light-danger rounded-pill f-12">Not Verified</span> </td>
+                      {% endif %}
+                      <td class="text-center">
+                        <ul class="list-inline me-auto mb-0">
+                          <li class="list-inline-item align-bottom" data-bs-toggle="tooltip" title="View">
+                            <a href="#" class="avtar avtar-xs btn-link-secondary btn-pc-default" data-bs-toggle="modal"
+                              data-bs-target="#customer-modal-{{user.id}}">
+                              <i class="ti ti-eye f-18"></i>
+                            </a>
+                          </li>
+                          <li class="list-inline-item align-bottom" data-bs-toggle="tooltip" title="Delete">
+                            <a href="#" class="avtar avtar-xs btn-link-danger btn-pc-default">
+                              <i class="ti ti-trash f-18"></i>
+                            </a>
+                          </li>
+                        </ul>
+                      </td>
+                    </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- [ sample-page ] end -->
+      </div>
+      <!-- [ Main Content ] end -->
+    </div>
+</div>
+
+{% for user in users %}
+<div class="modal fade" id="customer-modal-{{user.id}}" data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header border-0 pb-0">
+          <h5 class="mb-0">Customer Details</h5>
+          <a href="#" class="avtar avtar-s btn-link-danger ms-auto btn-pc-default" data-bs-dismiss="modal">
+            <i class="ti ti-x f-20"></i>
+          </a>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-lg-4">
+              <div class="card">
+                <div class="card-body position-relative">
+                  <div class="position-absolute end-0 top-0 p-3">
+                    {% if user.profile.online_status %}
+                    <span class="badge bg-success">Online</span>
+                    {% else %}
+                    <span class="badge bg-danger">Offline</span>
+                    {% endif %}
+                  </div>
+                  <div class="text-center mt-3">
+                    <div class="chat-avtar d-inline-flex mx-auto">
+                        {% if user.profile.profile_image %}
+                        <img class="rounded-circle img-fluid wid-60" src="{{user.profile.profile_image.url}}" alt="sandcity_profile_{{user.username}}">
+                        {% else %}
+                        <img src="/media/assets/images/favicon.png" alt="sandcity_profile_{{user.username}}" class="rounded-circle img-fluid wid-60">
+                        {% endif %}
+                    </div>
+                    <h5 class="mb-0">{{user.first_name}} {{user.last_name}}</h5>
+                    <p class="text-muted text-sm">Last Login: {{user.last_login|date:"d M"}} at {{user.last_login|time:"g:i A"}}</p>
+                    <hr class="my-3 border border-secondary-subtle">
+                    <div class="row g-3">
+                      <div class="col-8">
+                        <h5 class="mb-0">{% if user.profile.dob %}{{user.profile.dob|date:"d M, Y"}}{% else %}N/A{% endif %}</h5>
+                        <small class="text-muted">Date of Birth</small>
+                      </div>
+                      <div class="col-4">
+                        <h5 class="mb-0">7634</h5>
+                        <small class="text-muted">Visits</small>
+                      </div>
+                    </div>
+                    <hr class="my-3 border border-secondary-subtle">
+                    <div class="d-inline-flex align-items-center justify-content-between w-100 mb-3">
+                      <i class="ti ti-user"></i>
+                      <p class="mb-0">{{user.username}}</p>
+                    </div>
+                    <div class="d-inline-flex align-items-center justify-content-between w-100 mb-3">
+                      <i class="ti ti-phone"></i>
+                      <p class="mb-0">{% if user.profile.number %}{{user.profile.number}}{% else %}No Number{% endif %}</p>
+                    </div>
+                    <div class="d-inline-flex align-items-center justify-content-between w-100 mb-3">
+                      <i class="ti ti-map-pin"></i>
+                      <p class="mb-0">{% if user.profile.country %}{{user.profile.country}}{% else %}N/A{% endif %}</p>
+                    </div>
+                    <div class="d-inline-flex align-items-center justify-content-between w-100">
+                      <i class="ti ti-friends"></i>
+                        <p class="mb-0">{{user.profile.gender}}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-8">
+              <div class="card">
+                <div class="card-header">
+                  <h5>Personal Details</h5>
+                </div>
+                <div class="card-body">
+                  <ul class="list-group list-group-flush">
+                    <li class="list-group-item px-0 pt-0">
+                      <div class="row">
+                        <div class="col-md-6">
+                          <p class="mb-1 text-muted">Full Name</p>
+                          <h6 class="mb-0">Aaron Poole</h6>
+                        </div>
+                        <div class="col-md-6">
+                          <p class="mb-1 text-muted">Father Name</p>
+                          <h6 class="mb-0">Mr. Ralph Sabatini</h6>
+                        </div>
+                      </div>
+                    </li>
+                    <li class="list-group-item px-0">
+                      <div class="row">
+                        <div class="col-md-6">
+                          <p class="mb-1 text-muted">Country</p>
+                          <h6 class="mb-0">Lesotho</h6>
+                        </div>
+                        <div class="col-md-6">
+                          <p class="mb-1 text-muted">Zip Code</p>
+                          <h6 class="mb-0">247 849</h6>
+                        </div>
+                      </div>
+                    </li>
+                    <li class="list-group-item px-0 pb-0">
+                      <p class="mb-1 text-muted">Address</p>
+                      <h6 class="mb-0">507 Sulnek Grove, Tudzovgeh, United States - 37173</h6>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+              <div class="card">
+                <div class="card-header">
+                  <h5>Bookings</h5>
+                </div>
+                <div class="card-body">
+                  <p class="mb-0">Hello, I’m Aaron Poole Manufacturing Director based in international company, Void
+                    jiidki me na fep juih ced gihhiwi launke cu mig tujum peodpo.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+</div>
+{% endfor %}
+{% endblock %}

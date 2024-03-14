@@ -4,11 +4,12 @@ from django.utils import timezone
 from django.core.mail import send_mail
 from django.conf import settings
 from .cars import Cars, Booking
+import uuid
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="profile")
     number = models.CharField(max_length=20, null=True, blank=True)
-    profile_image = models.ImageField(upload_to="images/profile/", null=True, blank=True)
+    profile_image = models.ImageField(default="/media/assets/images/favicon.png", upload_to="images/profile/", null=True, blank=True)
     dob = models.DateField(blank=True, null=True)
     gender = models.CharField(max_length=50, null=True, blank=True)
     country = models.CharField(max_length=50, null=True, blank=True)
@@ -24,6 +25,9 @@ class Profile(models.Model):
     last_activity_time = models.DateTimeField(null=True, blank=True)
     total_active_time = models.DurationField(default=timezone.timedelta())
     wishlists = models.ManyToManyField(Cars, related_name="wishlists")
+
+    def get_uuid(self):
+        return str(uuid.uuid4())
 
     def get_all_bookings(self):
         return Booking.objects.filter(is_paid=True, user=self.user)

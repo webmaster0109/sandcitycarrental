@@ -31,7 +31,7 @@ class Cars(models.Model):
     actual_price = models.PositiveIntegerField(default=100, null=True, blank=True)
     discounted_price = models.PositiveIntegerField(default=50, null=True, blank=True)
 
-    is_available = models.BooleanField(default=True)
+    in_stock = models.BooleanField(default=True)
 
     def __str__(self):
         return self.brand

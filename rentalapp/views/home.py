@@ -16,6 +16,8 @@ from hitcount.views import HitCountDetailView
 from django.template.defaultfilters import striptags
 import math
 from rentalapp.models.custom_page import CustomPage
+from rentalapp.models.users import UserNotification
+from django.contrib.auth.models import User
 
 def home_page(request):
     category = CarTypes.objects.all()
@@ -323,6 +325,19 @@ def cart(request):
             cart_obj.booking_id = f"S-{random.randint(10000000, 99999999)}"
             cart_obj.is_paid = True
             cart_obj.save()
+            
+            user_notification = UserNotification.objects.create(
+                user=request.user,
+                title = "Payment Confirmation 🎉",
+                message = f"Your payment has been successfully processed for {cart_obj.car.brand}, {cart_obj.car.year}.",
+            )
+            # Create UserNotification for admin
+            admin = User.objects.get(is_superuser=True)
+            admin_notification = UserNotification.objects.create(
+                user=admin,
+                title= f"New Payment Received for {cart_obj.car.brand}, {cart_obj.car.year} 🎉",
+                message=f"A {cart_obj.payment_mode} payment has been received from {request.user.first_name} {request.user.last_name}. Total Amount is <b>AED {cart_obj.total_price:,}</b> for <i>{cart_obj.total_days} days</i>",
+            )
             return redirect('success_payment')
 
     context = {

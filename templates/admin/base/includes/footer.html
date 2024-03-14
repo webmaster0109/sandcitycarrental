@@ -1,0 +1,18 @@
+<footer class="pc-footer">
+    <div class="footer-wrapper container-fluid">
+      <div class="row">
+        <div class="col my-1">
+          <p class="m-0"
+            >&copy;{{copyrights_year|date:"Y"}} All rights reserved by <a href="{% url 'homepage' %}" target="_blank">Sandcity</a></p
+          >
+        </div>
+        <div class="col-auto my-1">
+          <ul class="list-inline footer-link mb-0">
+            <li class="list-inline-item"><a href="{% url 'homepage' %}">Home</a></li>
+            <li class="list-inline-item"><a href="{% url 'contact_us' %}" target="_blank">Contact us</a></li>
+            <li class="list-inline-item"><a href="{% url 'about_us' %}" target="_blank">About us</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+</footer>

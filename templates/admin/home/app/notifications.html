@@ -1,0 +1,54 @@
+{% extends 'admin/base/base.html' %}
+
+{% block content %}
+<div class="pc-container">
+    <div class="pc-content">
+      <!-- [ breadcrumb ] start -->
+      <div class="page-header">
+        <div class="page-block">
+          <div class="row align-items-center">
+            <div class="col-md-12">
+              <ul class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'admin_dashboard' %}">Home</a></li>
+                <li class="breadcrumb-item"><a href="javascript: void(0)">CRM Application</a></li>
+                <li class="breadcrumb-item" aria-current="page">Notifications</li>
+              </ul>
+            </div>
+            <div class="col-md-12">
+              <div class="page-header-title">
+                <h2 class="mb-0">Notifications List</h2>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- [ breadcrumb ] end -->
+
+      <!-- [ Main Content ] start -->
+      <div class="row">
+        <!-- [ sample-page ] start -->
+        <div class="col-sm-12">
+            <div class="card task-card">
+                <div class="card-header d-flex align-items-center justify-content-between">
+                  <h5>Notifications</h5>
+                </div>
+                <div class="card-body">
+                  <ul class="list-unstyled task-list">
+                    {% for notification in notifications %}
+                    <li>
+                      <i class="feather icon-check f-w-600 task-icon bg-success"></i>
+                      <p class="m-b-5">{{notification.created_at|date:"l, d F"}} at {{notification.created_at|time:"g:i A"}}</p>
+                      <h5 class="text-muted">{{notification.title}}</h5>
+                      <p>{{notification.message|safe}}</p>
+                    </li>
+                    {% endfor %}
+                  </ul>
+                </div>
+              </div>
+        </div>
+        <!-- [ sample-page ] end -->
+      </div>
+      <!-- [ Main Content ] end -->
+    </div>
+  </div>
+{% endblock %}

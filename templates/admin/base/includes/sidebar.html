@@ -1,0 +1,122 @@
+<nav class="pc-sidebar">
+    <div class="navbar-wrapper">
+      <div class="m-header">
+        <a href="{% url 'admin_dashboard' %}" class="b-brand text-primary">
+          <img src="/media/assets/images/logo/light-logo.png" width="150px" class="img-fluid logo-lg" alt="logo">
+          <span class="badge bg-light-success rounded-pill ms-2 theme-version">Admin</span>
+        </a>
+      </div>
+      <div class="navbar-content">
+        <div class="card pc-user-card">
+          <div class="card-body">
+            <div class="d-flex align-items-center">
+              <div class="flex-shrink-0">
+                <img src="{{request.user.profile.profile_image.url}}" alt="{{request.user.first_name}}_sandcity_profile" class="user-avtar wid-45 rounded-circle" />
+              </div>
+              <div class="flex-grow-1 ms-3 me-2">
+                <h6 class="mb-0">{{request.user.first_name}}</h6>
+                <small>Administrator</small>
+              </div>
+            </div>
+          </div>
+        </div>
+  
+        <ul class="pc-navbar">
+          <li class="pc-item pc-caption">
+            <label>Navigation</label>
+          </li>
+          <li class="pc-item pc-hasmenu">
+            <a href="{% url 'admin_dashboard' %}" class="pc-link">
+              <span class="pc-micon">
+                <svg class="pc-icon">
+                  <use xlink:href="#custom-status-up"></use>
+                </svg>
+              </span>
+              <span class="pc-mtext">Dashboard</span>
+            </a>
+          </li>
+          <li class="pc-item pc-caption">
+            <label>CRM Applications</label>
+            <svg class="pc-icon">
+              <use xlink:href="#custom-shopping-bag"></use>
+            </svg>
+          </li>
+          <li class="pc-item">
+            <a href="{% url 'admin_customers' %}" class="pc-link">
+              <span class="pc-micon">
+                <svg class="pc-icon">
+                  <use xlink:href="#custom-user-square"></use>
+                </svg>
+              </span>
+              <span class="pc-mtext">Customer</span></a
+            >
+          </li>
+          <li class="pc-item">
+            <a href="{% url 'admin_user_orders' %}" class="pc-link">
+              <span class="pc-micon">
+                <svg class="pc-icon">
+                  <use xlink:href="#custom-bag"></use>
+                </svg>
+              </span>
+              <span class="pc-mtext">Bookings</span>
+            </a>
+          </li>
+          <li class="pc-item">
+            <a href="{% url 'admin_calendar' %}" class="pc-link">
+              <span class="pc-micon">
+                <svg class="pc-icon">
+                  <use xlink:href="#custom-calendar-1"></use>
+                </svg>
+              </span>
+              <span class="pc-mtext">Calendar</span></a
+            >
+          </li>
+          <li class="pc-item">
+            <a href="{% url 'admin_notifications' %}" class="pc-link">
+              <span class="pc-micon">
+                <svg class="pc-icon">
+                  <use xlink:href="#custom-notification"></use>
+                </svg>
+              </span>
+              <span class="pc-mtext">Notifications</span></a
+            >
+          </li>
+          <li class="pc-item">
+            <a href="#" class="pc-link">
+              <span class="pc-micon">
+                <svg class="pc-icon">
+                  <use xlink:href="#custom-folder-open"></use>
+                </svg>
+              </span>
+              <span class="pc-mtext">File manager</span></a
+            >
+          </li>
+          <li class="pc-item">
+            <a href="../application/mail.html" class="pc-link">
+              <span class="pc-micon">
+                <svg class="pc-icon">
+                  <use xlink:href="#custom-direct-inbox"></use>
+                </svg>
+              </span>
+              <span class="pc-mtext">Mail</span></a
+            >
+          </li>
+          <li class="pc-item pc-caption">
+            <label>CMS Pages</label>
+            <svg class="pc-icon">
+              <use xlink:href="#custom-flag"></use>
+            </svg>
+          </li> 
+          <li class="pc-item"
+            ><a href="../pages/landing.html" class="pc-link" target="_blank"
+              ><span class="pc-micon">
+                <svg class="pc-icon">
+                  <use xlink:href="#custom-document-filter"></use>
+                </svg> </span
+              ><span class="pc-mtext">Blogs</span></a
+            >
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
