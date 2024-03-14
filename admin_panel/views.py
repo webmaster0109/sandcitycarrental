@@ -161,7 +161,7 @@ def delete_user(request, user_id):
 
 @login_required(login_url="/secure-admin/auth/private/login")
 def admin_notifications(request):
-    notifications = request.user.usernotification_set.all()
+    notifications = request.user.usernotification_set.all().order_by('-created_at')
     # Mark notifications as read
     for notification in notifications:
         notification.mark_as_read()
