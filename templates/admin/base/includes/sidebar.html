@@ -61,6 +61,22 @@
               <span class="pc-mtext">Bookings</span>
             </a>
           </li>
+          <li class="pc-item pc-hasmenu">
+            <a href="#" class="pc-link">
+              <span class="pc-micon">
+                <svg class="pc-icon">
+                  <use xlink:href="#custom-element-plus"></use>
+                </svg>
+              </span>
+              <span class="pc-mtext">Cars</span><span class="pc-arrow"><i data-feather="chevron-right"></i></span
+            ></a>
+            <ul class="pc-submenu">
+              <li class="pc-item"><a class="pc-link" href="{% url 'admin_all_cars' %}">Cars List</a></li>
+              <li class="pc-item"><a class="pc-link" href="{% url 'admin_car_categories' %}">Add Car Types</a></li>
+              <li class="pc-item"><a class="pc-link" href="{% url 'admin_add_new_car' %}">Add New Cars</a></li>
+              <li class="pc-item"><a class="pc-link" href="#">Add New Features</a></li>
+            </ul>
+          </li>
           <li class="pc-item">
             <a href="{% url 'admin_calendar' %}" class="pc-link">
               <span class="pc-micon">

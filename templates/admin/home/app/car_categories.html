@@ -1,0 +1,95 @@
+{% extends 'admin/base/base.html' %}
+
+{% block content %}
+<div class="pc-container">
+    <div class="pc-content">
+      <!-- [ breadcrumb ] start -->
+      <div class="page-header">
+        <div class="page-block">
+          <div class="row align-items-center">
+            <div class="col-md-12">
+              <ul class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'admin_dashboard' %}">Home</a></li>
+                <li class="breadcrumb-item"><a href="javascript: void(0)">CRM Application</a></li>
+                <li class="breadcrumb-item" aria-current="page">Car Categories</li>
+              </ul>
+            </div>
+            <div class="col-md-12">
+              <div class="page-header-title">
+                <h2 class="mb-0">My Car Categories</h2>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- [ breadcrumb ] end -->
+
+      <div class="row">
+        <div class="col-sm-6">    
+            <div class="row">
+                {% for type in car_types %}
+                <div class="col-sm-6 col-xl-6">
+                    <div class="card product-card">
+                      <div class="card-img-top">
+                          <img src="{{type.category_images.url}}" alt="{{type.car_types}}" class="img-prod img-fluid">
+                          <div class="btn-prod-cart card-body position-absolute end-0 top-0">
+                                <a href="{% url 'admin_delete_category' type.slug %}" class="btn btn-danger"><i class="fas fa-trash-alt"></i></a>
+                          </div>
+                        <div class="btn-prod-cart card-body position-absolute end-0 bottom-0">
+                          <div class="btn btn-dark">
+                            <svg class="pc-icon">
+                              <use xlink:href="#custom-password-check"></use>
+                            </svg>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="card-body">
+                          <p class="prod-content mb-0 text-muted">{{type.price_detail}}</p>
+                        <div class="d-flex align-items-center justify-content-between mt-2">
+                          <h4 class="mb-0 text-truncate"><b>{{type.car_types}}</b></h4>
+                          <div class="ms-auto">
+                            <span>Slug: /{{type.slug}}</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="card">
+                <div class="card-header">
+                  <h5>Add New Car Categories</h5>
+                </div>
+                <div class="card-body">
+                {% include 'base/includes/alerts.html' %}
+                  <form method="post" enctype="multipart/form-data" action="{% url "add_car_categories" %}">
+                    {% csrf_token %}
+                    <div class="form-group">
+                      <label class="form-label">Category Name:</label>
+                      <input type="text" class="form-control" name="car_types" placeholder="Category Name">
+                    </div>
+                    <div class="form-group">
+                      <label class="form-label">Slug:</label>
+                      <input type="text" name="slug" class="form-control" placeholder="Category Slug">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Price Detail:</label>
+                        <input type="text" class="form-control" name="price_detail" placeholder="Price from AED 250">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Category Image:</label>
+                        <input type="file" name="category_images" class="form-control" placeholder="Price from AED 250">
+                    </div>
+                    <div class="form-group text-end">
+                        <button type="submit" class="btn btn-warning">Add Category</button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+        </div>
+      </div>
+    </div>
+</div>
+{% endblock %}

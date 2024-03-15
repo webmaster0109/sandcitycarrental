@@ -1,10 +1,10 @@
 from django.http import HttpResponseRedirect, JsonResponse
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
-from rentalapp.models.cars import Booking
+from rentalapp.models.cars import *
 from django.db.models import Avg, Sum
 from django.utils import timezone
 from datetime import timedelta, date
@@ -187,3 +187,81 @@ def delete_booking(request, id):
         return JsonResponse({'error': 'Booking info does not exists'}, status=404)
     except Exception as e:
         return JsonResponse({'error': str(e)}, status=500)
+    
+@login_required(login_url="/secure-admin/auth/private/login")
+def admin_all_cars(request):
+    context ={
+        'cars': Cars.objects.all().order_by('-year')
+    }
+    return render(request, template_name="admin/home/app/all_cars.html", context=context)
+
+@login_required(login_url="/secure-admin/auth/private/login")
+def admin_car_categories(request):
+    context = {
+        'car_types': CarTypes.objects.all()
+    }
+    return render(request, template_name="admin/home/app/car_categories.html", context=context)
+
+@login_required(login_url="/secure-admin/auth/private/login")
+def add_car_categories(request):
+    if request.method == "POST":
+        types = request.POST.get('car_types')
+        category_images = request.FILES.get('category_images')
+        price_detail = request.POST.get('price_detail')
+        slug = request.POST.get('slug')
+        try:
+            car_type = CarTypes.objects.filter(car_types=types, slug=slug).first()
+            if car_type:
+                messages.warning(request, f"Already added Type: {types} & Slug: {slug}. Please type another one.")
+                return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+            car_type = CarTypes(car_types=types, category_images=category_images, price_detail=price_detail, slug=slug)
+            car_type.save()
+            messages.success(request, f"Successfully added {types}")
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=500)
+
+@login_required(login_url="/secure-admin/auth/private/login")
+def admin_delete_category(request, slug):
+    try:
+        car_type = CarTypes.objects.get(slug=slug)
+        car_type.delete()
+        messages.warning(request, f"Successfully deleted {car_type.car_types}")
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    except CarTypes.DoesNotExist:
+        return JsonResponse({'error': 'Booking info does not exists'}, status=404)
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)
+
+@login_required(login_url="/secure-admin/auth/private/login")
+def admin_add_new_car(request):
+    context = {
+        'types': CarTypes.objects.all()
+    }
+    return render(request, template_name="admin/home/app/add_new_car.html", context=context)
+
+@login_required(login_url="/secure-admin/auth/private/login")
+def add_new_car(request):
+    if request.method == "POST":
+        category = request.POST.get('category')
+        car_brand = request.POST.get('car_brand')
+        car_number = request.POST.get('car_number')
+        slug = request.POST.get('slug')
+        car_year = request.POST.get('year')
+        desc = request.POST.get('desc')
+        body_type = request.POST.get('body_type')
+        engine = request.POST.get('engine')
+        fuel_type = request.POST.get('fuel_type')
+        exterior_color = request.POST.get('exterior_color')
+        actual_price = request.POST.get('actual_price')
+        discounted_price = request.POST.get('discounted_price')
+        in_stock = request.POST.get('in_stock')
+        # car images uploading in bulk
+        car_images = request.FILES.getlist('car_images')
+
+
+        for image in car_images:
+            car_image = CarImages.objects.create(car_images=image)
+            # Associate the image with a specific car (assuming you have a car instance available)
+            # car_image.cars = car 
+            car_image.save()
