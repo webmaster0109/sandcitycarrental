@@ -1,6 +1,7 @@
 from django.db import models
 from .cars import Cars
 import uuid
+import random
 
 class CarFeatures(models.Model):
     feature_id = models.UUIDField(primary_key=True, unique=True, editable=False, default=uuid.uuid4)

@@ -1,0 +1,197 @@
+{% extends 'admin/base/base.html' %}
+
+{% block content %}
+<div class="pc-container">
+    <div class="pc-content">
+      <!-- [ breadcrumb ] start -->
+      <div class="page-header">
+        <div class="page-block">
+          <div class="row align-items-center">
+            <div class="col-md-12">
+              <ul class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'admin_dashboard' %}">Home</a></li>
+                <li class="breadcrumb-item"><a href="javascript: void(0)">CRM Application</a></li>
+                <li class="breadcrumb-item" aria-current="page">My Cars</li>
+              </ul>
+            </div>
+            <div class="col-md-12">
+              <div class="page-header-title">
+                <h2 class="mb-0">My Cars</h2>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- [ breadcrumb ] end -->
+
+      <!-- [ Main Content ] start -->
+      <div class="row">
+        <!-- [ sample-page ] start -->
+        <div class="col-sm-12">
+          <div class="card table-card">
+            <div class="card-body">
+                <div class="text-end p-4 pb-sm-2">
+                  <a href="{% url 'admin_add_new_car' %}" class="btn btn-dark">
+                    <i class="ti ti-car f-18"></i> Add New Cars
+                  </a>
+                  <div class="mt-1">{% include 'base/includes/alerts.html' %}</div>
+                </div>
+              <div class="table-responsive my-3">
+                <table class="table table-hover" id="pc-dt-simple">
+                    <thead>
+                      <tr>
+                        <th class="text-end">#</th>
+                        <th>Product Detail</th>
+                        <th class="text-center">Car No.</th>
+                        <th class="text-center">Amount</th>
+                        <th>Engine Type</th>
+                        <th>Status</th>
+                        <th class="text-center">Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                    {% for car in cars %}
+                      <tr>
+                        <td class="text-end">{{forloop.counter}}</td>
+                        <td>
+                          <div class="row">
+                            <div class="col-auto pe-0">
+                            {% for image in car.carimages_set.all|slice:":1" %}
+                            <img src="{{image.car_images.url}}" alt="user-image" class="wid-60 rounded">
+                            {% endfor %}
+                            </div>
+                            <div class="col">
+                              <h6 class="mb-1">{{car.brand}}, {{car.year}}</h6>
+                              <p class="text-muted f-12 mb-0">{{car.car_type.car_types}}, {{car.body_type}}</p>
+                            </div>
+                          </div>
+                        </td>
+                        <td class="text-center"><span class="p-2 bg-warning bg-opacity-25">{{car.car_number}}</span></td>
+                        <td class="text-center"><span class="fw-bold">AED {{car.discounted_price}}</span> <span class="fst-italic text-decoration-line-through text-danger">AED {{car.actual_price}}</span></td>
+                        <td style="text-transform: uppercase;">{{car.engine}}</td>
+                        {% if car.in_stock %}
+                        <td><span class="badge bg-light-success f-12">In Stock</span></td>
+                        {% else %}
+                        <td><span class="badge bg-light-danger f-12">Out of Stock</span></td>
+                        {% endif %}
+                        <td class="text-center">
+                          <ul class="list-inline me-auto mb-0">
+                            <li class="list-inline-item align-bottom" data-bs-toggle="tooltip" title="View {{car.brand}}">
+                              <a href="{% url "admin_show_car_details" car.slug %}" class="avtar avtar-xs btn-link-secondary btn-pc-default">
+                                <i class="ti ti-eye f-18"></i>
+                              </a>
+                            </li>
+                            <li class="list-inline-item align-bottom" data-bs-toggle="tooltip" title="Edit {{car.brand}}">
+                              <a href="#" class="avtar avtar-xs btn-link-success btn-pc-default" data-bs-toggle="modal" data-bs-target="#update-car-{{car.slug}}">
+                                <i class="ti ti-edit-circle f-18"></i>
+                              </a>
+                            </li>
+                            <li class="list-inline-item align-bottom" data-bs-toggle="tooltip" title="Delete {{car.brand}}">
+                              <a href="{% url 'delete_car' car.slug %}" class="avtar avtar-xs btn-link-danger btn-pc-default">
+                                <i class="ti ti-trash f-18"></i>
+                              </a>
+                            </li>
+                          </ul>
+                        </td>
+                      </tr>
+                    {% endfor %}
+                    </tbody>
+                  </table>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- [ sample-page ] end -->
+      </div>
+      <!-- [ Main Content ] end -->
+    </div>
+</div>
+
+{% for car in cars %}
+<div class="modal fade" id="update-car-{{car.slug}}" data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header border-0 pb-0">
+          <h5 class="mb-0">Update {{car.brand}}</h5>
+          <a href="#" class="avtar avtar-s btn-link-danger ms-auto btn-pc-default" data-bs-dismiss="modal">
+            <i class="ti ti-x f-20"></i>
+          </a>
+        </div>
+        <div class="modal-body">
+          <form action="{% url 'admin_update_car_details' car.slug %}" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+          <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="form-label">Car Category*</label>
+                    <input type="text" class="form-control" name="category" readonly value="{{car.car_type.car_types}}" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Car Brand Name*</label>
+                    <input type="text" class="form-control" name="car_brand" value="{{car.brand}}" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Car Number*</label>
+                    <input type="text" class="form-control" name="car_number" value="{{car.car_number}}" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Car Slug*</label>
+                    <input type="text" class="form-control" name="slug" value="{{car.slug}}" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Car Year*</label>
+                    <input type="text" class="form-control" name="year" value="{{car.year}}" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Car Descriptions*</label>
+                    <textarea name="desc" class="form-control" rows="3" required>{{car.desc}}</textarea>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">In Stock*</label>
+                    <select class="form-select" name="in_stock" required>
+                        <option value="True" {% if car.in_stock %}selected{% endif %}>In Stock</option>
+                        <option value="False" {% if not car.in_stock %}selected{% endif %}>Out of Stock</option>
+                    </select>
+                </div>
+                </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="form-label">Car Body Type*</label>
+                    <input type="text" class="form-control" name="body_type" value="{{car.body_type}}" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Car Engine Type*</label>
+                    <input type="text" class="form-control" name="engine" value="{{car.engine}}" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Car Fuel Type*</label>
+                    <input type="text" class="form-control" name="fuel_type" value="{{car.fuel_type}}" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Car Exterior Color*</label>
+                    <input type="text" class="form-control" name="exterior_color" value="{{car.exterior_color}}" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Rental Original Price*</label>
+                    <input type="text" class="form-control" name="actual_price" value="{{car.actual_price}}" required>
+                    <small class="text-muted">Note:* Don't type AED or any word, just type numeric price only</small>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Rental Discounted Price*</label>
+                    <input type="text" class="form-control" name="discounted_price" value="{{car.discounted_price}}" required>
+                    <small class="text-muted">Note:* Don't type AED or any word, just type numeric price only</small>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <div class="text-end btn-page mb-0 mt-4">
+                    <button type="submit" class="btn btn-warning">Update new Product</button>
+                </div>
+            </div>
+          </div>
+        </form>
+        </div>
+      </div>
+    </div>
+</div>
+{% endfor %}
+{% endblock %}

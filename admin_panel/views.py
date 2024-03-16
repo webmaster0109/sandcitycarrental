@@ -5,9 +5,11 @@ from django.contrib import messages
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from rentalapp.models.cars import *
+from rentalapp.models.car_features import CarFeatures
 from django.db.models import Avg, Sum
 from django.utils import timezone
 from datetime import timedelta, date
+from .forms import BlogForm, BlogsDetail
 # Create your views here.
 
 def admin_login(request):
@@ -157,7 +159,8 @@ def delete_user(request, user_id):
     except User.DoesNotExist:
         return JsonResponse({'error': 'User does not exists'}, status=404)
     except Exception as e:
-        return JsonResponse({'error': str(e)}, status=500)
+        messages.warning(request, str(e))
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 @login_required(login_url="/secure-admin/auth/private/login")
 def admin_notifications(request):
@@ -186,21 +189,22 @@ def delete_booking(request, id):
     except Booking.DoesNotExist:
         return JsonResponse({'error': 'Booking info does not exists'}, status=404)
     except Exception as e:
-        return JsonResponse({'error': str(e)}, status=500)
+        messages.warning(request, str(e))
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     
 @login_required(login_url="/secure-admin/auth/private/login")
 def admin_all_cars(request):
     context ={
         'cars': Cars.objects.all().order_by('-year')
     }
-    return render(request, template_name="admin/home/app/all_cars.html", context=context)
+    return render(request, template_name="admin/home/page/all_cars.html", context=context)
 
 @login_required(login_url="/secure-admin/auth/private/login")
 def admin_car_categories(request):
     context = {
         'car_types': CarTypes.objects.all()
     }
-    return render(request, template_name="admin/home/app/car_categories.html", context=context)
+    return render(request, template_name="admin/home/page/car_categories.html", context=context)
 
 @login_required(login_url="/secure-admin/auth/private/login")
 def add_car_categories(request):
@@ -219,7 +223,31 @@ def add_car_categories(request):
             messages.success(request, f"Successfully added {types}")
             return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
         except Exception as e:
-            return JsonResponse({'error': str(e)}, status=500)
+            messages.warning(request, str(e))
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+@login_required(login_url="/secure-admin/auth/private/login")
+def update_car_categories(request, slug):
+    car_types = CarTypes.objects.get(slug=slug)
+    if request.method == "POST":
+        types = request.POST.get('car_types')
+        category_images = request.FILES.get('category_images')
+        price_detail = request.POST.get('price_detail')
+        slug = request.POST.get('slug')
+        try:
+            if category_images is None:
+                messages.warning(request, f"Empty image upload field")
+                return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+            car_types.car_types = types
+            car_types.category_images = category_images
+            car_types.price_detail = price_detail
+            car_types.slug = slug
+            car_types.save()
+            messages.success(request, f"Successfully updated {types}")
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+        except Exception as e:
+            messages.warning(request, str(e))
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 @login_required(login_url="/secure-admin/auth/private/login")
 def admin_delete_category(request, slug):
@@ -231,14 +259,15 @@ def admin_delete_category(request, slug):
     except CarTypes.DoesNotExist:
         return JsonResponse({'error': 'Booking info does not exists'}, status=404)
     except Exception as e:
-        return JsonResponse({'error': str(e)}, status=500)
+        messages.warning(request, str(e))
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 @login_required(login_url="/secure-admin/auth/private/login")
 def admin_add_new_car(request):
     context = {
         'types': CarTypes.objects.all()
     }
-    return render(request, template_name="admin/home/app/add_new_car.html", context=context)
+    return render(request, template_name="admin/home/page/add_new_car.html", context=context)
 
 @login_required(login_url="/secure-admin/auth/private/login")
 def add_new_car(request):
@@ -246,22 +275,225 @@ def add_new_car(request):
         category = request.POST.get('category')
         car_brand = request.POST.get('car_brand')
         car_number = request.POST.get('car_number')
-        slug = request.POST.get('slug')
+        car_slug = request.POST.get('slug')
         car_year = request.POST.get('year')
         desc = request.POST.get('desc')
         body_type = request.POST.get('body_type')
         engine = request.POST.get('engine')
         fuel_type = request.POST.get('fuel_type')
         exterior_color = request.POST.get('exterior_color')
-        actual_price = request.POST.get('actual_price')
-        discounted_price = request.POST.get('discounted_price')
-        in_stock = request.POST.get('in_stock')
-        # car images uploading in bulk
-        car_images = request.FILES.getlist('car_images')
+        actual_price = int(request.POST.get('actual_price'))
+        discounted_price = int(request.POST.get('discounted_price'))
+        in_stock = bool(request.POST.get('in_stock'))
+
+        try:
+            if not all([category, car_brand, car_number, car_slug, car_year, body_type, engine, fuel_type, actual_price, exterior_color, discounted_price, in_stock]):
+                messages.warning(request, "Required fields are missing")
+                return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+            
+            car_type = CarTypes.objects.filter(car_types=category).first()
+            if not car_type:
+                messages.warning(request, f"Car type '{category}' does not exist")
+                return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+            
+            if Cars.objects.filter(brand=car_brand, slug=car_slug).exists():
+                messages.warning(request, f"Car Brand: {car_brand} & Slug: {car_slug} already exists")
+                return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+            
+            car = Cars(
+                car_type=car_type,
+                brand=car_brand,
+                car_number=car_number,
+                slug=car_slug,
+                year=car_year,
+                desc=desc,
+                body_type=body_type,
+                engine=engine,
+                fuel_type=fuel_type,
+                exterior_color=exterior_color,
+                actual_price=actual_price,
+                discounted_price=discounted_price,
+                in_stock=in_stock
+            )
+            car.save()
+            # car images uploading in bulk
+            car_images = request.FILES.getlist('car_images')
+            for image in car_images:
+                CarImages.objects.create(cars=car, car_images=image)
+            
+            messages.success(request, "Car added successfully")
+            return redirect('admin_all_cars')
+            
+        except Exception as e:
+            messages.warning(request, str(e))
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+@login_required(login_url="/secure-admin/auth/private/login")
+def delete_car(request, slug):
+    try:
+        car = Cars.objects.get(slug=slug)
+        car.delete()
+        messages.warning(request, f"{car.brand} delete successfully")
+        return redirect('admin_all_cars')
+    except Cars.DoesNotExist:
+        return JsonResponse({'error': 'Car object does not exists'}, status=404)
+    except Exception as e:
+        messages.warning(request, str(e))
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+@login_required(login_url="/secure-admin/auth/private/login")
+def admin_show_car_details(request, slug):
+    car = Cars.objects.get(slug=slug)
+    average_review = CarReviews.objects.filter(cars=car).aggregate(rating=Avg('rating'))
+    context = {
+        'car': car,
+        'average_review': average_review
+    }
+    return render(request, template_name="admin/home/page/show_car_details.html", context=context)
+
+@login_required(login_url="/secure-admin/auth/private/login")
+def admin_update_car_details(request, slug):
+    cars = Cars.objects.get(slug=slug)
+    if request.method == "POST":
+        category = request.POST.get('category')
+        car_brand = request.POST.get('car_brand')
+        car_number = request.POST.get('car_number')
+        car_slug = request.POST.get('slug')
+        car_year = request.POST.get('year')
+        desc = request.POST.get('desc')
+        body_type = request.POST.get('body_type')
+        engine = request.POST.get('engine')
+        fuel_type = request.POST.get('fuel_type')
+        exterior_color = request.POST.get('exterior_color')
+        actual_price = int(request.POST.get('actual_price'))
+        discounted_price = int(request.POST.get('discounted_price'))
+        in_stock = bool(request.POST.get('in_stock'))
+
+        try:
+            if not all([category, car_brand, car_number, car_slug, car_year, body_type, engine, fuel_type, actual_price, exterior_color, discounted_price, in_stock]):
+                messages.warning(request, "Required fields are missing")
+                return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+            
+            car_type = CarTypes.objects.filter(car_types=category).first()
+            if not car_type:
+                messages.warning(request, f"Car type '{category}' does not exist")
+                return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+            
+            cars.car_type = car_type
+            cars.brand = car_brand
+            cars.car_number = car_number
+            cars.slug = car_slug
+            cars.year = car_year
+            cars.desc = desc
+            cars.body_type = body_type
+            cars.engine = engine
+            cars.fuel_type = fuel_type
+            cars.exterior_color = exterior_color
+            cars.actual_price = actual_price
+            cars.discounted_price = discounted_price
+            cars.in_stock = in_stock
+            cars.save()
+            
+            messages.success(request, f"{car_brand} car updated successfully")
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+            
+        except Exception as e:
+            messages.warning(request, str(e))
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
-        for image in car_images:
-            car_image = CarImages.objects.create(car_images=image)
-            # Associate the image with a specific car (assuming you have a car instance available)
-            # car_image.cars = car 
-            car_image.save()
+@login_required(login_url="/secure-admin/auth/private/login")
+def admin_new_features(request):    
+    context={
+        'cars': Cars.objects.all()
+    }
+    return render(request, template_name="admin/home/page/add_new_features.html", context=context)
+
+@login_required(login_url="/secure-admin/auth/private/login")
+def add_new_features(request):
+    if request.method == "POST":
+        car = request.POST.get('cars')
+        feature = request.POST.get('features')
+        try:
+            if not all([car, feature]):
+                messages.warning(request, "Required fields are missing")
+                return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+            cars = Cars.objects.filter(brand=car).first()
+            if not cars:
+                messages.warning(request, f"This '{car}' car does not exist")
+                return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+            if CarFeatures.objects.filter(cars=cars, features=feature).exists():
+                messages.warning(request, f"This {feature} feature in {car} already exists")
+                return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+            feature = CarFeatures(cars=cars, features=feature)
+            feature.save()
+            messages.success(request, f"{feature} added in {car} successfully")
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))   
+        except Exception as e:
+            messages.warning(request, str(e))
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+@login_required(login_url="/secure-admin/auth/private/login")
+def delete_car_features(request, feature_id):
+    feature = CarFeatures.objects.get(feature_id=feature_id)
+    feature.delete()
+    messages.warning(request, f"{feature.features} delete successfully")
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+@login_required(login_url="/secure-admin/auth/private/login")
+def update_car_features(request, feature_id):
+    features = CarFeatures.objects.get(feature_id=feature_id)
+    if request.method == "POST":
+        car = request.POST.get('cars')
+        feature = request.POST.get('features')
+        try:
+            if not all([car, feature]):
+                messages.warning(request, "Required fields are missing")
+                return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+            cars = Cars.objects.filter(brand=car).first()
+            if not cars:
+                messages.warning(request, f"This '{car}' car does not exist")
+                return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+            if CarFeatures.objects.filter(cars=cars, features=feature).exists():
+                messages.warning(request, f"This {feature} feature in {car} already exists, update new one.")
+                return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+            features.cars = cars
+            features.features = feature
+            features.save()
+            messages.success(request, f"{feature} updated in {car} successfully")
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))   
+        except Exception as e:
+            messages.warning(request, str(e))
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+@login_required(login_url="/secure-admin/auth/private/login")
+def admin_view_blog(request):
+    context={
+        'blogs': BlogsDetail.objects.all().order_by('-created_at')
+    }
+    return render(request, template_name="admin/home/page/admin_view_blog.html", context=context)
+
+@login_required(login_url="/secure-admin/auth/private/login")
+def admin_add_blog(request):
+    if request.method == "POST":
+        form = BlogForm(request.POST, request.FILES)
+        title = request.POST.get('title')
+        slug = request.POST.get('slug')
+        keywords = request.POST.get('keywords')
+        description = request.POST.get('description')
+        blog_image = request.FILES.get('blog_image')
+        is_published = bool(request.POST.get('is_published'))
+
+        try:
+            if form.is_valid():
+                body = form.cleaned_data['content']
+            form.save(commit=False)
+            blog_obj = BlogsDetail(author=request.user, title=title, slug=slug, keywords=keywords, desc=description, blog_image=blog_image, body=body, is_published=is_published)
+            blog_obj.save()
+            messages.warning(request, f"Successfully added {title} blog.")
+            return redirect('admin_view_blog')
+        except Exception as e:
+            messages.warning(request, str(e))
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+    return render(request, template_name="admin/home/page/admin_add_blog.html", context={'form': BlogForm})

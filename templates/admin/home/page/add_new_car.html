@@ -11,6 +11,7 @@
               <ul class="breadcrumb">
                 <li class="breadcrumb-item"><a href="{% url 'admin_dashboard' %}">Home</a></li>
                 <li class="breadcrumb-item"><a href="javascript: void(0)">CRM Application</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'admin_all_cars' %}">Cars List</a></li>
                 <li class="breadcrumb-item" aria-current="page">Add New Cars</li>
               </ul>
             </div>
@@ -26,12 +27,14 @@
         <div class="col-sm-12">
           <div class="card">
             <div class="card-body">
-            <form action="" method="post" enctype="multipart/form-data">
+            {% include 'base/includes/alerts.html' %}
+            <form action="{% url 'add_new_car' %}" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
               <div class="row">
                 <div class="col-md-6">
                     <div class="form-group">
                         <label class="form-label">Car Category*</label>
-                        <select class="form-select" required>
+                        <select class="form-select" name="category" required>
                             <option value="">Select One Category</option>
                             {% for type in types %}
                             <option value="{{type.car_types}}">{{type.car_types}}</option>
@@ -40,59 +43,71 @@
                     </div>
                     <div class="form-group">
                         <label class="form-label">Car Brand Name*</label>
-                        <input type="text" class="form-control" placeholder="Ex. Mercedes GLE 350 AMG" required>
+                        <input type="text" class="form-control" name="car_brand" placeholder="Ex. Mercedes GLE 350 AMG" required>
                     </div>
                     <div class="form-group">
                         <label class="form-label">Car Number*</label>
-                        <input type="text" class="form-control" placeholder="Ex. Y97710" required>
+                        <input type="text" class="form-control" name="car_number" placeholder="Ex. Y97710" required>
                     </div>
                     <div class="form-group">
                         <label class="form-label">Car Slug*</label>
-                        <input type="text" class="form-control" placeholder="Ex. mercedes-gle-350-amg" required>
+                        <input type="text" class="form-control" name="slug" placeholder="Ex. mercedes-gle-350-amg" required>
                     </div>
                     <div class="form-group">
                         <label class="form-label">Car Year*</label>
-                        <input type="text" class="form-control" placeholder="Ex. 2019" required>
+                        <input type="text" class="form-control" name="year" placeholder="Ex. 2019" required>
                     </div>
                     <div class="form-group">
                         <label class="form-label">Car Descriptions*</label>
                         <textarea name="desc" class="form-control" rows="3" placeholder="Ex. You can rent Mercedes GLE 350 AMG (Black), 2019 in Dubai, UAE for the next price AED 600 per day or AED 12,000 per month..." required></textarea>
                     </div>
+                    <div class="form-group">
+                        <label class="form-label">In Stock*</label>
+                        <select class="form-select" name="in_stock" required>
+                            <option value="">Select Stock Availablity</option>
+                            <option value="True">In Stock</option>
+                            <option value="False">Out of Stock</option>
+                        </select>
+                    </div>
                     </div>
                 <div class="col-md-6">
                     <div class="form-group">
                         <label class="form-label">Car Body Type*</label>
-                        <input type="text" class="form-control" placeholder="Ex. SUV" required>
+                        <input type="text" class="form-control" name="body_type" placeholder="Ex. SUV" required>
                     </div>
                     <div class="form-group">
                         <label class="form-label">Car Engine Type*</label>
-                        <input type="text" class="form-control" placeholder="Ex. Diesel Turbo Fuel Injection" required>
+                        <input type="text" class="form-control" name="engine" placeholder="Ex. Diesel Turbo Fuel Injection" required>
                     </div>
                     <div class="form-group">
                         <label class="form-label">Car Fuel Type*</label>
-                        <input type="text" class="form-control" placeholder="Ex. Diesel/Petrol" required>
+                        <input type="text" class="form-control" name="fuel_type" placeholder="Ex. Diesel/Petrol" required>
                     </div>
                     <div class="form-group">
                         <label class="form-label">Car Exterior Color*</label>
-                        <input type="text" class="form-control" placeholder="Ex. Carbon Black Metallic" required>
+                        <input type="text" class="form-control" name="exterior_color" placeholder="Ex. Carbon Black Metallic" required>
                     </div>
                     <div class="form-group">
                         <label class="form-label">Rental Original Price*</label>
-                        <input type="text" class="form-control" placeholder="Ex. 750" required>
+                        <input type="text" class="form-control" name="actual_price" placeholder="Ex. 750" required>
                         <small class="text-muted">Note:* Don't type AED or any word, just type numeric price only</small>
                     </div>
                     <div class="form-group">
                         <label class="form-label">Rental Discounted Price*</label>
-                        <input type="text" class="form-control" placeholder="Ex. 600" required>
+                        <input type="text" class="form-control" name="discounted_price" placeholder="Ex. 600" required>
                         <small class="text-muted">Note:* Don't type AED or any word, just type numeric price only</small>
                     </div>
+                    <div class="form-group">
+                        <label class="form-label">Upload Car Images*</label>
+                        <input class="form-control" name="car_images" type="file" multiple required>
+                        <small class="text-muted">Note:* You can upload more than one image</small>
+                    </div>
                 </div>
-                <div class="col-md-6">
-                    
-                </div>
-                <div class="text-end btn-page mb-0 mt-4">
-                    <button type="reset" class="btn btn-outline-dark">Reset</button>
-                    <button type="submit" class="btn btn-warning">Add new Product</button>
+                <div class="col-md-12">
+                    <div class="text-end btn-page mb-0 mt-4">
+                        <button type="reset" class="btn btn-outline-dark">Reset</button>
+                        <button type="submit" class="btn btn-warning">Add new Product</button>
+                    </div>
                 </div>
               </div>
             </form>

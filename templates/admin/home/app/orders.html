@@ -61,7 +61,7 @@
                             </div>
                           </div>
                         </td>
-                        <td>{{booking.car.car_number}}</td>
+                        <td><span class="p-2 bg-secondary bg-opacity-25">{{booking.car.car_number}}</span></td>
                         <td>AED {{booking.total_amount}}</td>
                         <td>{{booking.user.first_name}} {{booking.user.last_name}}</td>
                         <td>{% if booking.payment_mode %}{{booking.payment_mode}}{% else %}Processing{% endif %}</td>
