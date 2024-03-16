@@ -16,7 +16,7 @@ class BlogsDetail(models.Model):
     keywords = models.TextField()
     desc = models.TextField()
     blog_image = models.ImageField(upload_to="blogs/image/", null=True, blank=True)
-    body = CKEditor5Field(config_name='extends')
+    body = CKEditor5Field(config_name='extends', null=True, blank=True)
     created_at = models.DateTimeField(blank=True, null=True)
     updated_at = models.DateTimeField(auto_now=True)
     is_published = models.BooleanField(default=False)

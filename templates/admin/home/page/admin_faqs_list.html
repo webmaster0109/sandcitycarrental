@@ -1,0 +1,108 @@
+{% extends 'admin/base/base.html' %}
+
+{% block content %}
+<div class="pc-container">
+    <div class="pc-content">
+      <!-- [ breadcrumb ] start -->
+      <div class="page-header">
+        <div class="page-block">
+          <div class="row align-items-center">
+            <div class="col-md-12">
+              <ul class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'admin_dashboard' %}">Home</a></li>
+                <li class="breadcrumb-item"><a href="javascript: void(0)">CMS Pages</a></li>
+                <li class="breadcrumb-item" aria-current="page">FAQs List</li>
+              </ul>
+            </div>
+            <div class="col-md-12">
+              <div class="page-header-title">
+                <h2 class="mb-0">FAQs List</h2>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- [ breadcrumb ] end -->
+
+      <!-- [ Main Content ] start -->
+      <div class="row">
+        <!-- [ sample-page ] start -->
+        <div class="col-sm-12">
+          <div class="card table-card">
+            <div class="card-body">
+                <div class="d-sm-flex align-items-center p-4 pb-sm-2">
+                    <div class="me-auto my-1">{% include 'base/includes/alerts.html' %}</div>
+                    <div class="ms-auto my-1">
+                        <a href="{% url 'admin_add_new_car' %}" class="btn btn-dark">
+                            <i class="ti ti-question-mark f-18"></i> Add New FAQs
+                          </a>
+                    </div>
+                </div>
+              <div class="table-responsive my-3">
+                <table class="table table-hover" id="pc-dt-simple">
+                    <thead>
+                      <tr>
+                        <th class="text-end">#</th>
+                        <th>Questions</th>
+                        <th class="text-center">Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                    {% for faq in faqs %}
+                      <tr>
+                        <td class="text-end">{{forloop.counter}}</td>
+                        <td class="text-start">{{faq.question}}</td>
+                        
+                        <td class="text-center">
+                          <ul class="list-inline me-auto mb-0">
+                            <li class="list-inline-item align-bottom" data-bs-toggle="tooltip" title="View FAQs">
+                              <a href="" class="avtar avtar-xs btn-link-secondary btn-pc-default" data-bs-toggle="modal" data-bs-target="#view-faq-{{faq.id}}">
+                                <i class="ti ti-eye f-18"></i>
+                              </a>
+                            </li>
+                            <li class="list-inline-item align-bottom" data-bs-toggle="tooltip" title="Edit FAQs">
+                              <a href="{% url 'admin_update_faq' faq.id %}" class="avtar avtar-xs btn-link-success btn-pc-default">
+                                <i class="ti ti-edit-circle f-18"></i>
+                              </a>
+                            </li>
+                            <li class="list-inline-item align-bottom" data-bs-toggle="tooltip" title="Delete FAQs">
+                              <a href="{% url 'admin_delete_faq' faq.id %}" class="avtar avtar-xs btn-link-danger btn-pc-default">
+                                <i class="ti ti-trash f-18"></i>
+                              </a>
+                            </li>
+                          </ul>
+                        </td>
+                      </tr>
+                    {% endfor %}
+                    </tbody>
+                  </table>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- [ sample-page ] end -->
+      </div>
+      <!-- [ Main Content ] end -->
+    </div>
+</div>
+
+{% for faq in faqs %}
+<div class="modal fade" id="view-faq-{{faq.id}}" data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header border-0 pb-0">
+          <h5 class="mb-0">{{faq.question}}</h5>
+          <a href="#" class="avtar avtar-s btn-link-danger ms-auto btn-pc-default" data-bs-dismiss="modal">
+            <i class="ti ti-x f-20"></i>
+          </a>
+        </div>
+        <div class="modal-body">
+            <div class="bg-secondary bg-opacity-10 p-3 rounded-3">
+                {{faq.answer|safe}}
+            </div>
+        </div>
+      </div>
+    </div>
+</div>
+{% endfor %}
+{% endblock %}

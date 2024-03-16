@@ -82,13 +82,13 @@
             >
           </li>
           <li class="pc-item">
-            <a href="../application/mail.html" class="pc-link">
+            <a href="{% url 'admin_contact_form_details' %}" class="pc-link">
               <span class="pc-micon">
                 <svg class="pc-icon">
-                  <use xlink:href="#custom-direct-inbox"></use>
+                  <use xlink:href="#custom-sms"></use>
                 </svg>
               </span>
-              <span class="pc-mtext">Mail</span></a
+              <span class="pc-mtext">Contact Form Leads</span></a
             >
           </li>
           <li class="pc-item pc-caption">
@@ -117,7 +117,7 @@
             <a href="#" class="pc-link">
               <span class="pc-micon">
                 <svg class="pc-icon">
-                  <use xlink:href="#custom-document-filter"></use>
+                  <use xlink:href="#custom-text-block"></use>
                 </svg>
               </span>
               <span class="pc-mtext">Blogs</span><span class="pc-arrow"><i data-feather="chevron-right"></i></span
@@ -125,6 +125,20 @@
             <ul class="pc-submenu">
               <li class="pc-item"><a class="pc-link" href="{% url 'admin_view_blog' %}">Blogs List</a></li>
               <li class="pc-item"><a class="pc-link" href="{% url 'admin_add_blog' %}">Add New Blogs</a></li>
+            </ul>
+          </li>
+          <li class="pc-item pc-hasmenu">
+            <a href="#" class="pc-link">
+              <span class="pc-micon">
+                <svg class="pc-icon">
+                  <use xlink:href="#custom-flag"></use>
+                </svg>
+              </span>
+              <span class="pc-mtext">FAQs</span><span class="pc-arrow"><i data-feather="chevron-right"></i></span
+            ></a>
+            <ul class="pc-submenu">
+              <li class="pc-item"><a class="pc-link" href="{% url 'admin_faqs_list' %}">FAQs List</a></li>
+              <li class="pc-item"><a class="pc-link" href="{% url 'admin_new_faqs' %}">Add New FAQs</a></li>
             </ul>
           </li>
         </ul>

@@ -31,39 +31,8 @@
             <form action="{% url 'admin_add_blog' %}" method="post" enctype="multipart/form-data">
             {% csrf_token %}
               <div class="row">
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label class="form-label">Blog Title*</label>
-                        <input type="text" class="form-control" name="title" placeholder="Blog Title" required>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Blog Keywords*</label>
-                        <textarea name="keywords" class="form-control" rows="3" placeholder="" required>best car rental services in dubai, car rent in dubai</textarea>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Published Article*</label>
-                        <select class="form-select" name="is_published" required>
-                            <option value="True">Published</option>
-                            <option value="False">Draft</option>
-                        </select>
-                    </div>
-                    </div>
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label class="form-label">Blog Slug*</label>
-                        <input type="text" class="form-control" name="slug" placeholder="Blog Slug" required>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Blog Descriptions*</label>
-                        <textarea name="description" class="form-control" rows="3" placeholder="" required>Discover the Emirates with our personalized touch, offering you a unique and memorable car rental experience.</textarea>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Upload Images*</label>
-                        <input class="form-control" name="blog_image" type="file" required>
-                    </div>
-                </div>
                 <div class="col-md-12">
-                    <div class="form-group">
+                    <div class="form-group" name="body">
                         {{form.media}}
                         {{form.as_p}}
                     </div>

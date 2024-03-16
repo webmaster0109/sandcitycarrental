@@ -1,5 +1,5 @@
 from django.http import HttpResponseRedirect, JsonResponse
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login, authenticate
 from django.contrib import messages
 from django.contrib.auth.models import User
@@ -9,7 +9,8 @@ from rentalapp.models.car_features import CarFeatures
 from django.db.models import Avg, Sum
 from django.utils import timezone
 from datetime import timedelta, date
-from .forms import BlogForm, BlogsDetail
+from .forms import *
+from rentalapp.models.users import *
 # Create your views here.
 
 def admin_login(request):
@@ -149,6 +150,16 @@ def admin_customers(request):
         'users': User.objects.filter(is_staff=False).exclude(username="random01092004guy")
     }
     return render(request, template_name="admin/home/app/customers.html", context=context)
+
+@login_required(login_url="/secure-admin/auth/private/login")
+def admin_view_user_details(request, id):
+    user = User.objects.get(id=id)
+    notifications = UserNotification.objects.filter(user=user).order_by('-created_at')
+    context = {
+        'user': user,
+        'notifications': notifications
+    }
+    return render(request, template_name="admin/home/app/user_details.html", context=context)
 
 @login_required(login_url="/secure-admin/auth/private/login")
 def delete_user(request, user_id):
@@ -477,23 +488,110 @@ def admin_view_blog(request):
 def admin_add_blog(request):
     if request.method == "POST":
         form = BlogForm(request.POST, request.FILES)
-        title = request.POST.get('title')
-        slug = request.POST.get('slug')
-        keywords = request.POST.get('keywords')
-        description = request.POST.get('description')
-        blog_image = request.FILES.get('blog_image')
-        is_published = bool(request.POST.get('is_published'))
-
-        try:
-            if form.is_valid():
-                body = form.cleaned_data['content']
-            form.save(commit=False)
-            blog_obj = BlogsDetail(author=request.user, title=title, slug=slug, keywords=keywords, desc=description, blog_image=blog_image, body=body, is_published=is_published)
-            blog_obj.save()
-            messages.warning(request, f"Successfully added {title} blog.")
-            return redirect('admin_view_blog')
-        except Exception as e:
-            messages.warning(request, str(e))
+        if form.is_valid():
+            try:
+                instance = form.save(commit=False)
+                instance.author = request.user
+                instance.save()
+                messages.success(request, f"Successfully added {instance.title} blog.")
+                return redirect('admin_view_blog')
+            except Exception as e:
+                messages.warning(request, str(e))
+                return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+        else:
+            messages.warning(request, "Form is invalid.")
             return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
     return render(request, template_name="admin/home/page/admin_add_blog.html", context={'form': BlogForm})
+
+@login_required(login_url="/secure-admin/auth/private/login")
+def admin_delete_blog(request, slug):
+    blog_obj = BlogsDetail.objects.get(slug=slug)
+    if blog_obj.author == request.user:
+        blog_obj.delete()
+        messages.warning(request, f"Successfully deleted {blog_obj.title}.")
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+@login_required(login_url="/secure-admin/auth/private/login")
+def admin_update_blog(request, id):
+    blog = get_object_or_404(BlogsDetail, id=id)
+    if request.method == 'POST':
+        form = BlogUpdateForm(request.POST, request.FILES, instance=blog)
+        if form.is_valid():
+            try:
+                form.save()
+                messages.success(request, f"Successfully updated {blog.title}.")
+                return redirect('admin_view_blog')
+            except Exception as e:
+                messages.warning(request, str(e))
+                return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+        else:
+            messages.warning(request, "Form is invalid.")
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    else:
+        form = BlogUpdateForm(instance=blog)
+    
+    return render(request, 'admin/home/page/admin_update_blog.html', context={'form': form, 'blog': blog})
+
+@login_required(login_url="/secure-admin/auth/private/login")
+def admin_faqs_list(request):
+    return render(request, template_name="admin/home/page/admin_faqs_list.html", context={'faqs': Faq.objects.all()})
+
+@login_required(login_url="/secure-admin/auth/private/login")
+def admin_new_faqs(request):
+    if request.method == "POST":
+        form = FaqForm(request.POST)
+        if form.is_valid():
+            try:
+                form.save()
+                messages.success(request, f"Successfully added faq.")
+                return redirect('admin_faqs_list')
+            except Exception as e:
+                messages.warning(request, str(e))
+                return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+        else:
+            messages.warning(request, "Form is invalid.")
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    return render(request, template_name="admin/home/page/admin_new_faqs.html", context={'form': FaqForm})
+
+@login_required(login_url="/secure-admin/auth/private/login")
+def admin_update_faq(request, id):
+    faq = get_object_or_404(Faq, id=id)
+    if request.method == 'POST':
+        form = FaqForm(request.POST, instance=faq)
+        if form.is_valid():
+            try:
+                form.save()
+                messages.success(request, f"Successfully updated {faq.question}.")
+                return redirect('admin_faqs_list')
+            except Exception as e:
+                messages.warning(request, str(e))
+                return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+        else:
+            messages.warning(request, "Form is invalid.")
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    else:
+        form = FaqForm(instance=faq)
+    
+    return render(request, 'admin/home/page/admin_update_faq.html', context={'form': form, 'faq': faq})
+
+@login_required(login_url="/secure-admin/auth/private/login")
+def admin_delete_faq(request, id):
+    faq = get_object_or_404(Faq, id=id)
+    if request.user.is_staff:
+        faq.delete()
+        messages.warning(request, f"{faq.question} deleted successfully")
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+@login_required(login_url="/secure-admin/auth/private/login")
+def admin_contact_form_details(request):
+    context = {'contact': ContactUs.objects.all().order_by('-created_on')}
+    return render(request, 'admin/home/app/admin_contact_form_details.html', context=context)
+
+@login_required(login_url="/secure-admin/auth/private/login")
+def admin_delete_contact(request, id):
+    contact = ContactUs.objects.get(id=id)
+    if request.user.is_superuser or request.user.is_staff:
+        contact.delete()
+        messages.warning(request, f"{contact.message} from contact form deleted successfully")
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))

@@ -1,0 +1,121 @@
+{% extends 'admin/base/base.html' %}
+
+{% block content %}
+<div class="pc-container">
+    <div class="pc-content">
+      <!-- [ breadcrumb ] start -->
+      <div class="page-header">
+        <div class="page-block">
+          <div class="row align-items-center">
+            <div class="col-md-12">
+              <ul class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'admin_dashboard' %}">Home</a></li>
+                <li class="breadcrumb-item"><a href="javascript: void(0)">CRM Application</a></li>
+                <li class="breadcrumb-item" aria-current="page">Contact Forms List</li>
+              </ul>
+            </div>
+            <div class="col-md-12">
+              <div class="page-header-title">
+                <h2 class="mb-0">Contact Forms List</h2>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-12">
+            <div class="card table-card">
+                <div class="card-body">
+                  <div class="table-responsive my-3">
+                    <table class="table table-hover" id="pc-dt-simple">
+                      <thead>
+                        <tr>
+                          <th>#</th>
+                          <th>Name</th>
+                          <th>Email</th>
+                          <th>Contact No.</th>
+                          <th>Date & Time</th>
+                          <th class="text-center">Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {% for contact in contact %}
+                        <tr>
+                          <td>{{ forloop.counter }}</td>
+                          <td>{{contact.name}}</td>
+                          <td>{{contact.email}}</td>
+                          <td>{{contact.number}}</td>
+                          <td><i>{{contact.created_on|date:"l, d M"}}</i> at <b>{{contact.created_on|time:"h:i A"}}</b></td>
+                          <td class="text-center">
+                            <ul class="list-inline me-auto mb-0">
+                              <li class="list-inline-item align-bottom" data-bs-toggle="tooltip" title="View">
+                                <a href="#" class="avtar avtar-xs btn-link-secondary btn-pc-default" data-bs-toggle="modal"
+                                  data-bs-target="#customer-modal-{{contact.id}}">
+                                  <i class="ti ti-eye f-18"></i>
+                                </a>
+                              </li>
+                              <li class="list-inline-item align-bottom" data-bs-toggle="tooltip" title="Delete">
+                                <a href="{% url 'admin_delete_contact' contact.id %}" class="avtar avtar-xs btn-link-danger btn-pc-default">
+                                  <i class="ti ti-trash f-18"></i>
+                                </a>
+                              </li>
+                            </ul>
+                          </td>
+                        </tr>
+                        {% endfor %}
+                      </tbody>
+                    </table>
+                  </div>
+                  <div class="mt-3">{% include 'base/includes/alerts.html' %}</div>
+                </div>
+            </div>
+        </div>
+      </div>
+    </div>
+</div>
+
+{% for contact in contact %}
+<div class="modal fade" id="customer-modal-{{contact.id}}" data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header border-0 pb-0">
+          <h5 class="mb-0">Customer Details</h5>
+          <a href="#" class="avtar avtar-s btn-link-danger ms-auto btn-pc-default" data-bs-dismiss="modal">
+            <i class="ti ti-x f-20"></i>
+          </a>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-lg-12">
+                <div class="table-responsive">
+                    <table class="table table-bordered">
+                      <thead>
+                        <tr>
+                          <th>Name</th>
+                          <th>{{contact.name}}</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td>Email</td>
+                          <td>{{contact.email}}</td>
+                        </tr>
+                        <tr>
+                            <td>Number</td>
+                            <td>{{contact.number}}</td>
+                        </tr>
+                        <tr>
+                            <td>Message</td>
+                            <td>{{contact.message|safe}}</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+</div>
+{% endfor %}
+{% endblock %}

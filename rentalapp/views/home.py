@@ -412,6 +412,12 @@ class PostDetailView(HitCountDetailView):
     # set to True to count the hit
     count_hit = True
 
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        # Filter the queryset to include only published blog posts
+        queryset = queryset.filter(is_published=True)
+        return queryset
+
     def get_context_data(self, **kwargs):
         context = super(PostDetailView, self).get_context_data(**kwargs)
         stripped_body = striptags(self.object.body)

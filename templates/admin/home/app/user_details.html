@@ -1,0 +1,230 @@
+{% extends 'admin/base/base.html' %}
+
+{% block content %}
+<div class="pc-container">
+    <div class="pc-content">
+      <!-- [ breadcrumb ] start -->
+      <div class="page-header">
+        <div class="page-block">
+          <div class="row align-items-center">
+            <div class="col-md-12">
+              <ul class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'admin_dashboard' %}">Home</a></li>
+                <li class="breadcrumb-item"><a href="javascript: void(0)">CRM Application</a></li>
+                <li class="breadcrumb-item" aria-current="page">{{user.first_name}} {{user.last_name}} Detail</li>
+              </ul>
+            </div>
+            <div class="col-md-12">
+              <div class="page-header-title">
+                <h2 class="mb-0">{{user.first_name}} {{user.last_name}} Detail</h2>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-12">
+            <div class="card social-profile">
+                <div class="card-body pt-0 border-0 shadow-none drp-upgrade-card" style="background-image: url(/media/admins/images/layout/img-profile-card.jpg)">
+                  <div class="row align-items-end">
+                    <div class="col-md-auto text-md-start">
+                      <img class="img-fluid img-profile-avtar" src="{{user.profile.profile_image.url}}" alt="user_{{user.username}}_detail" />
+                    </div>
+                    <div class="col">
+                      <div class="row justify-content-between align-items-end">
+                        <div class="col-md-auto soc-profile-data">
+                          <h5 class="mb-1">{{user.first_name}} {{user.last_name}} <span style="font-size: 10px;"><div class="{% if user.profile.online_status %}bg-success{% else %}bg-secondary{% endif %} chat-badge me-1"></div>{% if user.profile.online_status %}Online{% else %}Offline{% endif %}</span></h5>
+                          <p class="mb-0">{{user.username}}</p>
+                        </div>
+                        <div class="col-md-auto">
+                          <button class="btn btn-dark"><i class="ti ti-mail me-2"></i>Send Email</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="card">
+                <div class="card-body py-0">
+                  <ul class="nav nav-tabs profile-tabs" id="myTab" role="tablist">
+                    <li class="nav-item">
+                      <a class="nav-link active" id="profile-tab" data-bs-toggle="tab" href="social-media.html#profile" role="tab" aria-selected="true">
+                        <i class="ti ti-activity me-2"></i> Activity History
+                      </a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link" id="followers-tab" data-bs-toggle="tab" href="social-media.html#followers" role="tab" aria-selected="false">
+                        <i class="ti ti-subtask me-2"></i> Tasks
+                      </a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link" id="friends-tab" data-bs-toggle="tab" href="social-media.html#friends" role="tab" aria-selected="false">
+                        <i class="ti ti-notes me-2"></i> Notes
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-lg-8 col-xxl-9">
+                  <div class="tab-content">
+                    <div class="tab-pane show active" id="profile" role="tabpanel">
+                        {% for notification in notifications %}
+                        <div class="card">
+                            <div class="card-body">
+                            <div class="media align-items-center mb-3">
+                                <div class="chat-avtar">
+                                <i class="ti ti-shopping-cart text-muted fs-3"></i>
+                                </div>
+                                <div class="media-body mx-2">
+                                <h5 class="mb-0">{{notification.title}}</h5>
+                                <span class="text-sm text-muted">{{notification.created_at|date:"l, d M"}} at {{notification.created_at|time:"h:i A"}}</span>
+                                </div>
+                                <div class="dropdown">
+                                <a
+                                    class="avtar avtar-xs btn-link-secondary dropdown-toggle arrow-none"
+                                    href="#"
+                                    data-bs-toggle="dropdown"
+                                    aria-haspopup="true"
+                                    aria-expanded="false"
+                                    ><i class="material-icons-two-tone f-18">more_vert</i></a
+                                >
+                                <div class="dropdown-menu dropdown-menu-end">
+                                    <a class="dropdown-item" href="#">Edit</a>
+                                    <a class="dropdown-item" href="#">Delete</a>
+                                </div>
+                                </div>
+                            </div>
+                            <p class="my-4">{{notification.message|safe}}</p>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    <div class="tab-pane" id="followers" role="tabpanel" aria-labelledby="followers-tab">
+                      <div class="card">
+                        <div class="card-header">
+                          <h5>Tasks <span class="badge bg-primary rounded-pill">99</span></h5>
+                        </div>
+                        <ul class="list-group list-group-flush">
+                          <li class="list-group-item">
+                            <div class="media align-items-center">
+                              <img class="rounded-circle img-fluid wid-40" src="../assets/images/user/avatar-1.jpg" alt="User image" />
+                              <div class="media-body mx-2">
+                                <h6 class="mb-0">John Doe</h6>
+                                <p class="mb-0">@John_Doe</p>
+                              </div>
+                              <button class="btn btn-outline-secondary">Message</button>
+                            </div>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                    <div class="tab-pane" id="friends" role="tabpanel" aria-labelledby="friends-tab">
+                      <div class="card">
+                        <div class="card-header">
+                          <h5>Notes <span class="badge bg-primary rounded-pill">30</span></h5>
+                        </div>
+                        <ul class="list-group list-group-flush">
+                          <li class="list-group-item">
+                            <div class="d-block d-sm-flex align-items-center justify-content-between">
+                              <div class="media align-items-center mb-3 mb-sm-0">
+                                <img class="rounded-circle img-fluid wid-40" src="../assets/images/user/avatar-1.jpg" alt="User image" />
+                                <div class="media-body mx-2">
+                                  <h6 class="mb-0">John Doe</h6>
+                                  <p class="mb-0">@John_Doe</p>
+                                </div>
+                              </div>
+                              <div class="ms-5 ms-sm-0">
+                                <button class="btn btn-outline-secondary me-1">Decline</button>
+                                <button class="btn btn-primary">Accept</button>
+                              </div>
+                            </div>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-lg-4 col-xxl-3">
+                  <div class="card">
+                    <div class="card-header d-flex align-items-center justify-content-between">
+                      <h5>Leads Details</h5>
+                      <div class="dropdown">
+                        <a
+                          class="avtar avtar-xs btn-link-secondary dropdown-toggle arrow-none"
+                          href="social-media.html#"
+                          data-bs-toggle="dropdown"
+                          aria-haspopup="true"
+                          aria-expanded="false"
+                          ><i class="material-icons-two-tone f-18">more_vert</i></a
+                        >
+                        <div class="dropdown-menu dropdown-menu-end">
+                          <a class="dropdown-item" href="social-media.html#">Edit</a>
+                          <a class="dropdown-item" href="social-media.html#">Delete</a>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="card-body">
+                      <ul class="list-unstyled mb-0">
+                        <li>
+                          <div class="d-flex align-items-center text-muted mb-2">
+                            <div class="avtar avtar-xs bg-light-secondary flex-shrink-0 me-2">
+                              <i class="material-icons-two-tone text-secondary f-16">home</i>
+                            </div>
+                            <span class="text-truncate w-100">{{user.profile.country}}</span>
+                          </div>
+                        </li>
+                        <li>
+                          <div class="d-flex align-items-center text-muted mb-2">
+                            <div class="avtar avtar-xs bg-light-secondary flex-shrink-0 me-2">
+                              <i class="material-icons-two-tone text-secondary f-16">calendar_today</i>
+                            </div>
+                            <span class="text-truncate w-100">{{user.profile.dob}}</span>
+                          </div>
+                        </li>
+                        <li>
+                          <a
+                            class="d-flex align-items-center text-muted text-hover-primary mb-2"
+                            href="mailto:{{user.email}}"
+                            target="_blank"
+                          >
+                            <div class="avtar avtar-xs bg-light-secondary flex-shrink-0 me-2">
+                              <i class="material-icons-two-tone text-secondary f-16">email</i>
+                            </div>
+                            <span class="text-truncate w-100">{{user.email}}</span>
+                          </a>
+                        </li>
+                        <li>
+                            <a
+                              class="d-flex align-items-center text-muted text-hover-primary mb-2"
+                              href="mailto:{{user.email}}"
+                              target="_blank"
+                            >
+                              <div class="avtar avtar-xs bg-light-secondary flex-shrink-0 me-2">
+                                <i class="material-icons-two-tone text-secondary f-16">phone_iphone</i>
+                              </div>
+                              <span class="text-truncate w-100">{{user.profile.number}}</span>
+                            </a>
+                          </li>
+                          <li>
+                            <a
+                              class="d-flex align-items-center text-muted text-hover-primary mb-2"
+                              href="mailto:{{user.email}}"
+                              target="_blank"
+                            >
+                              <div class="avtar avtar-xs bg-light-secondary flex-shrink-0 me-2">
+                                <i class="material-icons-two-tone text-secondary f-16">person_pin</i>
+                              </div>
+                              <span class="text-truncate w-100">{{user.profile.gender}}</span>
+                            </a>
+                          </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+        </div>
+      </div>
+    </div>
+</div>
+{% endblock %}
