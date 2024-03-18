@@ -11,13 +11,13 @@
               <ul class="breadcrumb">
                 <li class="breadcrumb-item"><a href="{% url 'admin_dashboard' %}">Home</a></li>
                 <li class="breadcrumb-item"><a href="javascript: void(0)">CMS Pages</a></li>
-                <li class="breadcrumb-item"><a href="{% url 'admin_faqs_list' %}">FAQs List</a></li>
-                <li class="breadcrumb-item" aria-current="page">Add new FAQs</li>
+                <li class="breadcrumb-item"><a href="{% url 'admin_view_user_details' task.user.id %}">{{task.user.username}}</a></li>
+                <li class="breadcrumb-item" aria-current="page">Edit {{task.task_title}}</li>
               </ul>
             </div>
             <div class="col-md-12">
               <div class="page-header-title">
-                <h2 class="mb-0">Add new FAQs</h2>
+                <h2 class="mb-0">Edit {{task.task_title}}</h2>
               </div>
             </div>
           </div>
@@ -28,18 +28,17 @@
           <div class="card">
             <div class="card-body">
             {% include 'base/includes/alerts.html' %}
-            <form action="{% url 'admin_new_faqs' %}" method="post">
+            <form action="{% url 'admin_edit_tasks' task.id %}" method="post" enctype="multipart/form-data">
             {% csrf_token %}
               <div class="row">
                 <div class="col-md-12">
-                    <div class="form-group">
-                        {{form.media}}
-                        {{form.as_p}}
+                    <div class="form-group" name="body">
+                        {{updateform.as_p}}
                     </div>
                 </div>
                 <div class="col-md-12">
                     <div class="text-end btn-page mb-0 mt-4">
-                        <button type="submit" class="btn btn-warning">Add new faq</button>
+                        <button type="submit" class="btn btn-warning">Update task</button>
                     </div>
                 </div>
               </div>

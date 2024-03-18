@@ -1,0 +1,77 @@
+{% extends 'admin/base/base.html' %}
+
+{% block content %}
+<div class="pc-container">
+    <div class="pc-content">
+      <!-- [ breadcrumb ] start -->
+      <div class="page-header">
+        <div class="page-block">
+          <div class="row align-items-center">
+            <div class="col-md-12">
+              <ul class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'admin_dashboard' %}">Home</a></li>
+                <li class="breadcrumb-item"><a href="javascript: void(0)">CRM Application</a></li>
+                <li class="breadcrumb-item" aria-current="page">Manage Tasks</li>
+              </ul>
+            </div>
+            <div class="col-md-12">
+              <div class="page-header-title">
+                <h2 class="mb-0">Manage Tasks</h2>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-12">
+            <div class="card table-card">
+                <div class="card-body">
+                  <div class="table-responsive my-3">
+                    <table class="table table-hover" id="pc-dt-simple">
+                      <thead>
+                        <tr>
+                          <th>#</th>
+                          <th>Name</th>
+                          <th>Status</th>
+                          <th>Due Date</th>
+                          <th>Task Stage</th>
+                          <th>Task Owner</th>
+                          <th class="text-center">Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {% for task in tasks %}
+                        <tr>
+                          <td>{{ forloop.counter }}</td>
+                          <td>{{task.user.first_name}} {{task.user.last_name}}</td>
+                          <td><span class="p-1 rounded-1 {% if task.status == 'Overdue' %}bg-danger{% elif task.status == 'Pending' %}bg-warning{% elif task.status == 'In Progress' %}bg-success{% endif %} bg-opacity-50">{{task.status}}</span></td>
+                          <td>{{task.date_time|date:"d/m/y"}}<br />{{task.date_time|time:"h:i A"}}</td>
+                          <td>{{task.lead_stage}}</td>
+                          <td>{{request.user.username}}</td>
+                          <td class="text-center">
+                            <ul class="list-inline me-auto mb-0">
+                              <li class="list-inline-item align-bottom" data-bs-toggle="tooltip" title="View">
+                                <a href="{% url 'admin_view_user_details' task.user.id %}" class="avtar avtar-xs btn-link-secondary btn-pc-default">
+                                  <i class="ti ti-eye f-18"></i>
+                                </a>
+                              </li>
+                              <li class="list-inline-item align-bottom" data-bs-toggle="tooltip" title="Delete">
+                                <a href="{% url 'admin_delete_tasks' task.id %}" class="avtar avtar-xs btn-link-danger btn-pc-default">
+                                  <i class="ti ti-trash f-18"></i>
+                                </a>
+                              </li>
+                            </ul>
+                          </td>
+                        </tr>
+                        {% endfor %}
+                      </tbody>
+                    </table>
+                  </div>
+                  <div class="mt-3">{% include 'base/includes/alerts.html' %}</div>
+                </div>
+            </div>
+        </div>
+      </div>
+    </div>
+</div>
+{% endblock %}

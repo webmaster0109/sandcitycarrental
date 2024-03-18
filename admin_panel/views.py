@@ -155,11 +155,67 @@ def admin_customers(request):
 def admin_view_user_details(request, id):
     user = User.objects.get(id=id)
     notifications = UserNotification.objects.filter(user=user).order_by('-created_at')
+    tasks = LeadsTasks.objects.filter(user=user).order_by('-date_time')
+    notes = LeadsNotes.objects.filter(user=user).order_by('-created_on')
     context = {
         'user': user,
-        'notifications': notifications
+        'notifications': notifications,
+        'form': LeadsTasksForm(),
+        'task_count': tasks.count(),
+        'tasks': tasks,
+        'notes_count': notes.count(),
+        'notes': notes,
+        'notes_form': LeadsNotesForm()
     }
     return render(request, template_name="admin/home/app/user_details.html", context=context)
+
+@login_required(login_url="/secure-admin/auth/private/login")
+def admin_add_tasks(request, id):
+    user = User.objects.get(id=id)
+    if request.method == "POST":
+        form = LeadsTasksForm(request.POST)
+        if form.is_valid():
+            try:
+                instance = form.save(commit=False)
+                instance.user = user
+                instance.save()
+                messages.success(request, f"Successfully created task of {user.username}")
+                return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+            except Exception as e:
+                messages.warning(request, str(e))
+                return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+        else:
+            messages.warning(request, "form is invalid")
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    
+@login_required(login_url="/secure-admin/auth/private/login")
+def admin_edit_tasks(request, id):
+    task = LeadsTasks.objects.get(id=id)
+    if request.method == "POST":
+        form = LeadsTasksForm(request.POST, instance=task)
+        if form.is_valid():
+            try:
+                form.save()
+                messages.success(request, f"Successfully updated task of {task.task_title}")
+                return redirect('admin_view_user_details', task.user.id)
+            except Exception as e:
+                messages.warning(request, str(e))
+                return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+        else:
+            messages.warning(request, "form is invalid")
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    else:
+        form = LeadsTasksForm(instance=task)
+    
+    return render(request, template_name="admin/home/app/admin_update_task.html", context={'updateform':form, 'task': task})
+
+@login_required(login_url="/secure-admin/auth/private/login")
+def admin_delete_tasks(request, id):
+    task = LeadsTasks.objects.get(id=id)
+    if request.user.is_staff:
+        task.delete()
+        messages.warning(request, f"Successfully deleted {task.task_title}")
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 @login_required(login_url="/secure-admin/auth/private/login")
 def delete_user(request, user_id):
@@ -552,7 +608,9 @@ def admin_new_faqs(request):
         else:
             messages.warning(request, "Form is invalid.")
             return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-    return render(request, template_name="admin/home/page/admin_new_faqs.html", context={'form': FaqForm})
+    else:
+        form = FaqForm()
+    return render(request, template_name="admin/home/page/admin_new_faq.html", context={'form': form})
 
 @login_required(login_url="/secure-admin/auth/private/login")
 def admin_update_faq(request, id):
@@ -594,4 +652,36 @@ def admin_delete_contact(request, id):
     if request.user.is_superuser or request.user.is_staff:
         contact.delete()
         messages.warning(request, f"{contact.message} from contact form deleted successfully")
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+@login_required(login_url="/secure-admin/auth/private/login")
+def admin_all_tasks(request):
+    context = {'tasks': LeadsTasks.objects.all().order_by('-date_time')}
+    return render(request, 'admin/home/app/admin_all_tasks.html', context=context)
+
+@login_required(login_url="/secure-admin/auth/private/login")
+def admin_add_notes(request, id):
+    user = User.objects.get(id=id)
+    if request.method == "POST":
+        form = LeadsNotesForm(request.POST)
+        if form.is_valid():
+            try:
+                instance = form.save(commit=False)
+                instance.user = user
+                instance.save()
+                messages.success(request, f"{instance.notes} added successfully")
+                return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+            except Exception as e:
+                messages.warning(request, str(e))
+                return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+        else:
+            messages.warning(request, "Invalid form submission")
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+@login_required(login_url="/secure-admin/auth/private/login")
+def admin_delete_notes(request, id):
+    notes = LeadsNotes.objects.get(id=id)
+    if request.user.is_staff:
+        notes.delete()
+        messages.warning(request, f"Successfully deleted {notes.notes}")
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))

@@ -24,17 +24,29 @@ def home_page(request):
     return render(request, template_name="frontend/index.html", context={'category':category})
 
 def add_to_wishlists(request, slug):
-    car = Cars.objects.get(slug=slug)
-    user_obj = request.user.profile
-    user_obj.wishlists.add(car)
-    messages.success(request, "Successfully added in wishlist")
+    if request.user.is_authenticated:
+        car = get_object_or_404(Cars, slug=slug)
+        user_profile = request.user.profile
+        if car not in user_profile.wishlists.all():
+            user_profile.wishlists.add(car)
+            messages.success(request, "Successfully added to wishlist")
+        else:
+            messages.warning(request, "Already in wishlist")
+    else:
+        messages.error(request, "You need to be logged in to add to wishlist")
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 def remove_to_wishlists(request, slug):
-    car = Cars.objects.get(slug=slug)
-    user_obj = request.user.profile
-    user_obj.wishlists.remove(car)
-    messages.warning(request, "Oops! Removed item from wishlist")
+    if request.user.is_authenticated:
+        car = get_object_or_404(Cars, slug=slug)
+        user_profile = request.user.profile
+        if car in user_profile.wishlists.all():
+            user_profile.wishlists.remove(car)
+            messages.success(request, "Successfully removed from wishlist")
+        else:
+            messages.warning(request, "Item not in wishlist")
+    else:
+        messages.error(request, "You need to be logged in to remove from wishlist")
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 def signup_newsletter(request):
@@ -109,8 +121,8 @@ def booking_search(request):
 
         total_days = (return_date - pickup_date).days
 
-        request.session['pickup_date'] = pickup_date
-        request.session['return_date'] = return_date
+        request.session['pickup_date'] = pickup_date_str
+        request.session['return_date'] = return_date_str
 
         car_prices = {}
         for car in available_cars:

@@ -18,13 +18,16 @@ urlpatterns = [
     path('dashboard/pages/new-feature', admin_new_features, name="admin_new_features"),
     path('dashboard/pages/view-blogs', admin_view_blog, name="admin_view_blog"),
     path('dashboard/pages/view-faqs', admin_faqs_list, name="admin_faqs_list"),
+    path('dashboard/apps/admin-all-tasks', admin_all_tasks, name="admin_all_tasks"),
 
     # add urls
     path('dashboard/pages/add-car-categories', add_car_categories, name="add_car_categories"),
     path('dashboard/pages/add-new-car', add_new_car, name="add_new_car"),
     path('dashboard/pages/add-new-feature', add_new_features, name="add_new_features"),
     path('dashboard/pages/add-new-blog', admin_add_blog, name="admin_add_blog"),
-    path('dashboard/pages/add-new-faqs', admin_new_faqs, name="admin_new_faqs"),
+    path('dashboard/pages/add-new-faq', admin_new_faqs, name="admin_new_faqs"),
+    path('dashboard/apps/add-new-task/<int:id>', admin_add_tasks, name="admin_add_tasks"),
+    path('dashboard/apps/add-new-notes/<int:id>', admin_add_notes, name="admin_add_notes"),
 
     # get urls
     path('dashboard/pages/show-car/<str:slug>', admin_show_car_details, name="admin_show_car_details"),
@@ -38,7 +41,9 @@ urlpatterns = [
     path('dashboard/pages/delete-car-feature/<str:feature_id>', delete_car_features, name="delete_car_features"),
     path('dashboard/pages/delete-blog/<str:slug>', admin_delete_blog, name="admin_delete_blog"),
     path('dashboard/pages/delete-faq/<int:id>', admin_delete_faq, name="admin_delete_faq"),
-    path('dashboard/app/delete-contact-form/<int:id>', admin_delete_contact, name="admin_delete_contact"),
+    path('dashboard/apps/delete-contact-form/<int:id>', admin_delete_contact, name="admin_delete_contact"),
+    path('dashboard/apps/delete-task/<int:id>', admin_delete_tasks, name="admin_delete_tasks"),
+    path('dashboard/apps/delete-notes/<int:id>', admin_delete_notes, name="admin_delete_notes"),
 
     # update urls
     path('dashboard/pages/update-car-feature/<str:feature_id>', update_car_features, name="update_car_features"),
@@ -46,4 +51,5 @@ urlpatterns = [
     path('dashboard/pages/update-car-category/<str:slug>', update_car_categories, name="update_car_categories"),
     path('dashboard/pages/update-blog/<int:id>', admin_update_blog, name="admin_update_blog"),
     path('dashboard/pages/update-faq/<int:id>', admin_update_faq, name="admin_update_faq"),
+    path('dashboard/apps/update-task/<int:id>', admin_edit_tasks, name="admin_edit_tasks"),
 ]

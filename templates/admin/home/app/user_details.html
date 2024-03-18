@@ -33,7 +33,7 @@
                     <div class="col">
                       <div class="row justify-content-between align-items-end">
                         <div class="col-md-auto soc-profile-data">
-                          <h5 class="mb-1">{{user.first_name}} {{user.last_name}} <span style="font-size: 10px;"><div class="{% if user.profile.online_status %}bg-success{% else %}bg-secondary{% endif %} chat-badge me-1"></div>{% if user.profile.online_status %}Online{% else %}Offline{% endif %}</span></h5>
+                          <h5 class="mb-1">{{user.first_name}} {{user.last_name}} <span style="font-size: 12px; font-weight: 400;"><div class="{% if user.profile.online_status %}bg-success{% else %}bg-secondary{% endif %} chat-badge me-1"></div>{% if user.profile.online_status %}Online{% else %}Offline (Last Active: {{user.profile.last_activity_time|time:"h:i A"}} on {{user.profile.last_activity_time|date:"l, d M"}}){% endif %}</span></h5>
                           <p class="mb-0">{{user.username}}</p>
                         </div>
                         <div class="col-md-auto">
@@ -67,6 +67,7 @@
               </div>
               <div class="row">
                 <div class="col-lg-8 col-xxl-9">
+                {% include 'base/includes/alerts.html' %}
                   <div class="tab-content">
                     <div class="tab-pane show active" id="profile" role="tabpanel">
                         {% for notification in notifications %}
@@ -95,53 +96,98 @@
                                 </div>
                                 </div>
                             </div>
-                            <p class="my-4">{{notification.message|safe}}</p>
+                            <p class="mt-4">{{notification.message|safe}}</p>
                             </div>
                         </div>
                         {% endfor %}
                     </div>
                     <div class="tab-pane" id="followers" role="tabpanel" aria-labelledby="followers-tab">
-                      <div class="card">
-                        <div class="card-header">
-                          <h5>Tasks <span class="badge bg-primary rounded-pill">99</span></h5>
-                        </div>
-                        <ul class="list-group list-group-flush">
-                          <li class="list-group-item">
-                            <div class="media align-items-center">
-                              <img class="rounded-circle img-fluid wid-40" src="../assets/images/user/avatar-1.jpg" alt="User image" />
-                              <div class="media-body mx-2">
-                                <h6 class="mb-0">John Doe</h6>
-                                <p class="mb-0">@John_Doe</p>
-                              </div>
-                              <button class="btn btn-outline-secondary">Message</button>
+                        <div class="card">
+                            <div class="card-header">
+                                <div class="d-sm-flex align-items-center">
+                                    <div class="me-auto">
+                                        <h5>Tasks <span class="badge bg-primary rounded-pill">{{task_count}}</span></h5>
+                                    </div>
+                                    <div class="ms-auto">
+                                        <a href="#" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#user-task-{{user.id}}">Add Task</a>
+                                    </div>
+                                </div>
                             </div>
-                          </li>
-                        </ul>
-                      </div>
+                        </div>
+                        {% for task in tasks %}
+                        <div class="card">
+                        <div class="card-body">
+                        <div class="media align-items-center mb-3">
+                            <div class="chat-avtar">
+                                <i class="fas fa-circle {% if task.status == 'Overdue' %}text-danger{% elif task.status == 'Pending' %}text-warning{% elif task.status == 'In Progress' %}text-success{% endif %} f-10 m-r-5"></i>
+                            </div>
+                            <div class="media-body mx-2">
+                            <h5 class="mb-0 {% if task.is_completed %}text-decoration-line-through{% endif %}">Follow Up: {{task.task_title}}</h5>
+                            <span class="text-normal text-muted {% if task.is_completed %}text-decoration-line-through{% endif %}">{{task.date_time|time:"h:i A"}}, {{task.date_time|date:"d M"}}</span>
+                            </div>
+                            <div class="dropdown">
+                            <a
+                                class="avtar avtar-xs btn-link-secondary dropdown-toggle arrow-none"
+                                href="#"
+                                data-bs-toggle="dropdown"
+                                aria-haspopup="true"
+                                aria-expanded="false"
+                                ><i class="material-icons-two-tone f-18">more_vert</i></a
+                            >
+                            <div class="dropdown-menu dropdown-menu-end">
+                                <a class="dropdown-item" href="{% url 'admin_edit_tasks' task.id %}">Edit</a>
+                                <a class="dropdown-item" href="{% url 'admin_delete_tasks' task.id %}">Delete</a>
+                            </div>
+                            </div>
+                        </div>
+                        <p class="mt-4 {% if task.is_completed %}text-decoration-line-through{% endif %}">{{task.task_message|safe}}</p>
+                        </div>
+                        </div>
+                        {% endfor %}
                     </div>
                     <div class="tab-pane" id="friends" role="tabpanel" aria-labelledby="friends-tab">
-                      <div class="card">
-                        <div class="card-header">
-                          <h5>Notes <span class="badge bg-primary rounded-pill">30</span></h5>
-                        </div>
-                        <ul class="list-group list-group-flush">
-                          <li class="list-group-item">
-                            <div class="d-block d-sm-flex align-items-center justify-content-between">
-                              <div class="media align-items-center mb-3 mb-sm-0">
-                                <img class="rounded-circle img-fluid wid-40" src="../assets/images/user/avatar-1.jpg" alt="User image" />
-                                <div class="media-body mx-2">
-                                  <h6 class="mb-0">John Doe</h6>
-                                  <p class="mb-0">@John_Doe</p>
+                        <div class="card">
+                            <div class="card-header">
+                                <div class="d-sm-flex align-items-center">
+                                    <div class="me-auto">
+                                        <h5>Notes <span class="badge bg-primary rounded-pill">{{notes_count}}</span></h5>
+                                    </div>
+                                    <div class="ms-auto">
+                                        <a href="#" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#user-notes-{{user.id}}">Add Notes</a>
+                                    </div>
                                 </div>
-                              </div>
-                              <div class="ms-5 ms-sm-0">
-                                <button class="btn btn-outline-secondary me-1">Decline</button>
-                                <button class="btn btn-primary">Accept</button>
-                              </div>
                             </div>
-                          </li>
-                        </ul>
-                      </div>
+                        </div>
+                        {% if notes %}
+                        <div class="card">
+                            <ul class="list-group list-group-flush border-top-0">
+                                {% for note in notes %}
+                                <li class="list-group-item">
+                                    <div class="d-flex align-items-start">
+                                    <div class="flex-grow-1 me-2">
+                                        <h6 class="mb-0 {% if note.is_completed %}text-decoration-line-through{% endif %}">{{note.notes}}</h6>
+                                        <span class="badge {% if note.is_completed %}bg-success{% else %}bg-primary{% endif %} rounded-pill">{% if note.is_completed %}Completed{% else %}In Process{% endif %}</span>
+                                    </div>
+                                    <div class="dropdown">
+                                        <a
+                                            class="avtar avtar-xs btn-link-secondary dropdown-toggle arrow-none"
+                                            href="#"
+                                            data-bs-toggle="dropdown"
+                                            aria-haspopup="true"
+                                            aria-expanded="false"
+                                            ><i class="material-icons-two-tone f-18">more_vert</i></a
+                                        >
+                                        <div class="dropdown-menu dropdown-menu-end">
+                                            <a class="dropdown-item" href="#">Edit</a>
+                                            <a class="dropdown-item" href="{% url 'admin_delete_notes' note.id %}">Delete</a>
+                                        </div>
+                                    </div>
+                                    </div>
+                                </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                        {% endif %}
                     </div>
                   </div>
                 </div>
@@ -197,7 +243,7 @@
                         <li>
                             <a
                               class="d-flex align-items-center text-muted text-hover-primary mb-2"
-                              href="mailto:{{user.email}}"
+                              href="tel:{{user.profile.number}}"
                               target="_blank"
                             >
                               <div class="avtar avtar-xs bg-light-secondary flex-shrink-0 me-2">
@@ -207,22 +253,66 @@
                             </a>
                           </li>
                           <li>
-                            <a
-                              class="d-flex align-items-center text-muted text-hover-primary mb-2"
-                              href="mailto:{{user.email}}"
-                              target="_blank"
-                            >
+                            <div class="d-flex align-items-center text-muted mb-2">
                               <div class="avtar avtar-xs bg-light-secondary flex-shrink-0 me-2">
                                 <i class="material-icons-two-tone text-secondary f-16">person_pin</i>
                               </div>
                               <span class="text-truncate w-100">{{user.profile.gender}}</span>
-                            </a>
+                            </div>
                           </li>
                       </ul>
                     </div>
                   </div>
                 </div>
               </div>
+        </div>
+      </div>
+    </div>
+</div>
+
+<div class="modal fade" id="user-task-{{user.id}}" data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header border-0 pb-0">
+          <h5 class="mb-0">Add {{user.username}} task</h5>
+          <a href="#" class="avtar avtar-s btn-link-danger ms-auto btn-pc-default" data-bs-dismiss="modal">
+            <i class="ti ti-x f-20"></i>
+          </a>
+        </div>
+        <div class="modal-body">
+            <form method="post" action="{% url 'admin_add_tasks' user.id %}">
+                {% csrf_token %}
+                <div class="form-group">
+                  {{form.as_p}}
+                </div>
+                <div class="form-group text-end">
+                    <button type="submit" class="btn btn-warning">Add Task</button>
+                </div>
+            </form>
+        </div>
+      </div>
+    </div>
+</div>
+
+<div class="modal fade" id="user-notes-{{user.id}}" data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header border-0 pb-0">
+          <h5 class="mb-0">Add {{user.username}} notes</h5>
+          <a href="#" class="avtar avtar-s btn-link-danger ms-auto btn-pc-default" data-bs-dismiss="modal">
+            <i class="ti ti-x f-20"></i>
+          </a>
+        </div>
+        <div class="modal-body">
+            <form method="post" action="{% url 'admin_add_notes' user.id %}">
+                {% csrf_token %}
+                <div class="form-group">
+                  {{notes_form.as_p}}
+                </div>
+                <div class="form-group text-end">
+                    <button type="submit" class="btn btn-warning">Add Task</button>
+                </div>
+            </form>
         </div>
       </div>
     </div>

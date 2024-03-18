@@ -3,7 +3,7 @@ from rentalapp.models.blogs import BlogsDetail
 from rentalapp.models.faqs import Faq
 from django.utils.text import slugify
 from django.utils import timezone
-from django.db import models
+from .models import LeadsTasks, LeadsNotes
 
 
 class BlogForm(forms.ModelForm):
@@ -60,3 +60,23 @@ class FaqForm(forms.ModelForm):
             'question': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Question', 'required': True}),
         }
 
+class LeadsTasksForm(forms.ModelForm):
+    class Meta:
+        model = LeadsTasks
+        fields = ['task_title', 'task_message', 'lead_stage', 'date_time', 'is_completed']
+        widgets = {
+            'task_title': forms.TextInput(attrs={'class': 'form-control', 'required': True}),
+            'task_message': forms.Textarea(attrs={'class': 'form-control', 'rows': 3, 'required': True}),
+            'lead_stage': forms.Select(attrs={'class': 'form-control', 'required': True}),
+            'date_time': forms.DateTimeInput(attrs={'type': 'datetime-local', 'class': 'form-control', 'required': True}),
+            'is_completed': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+        }
+
+class LeadsNotesForm(forms.ModelForm):
+    class Meta:
+        model = LeadsNotes
+        fields = ['notes', 'is_completed']
+        widgets = {
+            'notes': forms.Textarea(attrs={'class': 'form-control', 'rows': 3, 'required': True}),
+            'is_completed': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+        }
