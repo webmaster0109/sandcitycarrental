@@ -8,6 +8,6 @@ class Faq(models.Model):
     def __str__(self):
         return self.question
     
-    @classmethod
-    def search(self, query):
-        return self.objects.filter(models.Q(question__icontains=query) | models.Q(answer__icontains=query))
+    # @classmethod
+    # def search(self, query):
+    #     return self.objects.filter(models.Q(question__icontains=query) | models.Q(answer__icontains=query))

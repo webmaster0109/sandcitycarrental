@@ -52,7 +52,9 @@
                           <div class="row">
                             <div class="col-auto pe-0">
                             {% for image in booking.car.carimages_set.all|slice:":1" %}
-                            <img src="{{image.car_images.url}}" alt="user-image" class="wid-60 rounded">
+                            <a href="{% url 'admin_show_car_details' booking.car.slug %}" target="_blank" rel="noopener noreferrer">
+                              <img src="{{image.car_images.url}}" alt="user-image" class="wid-60 rounded">
+                            </a>
                             {% endfor %}
                             </div>
                             <div class="col">

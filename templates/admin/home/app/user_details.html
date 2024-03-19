@@ -37,7 +37,7 @@
                           <p class="mb-0">{{user.username}}</p>
                         </div>
                         <div class="col-md-auto">
-                          <button class="btn btn-dark"><i class="ti ti-mail me-2"></i>Send Email</button>
+                          <button class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#send-mail-{{user.id}}"><i class="ti ti-mail me-2"></i>Send Email</button>
                         </div>
                       </div>
                     </div>
@@ -166,7 +166,7 @@
                                     <div class="d-flex align-items-start">
                                     <div class="flex-grow-1 me-2">
                                         <h6 class="mb-0 {% if note.is_completed %}text-decoration-line-through{% endif %}">{{note.notes}}</h6>
-                                        <span class="badge {% if note.is_completed %}bg-success{% else %}bg-primary{% endif %} rounded-pill">{% if note.is_completed %}Completed{% else %}In Process{% endif %}</span>
+                                        <span class="badge {% if note.is_completed %}bg-success{% else %}bg-warning{% endif %} rounded-pill">{% if note.is_completed %}Completed{% else %}In Process{% endif %}</span>
                                     </div>
                                     <div class="dropdown">
                                         <a
@@ -178,7 +178,7 @@
                                             ><i class="material-icons-two-tone f-18">more_vert</i></a
                                         >
                                         <div class="dropdown-menu dropdown-menu-end">
-                                            <a class="dropdown-item" href="#">Edit</a>
+                                            <a class="dropdown-item" href="{% url 'admin_edit_notes' note.id %}">Edit</a>
                                             <a class="dropdown-item" href="{% url 'admin_delete_notes' note.id %}">Delete</a>
                                         </div>
                                     </div>
@@ -310,7 +310,32 @@
                   {{notes_form.as_p}}
                 </div>
                 <div class="form-group text-end">
-                    <button type="submit" class="btn btn-warning">Add Task</button>
+                    <button type="submit" class="btn btn-warning">Add Notes</button>
+                </div>
+            </form>
+        </div>
+      </div>
+    </div>
+</div>
+
+<div class="modal fade" id="send-mail-{{user.id}}" data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header border-0 pb-0">
+          <h5 class="mb-0">Send Mail to {{user.email}}</h5>
+          <a href="#" class="avtar avtar-s btn-link-danger ms-auto btn-pc-default" data-bs-dismiss="modal">
+            <i class="ti ti-x f-20"></i>
+          </a>
+        </div>
+        <div class="modal-body">
+            <form method="post" action="{% url 'admin_send_mail_to_user' user.id %}" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="form-group">
+                    {{sendmail_form.media}}
+                    {{sendmail_form.as_p}}
+                </div>
+                <div class="form-group text-end">
+                    <button type="submit" class="btn btn-warning">Send Mail</button>
                 </div>
             </form>
         </div>

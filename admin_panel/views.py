@@ -165,7 +165,8 @@ def admin_view_user_details(request, id):
         'tasks': tasks,
         'notes_count': notes.count(),
         'notes': notes,
-        'notes_form': LeadsNotesForm()
+        'notes_form': LeadsNotesForm(),
+        'sendmail_form': SendMailForm()
     }
     return render(request, template_name="admin/home/app/user_details.html", context=context)
 
@@ -679,9 +680,103 @@ def admin_add_notes(request, id):
             return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 @login_required(login_url="/secure-admin/auth/private/login")
+def admin_edit_notes(request, id):
+    note = LeadsNotes.objects.get(id=id)
+    if request.method == "POST":
+        form = LeadsNotesForm(request.POST, instance=note)
+        if form.is_valid():
+            try:
+                form.save()
+                messages.success(request, f"Successfully updated task of {note.notes}")
+                return redirect('admin_view_user_details', note.user.id)
+            except Exception as e:
+                messages.warning(request, str(e))
+                return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+        else:
+            messages.warning(request, "form is invalid")
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    else:
+        form = LeadsNotesForm(instance=note)
+    
+    return render(request, template_name="admin/home/app/admin_update_note.html", context={'updatenotes_form':form, 'note': note})
+
+@login_required(login_url="/secure-admin/auth/private/login")
 def admin_delete_notes(request, id):
     notes = LeadsNotes.objects.get(id=id)
     if request.user.is_staff:
         notes.delete()
         messages.warning(request, f"Successfully deleted {notes.notes}")
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+@login_required(login_url="/secure-admin/auth/private/login")
+def admin_send_mail_to_user(request, id):
+    user = User.objects.get(id=id)
+    if request.method == "POST":
+        form = SendMailForm(request.POST, request.FILES)
+        if form.is_valid():
+            try:
+                instance = form.save(commit=False)
+                instance.sender = settings.EMAIL_HOST_USER
+                instance.save()
+                instance.receiver.add(user)
+                receivers_emails = [receiver.email for receiver in instance.receiver.all()]
+                receivers_email = str(receivers_emails[0])
+                send_mail_to_user(instance.sender, receivers_email, instance.subject, instance.message)
+                messages.success(request, f"Sent mail to {receivers_email} successfully!")
+                return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+            except Exception as e:
+                messages.warning(request, str(e))
+                return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+        else:
+            messages.warning(request, "Invalid form submission")
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+@login_required(login_url="/secure-admin/auth/private/login")
+def admin_custom_page(request):
+    return render(request, template_name="admin/home/page/admin_custom_page.html", context={'customs': CustomPage.objects.all()})
+
+@login_required(login_url="/secure-admin/auth/private/login")
+def admin_add_custom(request):
+    if request.method == "POST":
+        form = CustomPageForm(request.POST, request.FILES)
+        if form.is_valid():
+            try:
+                form.save()
+                messages.success(request, f"Add page successfully!")
+                return redirect('admin_custom_page')
+            except Exception as e:
+                messages.warning(request, str(e))
+        else:
+            messages.warning(request, "Invalid form submission")
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    else:
+        custom_form = CustomPageForm()    
+    return render(request, template_name="admin/home/page/admin_add_custom.html", context={'custom_form': custom_form})
+
+@login_required(login_url="/secure-admin/auth/private/login")
+def admin_update_custom(request, slug):
+    custom = CustomPage.objects.get(slug=slug)
+    if request.method == "POST":
+        form = CustomPageForm(request.POST, request.FILES, instance=custom)
+        if form.is_valid():
+            try:
+                form.save()
+                messages.success(request, f"Updated {custom.title} page successfully!")
+                return redirect('admin_custom_page')
+            except Exception as e:
+                messages.warning(request, str(e))
+        else:
+            messages.warning(request, "Invalid form submission")
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    else:
+        custom_form = CustomPageForm(instance=custom)    
+    return render(request, template_name="admin/home/page/admin_update_custom.html", context={'custom_form': custom_form, 'custom':custom})
+
+
+@login_required(login_url="/secure-admin/auth/private/login")
+def admin_delete_custom(request, slug):
+    custom = CustomPage.objects.get(slug=slug)
+    if request.user.is_staff:
+        custom.delete()
+        messages.warning(request, f"{custom.title} delete successfully!")
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))

@@ -3,7 +3,8 @@ from rentalapp.models.blogs import BlogsDetail
 from rentalapp.models.faqs import Faq
 from django.utils.text import slugify
 from django.utils import timezone
-from .models import LeadsTasks, LeadsNotes
+from .models import *
+from rentalapp.models.custom_page import CustomPage
 
 
 class BlogForm(forms.ModelForm):
@@ -57,7 +58,7 @@ class FaqForm(forms.ModelForm):
         model = Faq
         fields = ['question', 'answer']
         widgets = {
-            'question': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Question', 'required': True}),
+            'question': forms.Textarea(attrs={'class': 'form-control', 'required': True, 'rows': 3}),
         }
 
 class LeadsTasksForm(forms.ModelForm):
@@ -79,4 +80,40 @@ class LeadsNotesForm(forms.ModelForm):
         widgets = {
             'notes': forms.Textarea(attrs={'class': 'form-control', 'rows': 3, 'required': True}),
             'is_completed': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+        }
+
+class SendMailForm(forms.ModelForm):    
+    class Meta:
+        model = SendMail
+        fields = ['subject', 'message']
+        widgets = {
+            'subject': forms.TextInput(attrs={'class':'form-control', 'required': True})
+        }
+
+
+class CustomPageForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(CustomPageForm, self).__init__(*args, **kwargs)
+        self.fields['keywords'].initial = 'best car rental services in dubai, car rent in dubai'
+        self.fields['desc'].initial = 'Discover the Emirates with our personalized touch, offering you a unique and memorable car rental experience.'
+        
+    def save(self, commit=True):
+        instance = super().save(commit=False)
+        if not instance.slug:
+            instance.slug = slugify(instance.title)
+        if not instance.created_at:
+            instance.created_at = timezone.now()
+        if commit:
+            instance.save()
+        return instance
+
+    class Meta:
+        model = CustomPage
+        fields = ['title', 'keywords', 'desc', 'page_image', 'body', 'is_published']
+        widgets = {
+            'title': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Blog Title', 'required': True}),
+            'keywords': forms.Textarea(attrs={'class': 'form-control', 'rows': 3, 'placeholder': 'Blog Keywords', 'required': True}),
+            'desc': forms.Textarea(attrs={'class': 'form-control', 'rows': 3, 'placeholder': 'Blog Description', 'required': True}),
+            'page_image': forms.ClearableFileInput(attrs={'class': 'form-control'}),
+            'is_published': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
         }

@@ -26,9 +26,7 @@ urlpatterns = [
     path('delete-reviews/<id>', delete_reviews, name="delete_reviews"),
     path('remove-to-wishlist/<slug>', remove_to_wishlists, name="remove_to_wishlists"),
     path('booking-confirm', success_payment, name="success_payment"),
-    # custom page
-    path('page/<str:slug>', custom_page, name="custom_page"),
-
+    
     # authentication urls
     path('auth/login', login_attempt, name="login"),
     path('auth/register', signup_attempt, name="register"),
@@ -50,4 +48,8 @@ urlpatterns = [
     path('upload-image/<user_id>', upload_image, name="upload_image"),
     path('remove-image/<user_id>', remove_image, name="remove_image"),
     path('delete-user/<user_id>/', delete_user, name="delete_user"),
+
+    # custom page
+    path('<str:slug>', custom_page, name="custom_page"),
+
 ]

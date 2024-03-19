@@ -151,6 +151,20 @@
               <li class="pc-item"><a class="pc-link" href="{% url 'admin_new_faqs' %}">Add New FAQs</a></li>
             </ul>
           </li>
+          <li class="pc-item pc-hasmenu">
+            <a href="#" class="pc-link">
+              <span class="pc-micon">
+                <svg class="pc-icon">
+                  <use xlink:href="#custom-link"></use>
+                </svg>
+              </span>
+              <span class="pc-mtext">Custome Page</span><span class="pc-arrow"><i data-feather="chevron-right"></i></span
+            ></a>
+            <ul class="pc-submenu">
+              <li class="pc-item"><a class="pc-link" href="{% url 'admin_custom_page' %}">Custom Page List</a></li>
+              <li class="pc-item"><a class="pc-link" href="{% url 'admin_add_custom' %}">Add New Custom Page</a></li>
+            </ul>
+          </li>
         </ul>
       </div>
     </div>

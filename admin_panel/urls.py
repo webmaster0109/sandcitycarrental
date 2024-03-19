@@ -19,6 +19,7 @@ urlpatterns = [
     path('dashboard/pages/view-blogs', admin_view_blog, name="admin_view_blog"),
     path('dashboard/pages/view-faqs', admin_faqs_list, name="admin_faqs_list"),
     path('dashboard/apps/admin-all-tasks', admin_all_tasks, name="admin_all_tasks"),
+    path('dashboard/pages/admin-custom-pages', admin_custom_page, name="admin_custom_page"),
 
     # add urls
     path('dashboard/pages/add-car-categories', add_car_categories, name="add_car_categories"),
@@ -28,6 +29,7 @@ urlpatterns = [
     path('dashboard/pages/add-new-faq', admin_new_faqs, name="admin_new_faqs"),
     path('dashboard/apps/add-new-task/<int:id>', admin_add_tasks, name="admin_add_tasks"),
     path('dashboard/apps/add-new-notes/<int:id>', admin_add_notes, name="admin_add_notes"),
+    path('dashboard/pages/add-custom-page', admin_add_custom, name="admin_add_custom"),
 
     # get urls
     path('dashboard/pages/show-car/<str:slug>', admin_show_car_details, name="admin_show_car_details"),
@@ -44,6 +46,7 @@ urlpatterns = [
     path('dashboard/apps/delete-contact-form/<int:id>', admin_delete_contact, name="admin_delete_contact"),
     path('dashboard/apps/delete-task/<int:id>', admin_delete_tasks, name="admin_delete_tasks"),
     path('dashboard/apps/delete-notes/<int:id>', admin_delete_notes, name="admin_delete_notes"),
+    path('dashboard/pages/delete-custom-page/<str:slug>', admin_delete_custom, name="admin_delete_custom"),
 
     # update urls
     path('dashboard/pages/update-car-feature/<str:feature_id>', update_car_features, name="update_car_features"),
@@ -52,4 +55,9 @@ urlpatterns = [
     path('dashboard/pages/update-blog/<int:id>', admin_update_blog, name="admin_update_blog"),
     path('dashboard/pages/update-faq/<int:id>', admin_update_faq, name="admin_update_faq"),
     path('dashboard/apps/update-task/<int:id>', admin_edit_tasks, name="admin_edit_tasks"),
+    path('dashboard/apps/update-note/<int:id>', admin_edit_notes, name="admin_edit_notes"),
+    path('dashboard/apps/update-custom-page/<str:slug>', admin_update_custom, name="admin_update_custom"),
+
+    # send mail
+    path('dashboard/apps/send-mail/<int:id>', admin_send_mail_to_user, name="admin_send_mail_to_user"),
 ]
