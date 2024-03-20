@@ -11,7 +11,9 @@ from django.utils import timezone
 from datetime import timedelta
 from django.utils.safestring import mark_safe
 import random
+from django.views.decorators.csrf import csrf_protect
 
+@csrf_protect
 def login_attempt(request):
     if request.user.is_authenticated:
         return redirect('homepage')
@@ -37,6 +39,7 @@ def login_attempt(request):
             return redirect('login')
     return render(request, template_name="backend/credentials/login.html")
 
+@csrf_protect
 def signup_attempt(request):
     if request.user.is_authenticated:
         return redirect(reverse('dashboard'))
@@ -70,6 +73,7 @@ def signup_attempt(request):
         return redirect('login')    
     return render(request, template_name="backend/credentials/register.html")
 
+@csrf_protect
 def verify_account(request, token):
     try:
         profile_obj = Profile.objects.get(verification_token=token)
@@ -106,6 +110,7 @@ def verify_account(request, token):
         print(e)
     return render(request, template_name="backend/credentials/verify_account.html")
 
+@csrf_protect
 def forgot_password(request):
     try:
         if request.user.is_authenticated:
@@ -149,6 +154,7 @@ def check_password_similarity(new_password, old_password):
     similarity_percentage = (len(common_characters) / len(old_password)) * 100
     return similarity_percentage >= 30
 
+@csrf_protect
 def change_password(request, token):
     try:
         if request.user.is_authenticated:
@@ -200,6 +206,7 @@ def change_password(request, token):
         print(e)
     return render(request, template_name="backend/credentials/change_password.html", context={'profile': profile_obj.user.id})
 
+@csrf_protect
 def forgot_username(request):
     try:
         if request.user.is_authenticated:
