@@ -406,7 +406,7 @@ def faqs(request):
 
 def custom_page(request, slug):
     context = {
-        'custompage': CustomPage.objects.get(slug=slug, is_published=True)
+        'custompage': CustomPage.objects.get(slug=slug)
     }
     return render(request, template_name="frontend/custom_page.html", context=context)
 
