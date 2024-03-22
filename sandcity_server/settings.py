@@ -13,7 +13,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['sandcitycarrental.ae', 'www.sandcitycarrental.ae']
 
-
+# 'sandcitycarrental.ae', 'www.sandcitycarrental.ae'
 # Application definition
 
 INSTALLED_APPS = [
