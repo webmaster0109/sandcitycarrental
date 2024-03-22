@@ -41,6 +41,11 @@ class Booking(models.Model):
         ('Cash in Hand', 'Cash in Hand'),
         ('Transfer to Bank', 'Transfer to Bank')
     )
+    CAR_PICKUP_FEE_CHOICES = (
+        (0, 0),
+        (100, 100),
+        (200, 200)
+    )
     car = models.ForeignKey(Cars, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
     booking_id = models.CharField(max_length=100, null=True, blank=True)
@@ -51,6 +56,9 @@ class Booking(models.Model):
     payment_mode = models.CharField(max_length=50, choices=PAYMENT_MODE_CHOICES, null=True, blank=True)
     transaction_id = models.CharField(max_length=255, null=True, blank=True)
     transaction_pdf = models.FileField(upload_to="pdf/transaction_pdf/", null=True, blank=True)
+    company_name = models.CharField(max_length=100, null=True, blank=True)
+    company_address = models.TextField(default="", null=True, blank=True)
+    car_pickup_fee = models.PositiveIntegerField(default=0, choices=CAR_PICKUP_FEE_CHOICES, null=True, blank=True)
     is_paid = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
 
@@ -59,8 +67,12 @@ class Booking(models.Model):
         return amount
     
     def total_amount(self):
-        total = self.total_price + self.security_amount()
-        return total
+        total_amount = 0
+        if self.car_pickup_fee == 0:
+            total_amount += self.total_price + self.security_amount()
+        else:
+            total_amount += self.total_price + self.car_pickup_fee + self.security_amount()
+        return total_amount
 
     def __str__(self):
         return self.car.brand

@@ -35,6 +35,7 @@ urlpatterns = [
     path('dashboard/apps/add-new-booking', admin_add_booking, name="admin_add_booking"),
 
     # get urls
+    path('dashboard/apps/get-invoice/<int:id>', admin_get_invoices, name="admin_get_invoices"),
     path('dashboard/pages/show-car/<str:slug>', admin_show_car_details, name="admin_show_car_details"),
     path('dashboard/app/show-user-detail/<int:id>', admin_view_user_details, name="admin_view_user_details"),
 

@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,400,500,600,700"/>
+    <link rel="stylesheet" href="/media/invoices/css/style.bundle.css">
+</head>
+<body>
+    <div class="app-content flex-column-fluid container">
+        <div class="text-end">
+            <a href="{% url 'admin_user_orders' %}" class="btn btn-sm btn-danger mb-3">Back to Booking Page</a>
+        </div>
+        <div class="card">     
+            <div class="card-body p-lg-20">
+                <div class="d-flex flex-column flex-xl-row">
+                    <div class="flex-lg-row-fluid me-xl-18 mb-10 mb-xl-0">
+                        <div class="mt-n1">                                    
+                            <!--begin::Top-->
+                            <div class="d-flex flex-stack pb-10">
+                                <!--begin::Logo-->
+                                <a href="{% url 'homepage' %}">
+                                    <img alt="Logo" style="width: 220px;" src="https://ik.imagekit.io/thevermafamily/Sandcity%20Letterhead-3.png"/>
+                                </a>
+                                <!--end::Logo-->
+                                                    
+                                <!--begin::Action-->            
+                                <a href="javascript:void(0)">
+                                    <img alt="Logo" style="width: 220px;" src="https://ik.imagekit.io/thevermafamily/Sandcity%20Letterhead-2.png"/>
+                                </a>                 
+                                <!--end::Action--> 
+                            </div>                
+                            <!--end::Top-->                
+                    
+                            <!--begin::Wrapper-->
+                            <div class="m-0"> 
+                                <!--begin::Label-->
+                                <div class="fw-bold fs-3 text-gray-800 mb-8">Invoice No: {{booking.booking_id}}</div>                
+                                <!--end::Label-->  
+                    
+                                <!--begin::Row-->
+                                <div class="row g-5 mb-11">
+                                    <!--end::Col-->
+                                    <div class="col-sm-6">
+                                        <!--end::Label-->
+                                        <div class="fw-semibold fs-7 text-gray-600 mb-1">Date:</div>                
+                                        <!--end::Label-->  
+                    
+                                        <!--end::Info-->
+                                        <div class="fw-bold fs-6 text-gray-800 d-flex align-items-center flex-wrap">
+                                            <span class="pe-2">{{booking.created_at|date:"d, F Y"}}</span>
+                                        </div>                
+                                        <!--end::Info--> 
+                                    </div>                
+                                    <!--end::Col-->  
+                    
+                                    <!--end::Col-->
+                                    <div class="col-sm-6">
+                                        
+                                    </div>                
+                                    <!--end::Col-->  
+                                </div>                
+                                <!--end::Row-->   
+                    
+                                <!--begin::Row-->
+                                <div class="row g-5 mb-12">
+                                    <!--end::Col-->
+                                    <div class="col-sm-6">
+                                        <!--end::Label-->
+                                        <div class="fw-semibold fs-7 text-gray-600 mb-1">Issued For:</div>                
+                                        <!--end::Label-->  
+                    
+                                        <!--end::Text-->
+                                        <div class="fw-bold fs-6 text-gray-800">
+                                            {% if booking.company_name is None %}{{booking.user.first_name}} {{booking.user.last_name}}{% else %}{{booking.company_name}}{% endif %}
+                                        </div>                
+                                        <!--end::Text-->  
+                    
+                                        <!--end::Description-->
+                                        <div class="fw-semibold fs-7 text-gray-600">
+                                            {% if booking.company_address == "" %}{{booking.user.profile.country}}{% else %}{{booking.company_address}}{% endif %}
+                                        </div>                
+                                        <!--end::Description-->  
+                                    </div>                
+                                    <!--end::Col-->  
+                    
+                                    <!--end::Col-->
+                                    <div class="col-sm-6">
+                                        <!--end::Label-->
+                                        <div class="fw-semibold fs-7 text-gray-600 mb-1">Issued By:</div>                
+                                        <!--end::Label-->  
+                    
+                                        <!--end::Text-->
+                                        <div class="fw-bold fs-6 text-gray-800">Sandcity Car Rental LLC</div>                
+                                        <!--end::Text-->  
+                    
+                                        <!--end::Description-->
+                                        <div class="fw-semibold fs-7 text-gray-600">                      
+                                            Dubai Downtown, UAE                        
+                                        </div>                
+                                        <!--end::Description-->   
+                                    </div>                
+                                    <!--end::Col-->  
+                                </div>                
+                                <!--end::Row-->   
+                    
+                    
+                                <!--begin::Content-->
+                                <div class="flex-grow-1">
+                                    <!--begin::Table-->
+                                    <div class="table-responsive border-bottom mb-9">
+                                        <table class="table mb-3">
+                                            <thead>
+                                                <tr class="border-bottom fs-6 fw-bold text-gray-600">
+                                                    <th class="min-w-20px text-start pb-2">Item</th>
+                                                    <th class="min-w-225px pb-2">Description</th>
+                                                    <th class="min-w-80px text-end pb-2">Price</th>
+                                                    <th class="min-w-100px text-end pb-2">Amount</th>
+                                                </tr>
+                                            </thead>
+                    
+                                            <tbody>
+                                                <tr class="fw-bold text-gray-700 fs-5">
+                                                    <td class="pt-6 text-start">1</td>
+                                                    <td class="d-flex align-items-center pt-6">                                            
+                                                        {{booking.car.brand}} rental {% if booking.total_days > 1 %}{{booking.total_days}} days{% else %}{{booking.total_days}} day{% endif %}
+                                                    </td>
+                                                    <td class="pt-6 text-end">AED {{booking.total_price}}</td>
+                                                    <td class="pt-6 text-gray-900 fw-bolder text-end">AED {{booking.total_price}}</td>
+                                                </tr>
+                                                <tr class="fw-bold text-gray-700 fs-5">
+                                                    <td class="pt-6 text-start">2</td>
+                                                    <td class="d-flex align-items-center pt-6">                                            
+                                                        Car Pickup Fee
+                                                    </td>
+                                                    <td class="pt-6 text-end">
+                                                        {% if booking.car_pickup_fee == 0 %}0{% elif booking.car_pickup_fee > 0 %}AED {{booking.car_pickup_fee}}{% endif %}
+                                                    </td>
+                                                    <td class="pt-6 text-gray-900 fw-bolder text-end">{% if booking.car_pickup_fee == 0 %}0{% elif booking.car_pickup_fee > 0 %}AED {{booking.car_pickup_fee}}{% endif %}</td>
+                                                </tr>
+                                                <tr class="fw-bold text-gray-700 fs-5">
+                                                    <td class="pt-6 text-start">3</td>
+                                                    <td class="d-flex align-items-center pt-6">                                            
+                                                        Security Deposit Fee*
+                                                    </td>
+                                                    <td class="pt-6 text-end">AED {{booking.security_amount}}</td>
+                                                    <td class="pt-6 text-gray-900 fw-bolder text-end">AED {{booking.security_amount}}</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>  
+                                    <!--end::Table-->                     
+                    
+                                    <!--begin::Container-->
+                                    <div class="d-flex justify-content-end">
+                                        <!--begin::Section-->
+                                        <div class="mw-300px">
+                                            <!--begin::Item-->
+                                            <div class="d-flex flex-stack mb-3">
+                                                <!--begin::Accountname-->
+                                                <div class="fw-semibold pe-10 text-gray-600 fs-7">Subtotal:</div>
+                                                <!--end::Accountname-->
+                    
+                                                <!--begin::Label-->
+                                                <div class="text-end fw-bold fs-6 text-gray-800">AED {{booking.total_amount}}</div> 
+                                                <!--end::Label-->
+                                            </div>
+                                            <!--end::Item-->
+                    
+                                            <!--begin::Item-->
+                                            <div class="d-flex flex-stack mb-3">
+                                                <!--begin::Accountname-->
+                                                <div class="fw-semibold pe-10 text-gray-600 fs-7">VAT 0%</div>
+                                                <!--end::Accountname-->
+                    
+                                                <!--begin::Label-->
+                                                <div class="text-end fw-bold fs-6 text-gray-800">0.00</div> 
+                                                <!--end::Label-->
+                                            </div>
+                                            <!--end::Item-->
+                    
+                                            <!--begin::Item-->
+                                            <div class="d-flex flex-stack">
+                                                <!--begin::Code-->
+                                                <div class="fw-semibold pe-10 text-gray-600 fs-7">Total</div>
+                                                <!--end::Code-->
+                    
+                                                <!--begin::Label-->
+                                                <div class="text-end fw-bold fs-6 text-gray-800">AED {{booking.total_amount}}</div> 
+                                                <!--end::Label-->
+                                            </div>
+                                            <!--end::Item-->
+                                        </div>   
+                                        <!--end::Section-->                        
+                                    </div>   
+                                    <!--end::Container-->                 
+                                </div>
+                                <!--end::Content-->          
+                            </div>
+                            <!--end::Wrapper-->           
+                        </div>     
+            <!--end::Invoice 2 content-->         
+                    </div>  
+                    <!--end::Content-->
+        
+                    <!--begin::Sidebar-->
+                    <div class="m-0">
+                        <!--begin::Invoice 2 sidebar-->
+        <div class="d-print-none border border-dashed border-gray-300 card-rounded h-lg-100 min-w-md-350px p-9 bg-lighten">
+            
+            <!--begin::Title-->
+            <h6 class="mb-8 fw-bolder text-gray-600 text-hover-primary">BANK DETAILS</h6>
+            <!--end::Title-->   
+        
+            <!--begin::Item-->
+            <div class="mb-6">       
+                <div class="fw-semibold text-gray-600 fs-7">Bank Account:</div> 
+              
+                <div class="fw-bold text-gray-800 fs-6">SANDCITY CAR RENTAL LLC</div>          
+            </div>                
+            <!--end::Item-->
+            <!--begin::Item-->
+            <div class="mb-6">       
+                <div class="fw-semibold text-gray-600 fs-7">Bank Name:</div> 
+              
+                <div class="fw-bold text-gray-800 fs-6">
+                    NATIONAL BANK OF RAS AL-KHAIMAH, THE
+                </div>          
+            </div>                
+            <!--end::Item-->
+            <!--begin::Item-->
+            <div class="mb-6">       
+                <div class="fw-semibold text-gray-600 fs-7">IBAN:</div> 
+              
+                <div class="fw-bold text-gray-800 fs-6">
+                    IAE 55 0400 0002 4324 3204 001
+                </div>          
+            </div>                
+            <!--end::Item-->  
+        
+            <!--begin::Item-->
+            <div class="mb-6">     
+                <div class="fw-semibold text-gray-600 fs-7">SWIFT:</div>
+        
+                <div class="fw-bold fs-6 text-gray-800 d-flex align-items-center">
+                    NRAKAEAKXXX
+                </div>                  
+            </div>                
+            <!--end::Item-->  
+        
+            <!--begin::Item-->
+            <div class="mb-15">     
+                <div class="fw-semibold text-gray-600 fs-7">Address:</div>
+        
+                <div class="fw-bold fs-6 text-gray-800 d-flex align-items-center">
+                    ALSAAD 1, AL DHAGAYA, DUBAI
+                </div>                  
+            </div>                
+            <!--end::Item-->
+        
+            <!--begin::Title-->
+            <h6 class="mb-8 fw-bolder text-gray-600 text-hover-primary">MORE INFO</h6>
+            <!--end::Title-->   
+        
+            <!--begin::Item-->
+            <div class="mb-6">     
+                <div class="fw-semibold text-gray-600 fs-7">If you have any question please contact:</div>
+        
+                <div class="fw-bold fs-6 text-gray-800">
+                    info@sandcitycarrental.ae
+                </div>                  
+            </div>                
+            <!--end::Item-->  
+        
+             <!--begin::Item-->
+             <div class="">       
+                <div class="fw-semibold text-gray-600 fs-7">Social Media:</div> 
+              
+                <div class="fw-bold text-gray-800 fs-6">
+                    <i class="bi bi-telephone-fill"></i> +971 50 194 8128 <br />
+                    <i class="bi bi-instagram"></i> sandcitycarrental_dubai <br />
+                    <i class="bi bi-facebook"></i> Sandcity Car Rental Dubai
+                </div>          
+            </div>                
+            <!--end::Item-->   
+        </div>                
+        <!--end::Invoice 2 sidebar-->                  </div>  
+                    <!--end::Sidebar-->
+                </div>
+                <!--end::Layout-->         
+            </div>
+            <!--end::Body-->
+        </div>
+        <!--end::Invoice 2 main-->        
+    </div>
+
+    <script src="/media/invoices/js/scripts.bundle.js"></script>
+</body>
+</html>
