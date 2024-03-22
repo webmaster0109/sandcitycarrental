@@ -11,7 +11,7 @@ SECRET_KEY = 'django-insecure-n5#r08q+9-v$udogj&obzl$y_0-*=_dt$^@y(i-i*v-6-akicb
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['sandcitycarrental.ae', 'www.sandcitycarrental.ae']
 
 
 # Application definition
@@ -27,8 +27,9 @@ INSTALLED_APPS = [
     'admin_panel.apps.AdminPanelConfig',
     'django_ckeditor_5',
     'hitcount',
-    'simple_history'
 ]
+
+CSRF_TRUSTED_ORIGINS = ['https://www.sandcitycarrental.ae']
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -39,7 +40,6 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
-    'simple_history.middleware.HistoryRequestMiddleware',
 ]
 
 ROOT_URLCONF = 'sandcity_server.urls'
