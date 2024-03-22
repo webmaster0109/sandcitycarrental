@@ -12,7 +12,7 @@ from datetime import timedelta, date
 from .forms import *
 from rentalapp.models.users import *
 from django.contrib.auth.hashers import make_password
-from django.core.mail import send_mail
+from django.core.mail import send_mail, EmailMultiAlternatives
 from django.conf import settings
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
@@ -847,7 +847,7 @@ def send_booking_car_email(booking):
     subject = f'[Invoice: #{booking.booking_id}] Sandcity Car Rental'
     # Change the following line to the admin's email address
     recipient_email = f'{booking.user.email}'
-    html_message = render_to_string('admin/home/app/user_invoices.html', {'booking': booking})
+    html_message = render_to_string('admin/home/app/user_email_invoice.html', {'booking': booking})
 
     message = strip_tags(html_message)
 
@@ -855,8 +855,10 @@ def send_booking_car_email(booking):
     admin_email = settings.EMAIL_HOST_USER 
 
     try:
-        send_mail(subject=subject, message=message, from_email=settings.EMAIL_HOST_USER, recipient_list=[recipient_email], html_message=html_message)
-        send_mail(subject=admin_subject, message=message, from_email=settings.EMAIL_HOST_USER, recipient_list=[admin_email], html_message=html_message)
+        email = EmailMultiAlternatives(subject, message, settings.EMAIL_HOST_USER, [recipient_email])
+        email.attach_alternative(html_message, "text/html")
+        email.send()
+        # send_mail(admin_subject, message, settings.EMAIL_HOST_USER, [admin_email], html_message=html_message)
     except Exception as e:
         print(f"Failed to send registration email to {recipient_email}. Error: {e}")
 

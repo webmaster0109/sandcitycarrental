@@ -55,8 +55,11 @@ class BookingForm(forms.ModelForm):
         return instance
     class Meta:
         model = Booking
-        fields = ['car', 'user', 'booking_id', 'pickup_date', 'return_date', 'total_price', 'payment_mode', 'transaction_id', 'transaction_pdf', 'is_paid']
+        fields = ['car', 'user', 'booking_id', 'company_name', 'company_address', 'pickup_date', 'return_date', 'total_price', 'car_pickup_fee', 'payment_mode', 'transaction_id', 'transaction_pdf', 'is_paid']
         widgets = {
+            'company_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Optional*'}),
+            'company_address': forms.Textarea(attrs={'class': 'form-control', 'rows': 3, 'placeholder': 'Optional*'}),
+            'car_pickup_fee': forms.Select(attrs={'class': 'form-control', 'required': True}),
             'car': forms.Select(attrs={'class': 'form-control', 'required': True}),
             'user': forms.Select(attrs={'class': 'form-control', 'required': True}),
             'total_price': forms.TextInput(attrs={'class': 'form-control', 'required': True}),
