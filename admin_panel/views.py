@@ -11,6 +11,7 @@ from django.utils import timezone
 from datetime import timedelta, date
 from .forms import *
 from rentalapp.models.users import *
+from django.contrib.auth.hashers import make_password
 # Create your views here.
 
 def admin_login(request):
@@ -252,7 +253,12 @@ def admin_user_orders(request):
 def delete_booking(request, id):
     try:
         booking = Booking.objects.get(id=id)
+        car = Cars.objects.get(slug=booking.car.slug)
+        if booking.car.in_stock is False:
+            car.in_stock = True
+            car.save()
         booking.delete()
+        messages.warning(request, f"{car.brand}' booking is deleted")
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     except Booking.DoesNotExist:
         return JsonResponse({'error': 'Booking info does not exists'}, status=404)
@@ -435,7 +441,7 @@ def admin_update_car_details(request, slug):
         exterior_color = request.POST.get('exterior_color')
         actual_price = int(request.POST.get('actual_price'))
         discounted_price = int(request.POST.get('discounted_price'))
-        in_stock = bool(request.POST.get('in_stock'))
+        in_stock = request.POST.get('in_stock')
 
         try:
             if not all([category, car_brand, car_number, car_slug, car_year, body_type, engine, fuel_type, actual_price, exterior_color, discounted_price, in_stock]):
@@ -780,3 +786,87 @@ def admin_delete_custom(request, slug):
         custom.delete()
         messages.warning(request, f"{custom.title} delete successfully!")
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+@login_required(login_url="/secure-admin/auth/private/login")
+def admin_add_user(request):
+    if request.user.is_superuser:
+        if request.method == "POST":
+            user_form = UserForm(request.POST)
+            if user_form.is_valid():
+                try:
+                    instance = user_form.save(commit=False)
+                    if User.objects.filter(email=instance.email).exists():
+                        messages.warning(request, f"{instance.email} is already taken. Please use another one.")
+                        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+                    instance.password = make_password(user_form.cleaned_data['password'])
+                    instance.save()
+                    messages.success(request, f"Added {instance.username} successfully!")
+                    return redirect('admin_add_profile')
+                except Exception as e:
+                    messages.warning(request, str(e))
+                    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+            else:
+                messages.warning(request, "Invalid form submission")
+                return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+        user_form = UserForm()
+    else:
+        messages.warning(request, "Sorry! You are not authorized.")
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    return render(request, template_name="admin/home/app/add_new_user.html", context={'user_form': user_form})
+
+@login_required(login_url="/secure-admin/auth/private/login")
+def admin_add_profile(request):
+    if request.user.is_superuser:
+        if request.method == "POST":
+            profile_form = ProfileForm(request.POST, request.FILES)
+            if profile_form.is_valid():
+                try:
+                    instance = profile_form.save(commit=False)
+                    instance.save()
+                    messages.success(request, f"Added successfully!")
+                    return redirect('admin_customers')
+                except Exception as e:
+                    messages.warning(request, str(e))
+                    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+            else:
+                messages.warning(request, "Invalid form submission")
+                return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+        profile_form = ProfileForm()
+    else:
+        messages.warning(request, "Sorry! You are not authorized.")
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    return render(request, template_name="admin/home/app/add_new_profile.html", context={'profile_form': profile_form})
+
+@login_required(login_url="/secure-admin/auth/private/login")
+def admin_add_booking(request):
+    if request.user.is_superuser:
+        if request.method == "POST":
+            booking_form = BookingForm(request.POST, request.FILES)
+            if booking_form.is_valid():
+                try:
+                    instance = booking_form.save(commit=False)
+                    car = Cars.objects.get(slug=instance.car.slug)
+                    if not car.in_stock:
+                        messages.warning(request, f"{car.brand} is not available. Please book another car")
+                        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+                    else:
+                        instance.total_days = (instance.return_date - instance.pickup_date).days
+                        instance.save()
+                        car.in_stock = False
+                        car.save()
+                        messages.success(request, f"Added booking successfully!")
+                        return redirect('admin_user_orders')
+                except Exception as e:
+                    messages.warning(request, str(e))
+                    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+            else:
+                messages.warning(request, "Invalid form submission")
+                return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+        booking_form = BookingForm()
+    else:
+        messages.warning(request, "Sorry! You are not authorized.")
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    return render(request, template_name="admin/home/app/add_new_booking.html", context={'booking_form': booking_form})

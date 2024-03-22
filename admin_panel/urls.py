@@ -30,6 +30,9 @@ urlpatterns = [
     path('dashboard/apps/add-new-task/<int:id>', admin_add_tasks, name="admin_add_tasks"),
     path('dashboard/apps/add-new-notes/<int:id>', admin_add_notes, name="admin_add_notes"),
     path('dashboard/pages/add-custom-page', admin_add_custom, name="admin_add_custom"),
+    path('dashboard/apps/add-new-user', admin_add_user, name="admin_add_user"),
+    path('dashboard/apps/add-new-profile', admin_add_profile, name="admin_add_profile"),
+    path('dashboard/apps/add-new-booking', admin_add_booking, name="admin_add_booking"),
 
     # get urls
     path('dashboard/pages/show-car/<str:slug>', admin_show_car_details, name="admin_show_car_details"),

@@ -7,11 +7,16 @@ from .cars import Cars, Booking
 import uuid
 
 class Profile(models.Model):
+    GENDER_CHOICES = (
+        ('Male', 'Male'),
+        ('Female', 'Female'),
+        ('Others', 'Others')
+    )
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="profile")
     number = models.CharField(max_length=20, null=True, blank=True)
     profile_image = models.ImageField(default="/media/assets/images/favicon.png", upload_to="images/profile/", null=True, blank=True)
     dob = models.DateField(blank=True, null=True)
-    gender = models.CharField(max_length=50, null=True, blank=True)
+    gender = models.CharField(max_length=50, choices=GENDER_CHOICES, null=True, blank=True)
     country = models.CharField(max_length=50, null=True, blank=True)
     created_on = models.DateTimeField(auto_now_add=True, null=True, blank=True)
     modified_at = models.DateTimeField(auto_now=True)
@@ -24,7 +29,7 @@ class Profile(models.Model):
     online_status = models.BooleanField(default=False)
     last_activity_time = models.DateTimeField(null=True, blank=True)
     total_active_time = models.DurationField(default=timezone.timedelta())
-    wishlists = models.ManyToManyField(Cars, related_name="wishlists")
+    wishlists = models.ManyToManyField(Cars, related_name="wishlists", null=True, blank=True)
 
     def get_uuid(self):
         return str(uuid.uuid4())

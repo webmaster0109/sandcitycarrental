@@ -37,6 +37,10 @@ class Cars(models.Model):
         return self.brand
 
 class Booking(models.Model):
+    PAYMENT_MODE_CHOICES = (
+        ('Cash in Hand', 'Cash in Hand'),
+        ('Transfer to Bank', 'Transfer to Bank')
+    )
     car = models.ForeignKey(Cars, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
     booking_id = models.CharField(max_length=100, null=True, blank=True)
@@ -44,7 +48,7 @@ class Booking(models.Model):
     return_date = models.DateField(null=True, blank=True)
     total_days = models.PositiveIntegerField(default=0, null=True, blank=True)
     total_price = models.PositiveIntegerField(default=0, null=True, blank=True)
-    payment_mode = models.CharField(max_length=50, null=True, blank=True)
+    payment_mode = models.CharField(max_length=50, choices=PAYMENT_MODE_CHOICES, null=True, blank=True)
     transaction_id = models.CharField(max_length=255, null=True, blank=True)
     transaction_pdf = models.FileField(upload_to="pdf/transaction_pdf/", null=True, blank=True)
     is_paid = models.BooleanField(default=False)

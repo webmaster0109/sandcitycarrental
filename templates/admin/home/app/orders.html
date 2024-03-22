@@ -30,6 +30,14 @@
         <div class="col-sm-12">
           <div class="card table-card">
             <div class="card-body">
+              <div class="d-sm-flex align-items-center p-4 pb-sm-2">
+                  <div class="me-auto my-1">{% include 'base/includes/alerts.html' %}</div>
+                  <div class="ms-auto my-1">
+                    <a href="{% url 'admin_add_booking' %}" class="btn btn-dark">
+                      <i class="ti ti-user f-18"></i> Add New Booking
+                    </a>
+                  </div>
+              </div>
               <div class="table-responsive my-3">
                 <table class="table table-hover" id="pc-dt-simple">
                     <thead>
