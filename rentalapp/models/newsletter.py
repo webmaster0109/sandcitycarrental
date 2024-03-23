@@ -10,7 +10,7 @@ class EmailNewsletters(models.Model):
     is_subscribe = models.BooleanField(default=False)
 
     def __str__(self):
-        return self.email
+        return self.email or "Email"
 
 user_signature = '\n\nBest regards,\nSandcity Car Rental Pvt. Ltd'
 

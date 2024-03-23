@@ -151,7 +151,40 @@ Footer END -->
 
 <!-- Bootstrap JS -->
 <script src="/media/assets/vendor/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script type="text/javascript">
+	$(document).on('submit', '#newsletterForm', function(e){
+		e.preventDefault();
+		var email = $('#email').val();
+		$('#submitSpinner').show();
+		$.ajax({
+			type : 'POST',
+			url : "{% url 'signup_newsletter' %}",
+			data : {
+				email:email,
+				csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val()
+			},
+			success : function(response){
+				$('#newsletterForm')[0].reset();
+				$('#submitSpinner').hide();
+				$('#alert-message').removeClass('alert-warning').addClass('alert-success').text(response.message).show();
+                // Hide the alert message after 3 seconds
+                setTimeout(function() {
+                    $('#alert-message').fadeOut('slow');
+                }, 3000);
+			},
+			error: function(xhr, status, error) {
+                $('#newsletterForm')[0].reset();
+				$('#submitSpinner').hide();
+                $('#alert-message').removeClass('alert-success').addClass('alert-warning').text(xhr.responseJSON.message).show();
 
+				setTimeout(function() {
+                    $('#alert-message').fadeOut('slow');
+                }, 3000);
+            }
+		});
+	});
+</script>
 <!-- Vendors -->
 <script src="/media/assets/vendor/choices/js/choices.min.js"></script>
 <script src="/media/assets/vendor/flatpickr/js/flatpickr.min.js"></script>

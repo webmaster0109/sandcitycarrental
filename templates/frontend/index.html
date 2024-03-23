@@ -515,13 +515,16 @@
 				<div class="col-md-7 mx-auto text-center py-5">
 					<!-- Title -->
 					<h2 class="mb-4">Subscribe And Get a Special Discount </h2>
-					{% include 'base/includes/alerts.html' %}
+					<div id="alert-message" class="alert"></div>
 					<!-- Form -->
-					<form class="bg-body shadow rounded-2 p-2" method="post" action="{% url 'signup_newsletter' %}">
+					<form class="bg-body shadow rounded-2 p-2" id="newsletterForm" method="post">
 						{% csrf_token %}
 						<div class="input-group">
-							<input class="form-control border-0 me-1" type="email" name="email" placeholder="Enter your email">
-							<button type="submit" class="btn btn-dark rounded-2 mb-0">Subscribe!</button>
+							<input class="form-control border-0 me-1" type="email" id="email" name="email" placeholder="Enter your email">
+							<button type="submit" class="btn btn-dark rounded-2 mb-0">
+								<span id="submitSpinner" style="display: none;" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+								Subscribe!
+							</button>
 						</div>
 					</form>
 				</div>

@@ -1,6 +1,6 @@
 import random
 from django.shortcuts import render, redirect, get_object_or_404
-from django.http import HttpResponseRedirect, HttpResponse
+from django.http import HttpResponseRedirect, JsonResponse
 from rentalapp.models.users import ContactUs, send_contact_form_email
 from rentalapp.models.cars import CarTypes, Cars, Booking, CarReviews
 from rentalapp.models.faqs import Faq
@@ -54,14 +54,12 @@ def signup_newsletter(request):
         email = request.POST.get('email')
         email_obj = EmailNewsletters.objects.filter(email=email).first()
 
-        if email_obj and email_obj.is_subscribe:
-            messages.warning(request, "Your email address has already been registered")
-            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+        if email_obj:
+            return JsonResponse({'status': 'error', 'message': 'Your email address has already been registered'})
         
         email_obj = EmailNewsletters.objects.create(email=email)
         send_newsletter_email(email_obj)
-        messages.success(request, "You've successfully registered newsletter signup.")
-        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+        return JsonResponse({'status': 'success', 'message': 'You\'ve successfully registered newsletter signup.'})
 
 def menu_items(request):
     cars = Cars.objects.all()
