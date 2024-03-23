@@ -847,7 +847,7 @@ def send_booking_car_email(booking):
     subject = f'[Invoice: #{booking.booking_id}] Sandcity Car Rental'
     # Change the following line to the admin's email address
     recipient_email = f'{booking.user.email}'
-    html_message = render_to_string('admin/home/app/user_email_invoice.html', {'booking': booking})
+    html_message = render_to_string('email/user_email_invoice.html', {'booking': booking})
 
     message = strip_tags(html_message)
 
@@ -858,7 +858,7 @@ def send_booking_car_email(booking):
         email = EmailMultiAlternatives(subject, message, settings.EMAIL_HOST_USER, [recipient_email])
         email.attach_alternative(html_message, "text/html")
         email.send()
-        # send_mail(admin_subject, message, settings.EMAIL_HOST_USER, [admin_email], html_message=html_message)
+        send_mail(admin_subject, message, settings.EMAIL_HOST_USER, [admin_email], html_message=html_message)
     except Exception as e:
         print(f"Failed to send registration email to {recipient_email}. Error: {e}")
 
