@@ -72,11 +72,11 @@ def calculate_dynamic_price(discounted_price, total_days):
     elif total_days == 2:
         return discounted_price - 50
     elif 3 <= total_days <= 6:
-        return discounted_price - 100
+        return discounted_price - 200
     elif 7 <= total_days <= 29:
-        return discounted_price - 150
+        return discounted_price - 300
     else:
-        return discounted_price - 180
+        return discounted_price - 380
 
 def booking_search(request):
     if request.method == 'GET':
@@ -200,7 +200,7 @@ def car_details(request, slug):
 
             booking_days = (return_date - pickup_date).days
             discounted_price = cars.discounted_price
-            total_price = booking_days * discounted_price
+            total_price = booking_days * calculate_dynamic_price(discounted_price, booking_days)
 
             car_prices = {}
             if booking_days > 1:
