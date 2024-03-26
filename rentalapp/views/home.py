@@ -85,20 +85,25 @@ def booking_search(request):
         pickup_date_str = request.GET.get('pickup_date')
         return_date_str = request.GET.get('return_date')
 
-        if not all([selected_category, pickup_date_str, return_date_str]):
+        if not all([pickup_date_str, return_date_str]):
             return redirect('homepage')
         
+        
+        request.session['pickup_date'] = pickup_date_str
+        request.session['return_date'] = return_date_str
+
+        if not selected_category:
+            request.session.pop('car_type', None)
+
+        print(request.session.get('car_type', None))
 
         request.session['car_type'] = selected_category
 
-        # Start with all bookings
         filtered_bookings = Booking.objects.all()
+        get_all_cars = Cars.objects.all()
 
-        available_cars = Cars.objects.exclude(
-            Q(booking__pickup_date__lte=return_date_str, booking__return_date__gte=pickup_date_str) |
-            Q(booking__pickup_date__gte=pickup_date_str, booking__return_date__lte=return_date_str) |
-            Q(booking__pickup_date__lte=pickup_date_str, booking__return_date__gte=return_date_str)
-        ).filter(car_type__car_types=selected_category)
+        if selected_category:
+            filtered_bookings = filtered_bookings.filter(car__car_type__car_types=selected_category)
 
         try:
             pickup_date = datetime.strptime(pickup_date_str, '%Y-%m-%d').date()
@@ -106,39 +111,41 @@ def booking_search(request):
         except ValueError:
             raise ValidationError(_('Invalid date format. Please use YYYY-MM-DD format.'))
 
-        # Filter by category
-        if selected_category:
-            filtered_bookings = filtered_bookings.filter(car__car_type__car_types=selected_category)
+        if pickup_date and return_date:
+            total_days = (return_date - pickup_date).days
 
-        # Filter by pickup date
-        if pickup_date:
-            filtered_bookings = filtered_bookings.filter(pickup_date__gte=pickup_date)
+            available_cars = Cars.objects.exclude(
+                Q(booking__pickup_date__lte=return_date_str, booking__return_date__gte=pickup_date_str) |
+                Q(booking__pickup_date__gte=pickup_date_str, booking__return_date__lte=return_date_str) |
+                Q(booking__pickup_date__lte=pickup_date_str, booking__return_date__gte=return_date_str)
+            )
 
-        # Filter by return date
-        if return_date:
-            filtered_bookings = filtered_bookings.filter(return_date__lte=return_date)
+            if selected_category:
+                available_cars = available_cars.filter(car_type__car_types=selected_category)
 
-        total_days = (return_date - pickup_date).days
+            car_prices = {}
+            for car in available_cars:
+                dynamic_price = calculate_dynamic_price(car.discounted_price, total_days, car)
+                car.total_price = total_days * dynamic_price
+                total_price = total_days * dynamic_price
+                car_prices[car.slug] = {'total_price': total_price, 'total_days': total_days, 'pickup_date': pickup_date_str, 'return_date': return_date_str}
+            
+            for car in get_all_cars:
+                dynamic_price = calculate_dynamic_price(car.discounted_price, total_days, car)
+                car.total_price = total_days * dynamic_price
+                total_price = total_days * dynamic_price
+                car_prices[car.slug] = {'total_price': total_price, 'total_days': total_days, 'pickup_date': pickup_date_str, 'return_date': return_date_str}
 
-        request.session['pickup_date'] = pickup_date_str
-        request.session['return_date'] = return_date_str
+            request.session['car_prices'] = car_prices
+        else:
+            total_days = 0  # or any default value you want to set
 
-        car_prices = {}
-        for car in available_cars:
-            dynamic_price = calculate_dynamic_price(car.discounted_price, total_days, car)
-            car.total_price = total_days * dynamic_price
-            total_price = total_days * dynamic_price
-            car_prices[car.slug] = {'total_price': total_price, 'total_days': total_days, 'pickup_date': pickup_date_str, 'return_date': return_date_str}
-        
-        request.session['car_prices'] = car_prices
-
-        # Pass the filtered bookings to the template
-        context = {
-            'categories': CarTypes.objects.all(),
-            'filtered_bookings': available_cars,
-            'total_days': total_days,
-            'car_type': request.session['car_type']
-        }
+    context = {
+        'categories': CarTypes.objects.all(),
+        'filtered_bookings': available_cars if selected_category else get_all_cars,
+        'total_days': total_days,
+        'car_type': request.session.get('car_type', None)
+    }
 
     return render(request, 'frontend/booking_search.html', context=context)
 

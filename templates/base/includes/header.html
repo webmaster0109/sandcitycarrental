@@ -240,7 +240,7 @@
                                                     <li>
                                                         <a href="{% url "notification" %}" class="list-group-item list-group-item-action rounded {% if notification.is_read is False %}notif-unread{% endif %} border-0 mb-1 p-3">
                                                             <h6 class="mb-2">{{notification.title}}</h6>
-                                                            <p class="mb-1 small">{{notification.message}}</p>
+                                                            <p class="mb-1 small">{{notification.message|safe}}</p>
                                                             <span class="small text-orange">{{ notification.created_at|date:"l, F j, Y" }}</span>
                                                         </a>
                                                     </li>

@@ -25,9 +25,9 @@
                         <div class="col-lg-3 ms-auto">
                             <div class="form-control-bg-light form-fs-md">
                                 <select class="form-select js-choice" data-search-enabled="true" name="car_category">
-                                    <option value="" >Select Car Category</option>
+                                    <option value="" {% if car_type is None %}selected{% endif %}>All Cars</option>
                                     {% for cat in categories %}
-                                    <option name="car_category" {% if car_type in cat.car_types %}selected{% endif %} value="{{cat.car_types}}">{{cat.car_types}}</option>
+                                    <option name="car_category" {% if car_type == cat.car_types %}selected{% endif %} value="{{cat.car_types}}">{{cat.car_types}}</option>
                                     {% endfor %}
                                 </select>
                             </div>	

@@ -40,7 +40,7 @@
                                             <!-- Title -->
                                             <div class="ms-3">
                                                 <h6 class="fw-light mb-1">{{notification.title}}</h6>
-                                                <p class="mb-1 small">{{notification.message}}</p>
+                                                <p class="mb-1 small">{{notification.message|safe}}</p>
                                                 <small>{{ notification.created_at|date:"F j, Y" }}</small>
                                             </div>
                                         </div>
