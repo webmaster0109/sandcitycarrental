@@ -362,10 +362,10 @@ def add_new_car(request):
         exterior_color = request.POST.get('exterior_color')
         actual_price = int(request.POST.get('actual_price'))
         discounted_price = int(request.POST.get('discounted_price'))
-        in_stock = bool(request.POST.get('in_stock'))
-
+        marketing_price = int(request.POST.get('marketing_price'))
+        in_stock = request.POST.get('in_stock')
         try:
-            if not all([category, car_brand, car_number, car_slug, car_year, body_type, engine, fuel_type, actual_price, exterior_color, discounted_price, in_stock]):
+            if not all([category, car_brand, car_number, car_slug, car_year, body_type, engine, fuel_type, actual_price, exterior_color, discounted_price, marketing_price, in_stock]):
                 messages.warning(request, "Required fields are missing")
                 return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
             
@@ -391,6 +391,7 @@ def add_new_car(request):
                 exterior_color=exterior_color,
                 actual_price=actual_price,
                 discounted_price=discounted_price,
+                marketing_price=marketing_price,
                 in_stock=in_stock
             )
             car.save()
@@ -445,10 +446,11 @@ def admin_update_car_details(request, slug):
         exterior_color = request.POST.get('exterior_color')
         actual_price = int(request.POST.get('actual_price'))
         discounted_price = int(request.POST.get('discounted_price'))
+        marketing_price = int(request.POST.get('marketing_price'))
         in_stock = request.POST.get('in_stock')
 
         try:
-            if not all([category, car_brand, car_number, car_slug, car_year, body_type, engine, fuel_type, actual_price, exterior_color, discounted_price, in_stock]):
+            if not all([category, car_brand, car_number, car_slug, car_year, body_type, engine, fuel_type, actual_price, exterior_color, discounted_price, marketing_price, in_stock]):
                 messages.warning(request, "Required fields are missing")
                 return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
             
@@ -469,6 +471,7 @@ def admin_update_car_details(request, slug):
             cars.exterior_color = exterior_color
             cars.actual_price = actual_price
             cars.discounted_price = discounted_price
+            cars.marketing_price = marketing_price
             cars.in_stock = in_stock
             cars.save()
             

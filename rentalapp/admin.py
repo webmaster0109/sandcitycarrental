@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models.cars import CarImages, Cars, CarTypes, Booking, CarReviews
+from .models.cars import CarImages, Cars, CarTypes, Booking, CarReviews, CarRentalPeriodPrices
 from .models.users import Profile, Country, UserNotification
 from .models.car_features import CarFeatures
 from .models.newsletter import EmailNewsletters
@@ -11,12 +11,6 @@ from .models.custom_page import CustomPage
 admin.site.site_header = "SandCity Car Rental"
 admin.site.site_title = "SandCity Portal"
 admin.site.index_title = "Welcome to SandCity Portal"
-
-admin.site.register(UserNotification)
-admin.site.register(EmailNewsletters)
-admin.site.register(CarReviews)
-
-admin.site.register(Faq)
 
 @admin.register(CustomPage)
 class CustomPageAdmin(admin.ModelAdmin):
@@ -45,11 +39,7 @@ class CarsAdmin(admin.ModelAdmin):
     inlines = [CarImagesAdmin, CarFeaturesAdmin]
     prepopulated_fields = {'slug': ('brand',)}
 
-admin.site.register(CarImages)
-
-admin.site.register(Profile)
-admin.site.register(CarFeatures)
-admin.site.register(Country)
+admin.site.register((Profile, CarFeatures, Country, UserNotification, EmailNewsletters, CarReviews, Faq, CarImages, CarRentalPeriodPrices))
 
 @admin.register(Booking)
 class BookingAdmin(admin.ModelAdmin):

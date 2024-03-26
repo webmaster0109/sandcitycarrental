@@ -2,7 +2,7 @@ import random
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponseRedirect, JsonResponse
 from rentalapp.models.users import ContactUs, send_contact_form_email
-from rentalapp.models.cars import CarTypes, Cars, Booking, CarReviews
+from rentalapp.models.cars import *
 from rentalapp.models.faqs import Faq
 from django.contrib import messages
 from django.db.models import Q, Avg, Count
@@ -66,17 +66,18 @@ def menu_items(request):
     car_types = CarTypes.objects.all()
     return {'car_detail': cars, 'car_types': car_types}
 
-def calculate_dynamic_price(discounted_price, total_days):
+def calculate_dynamic_price(discounted_price, total_days, car):
+    rental_price = CarRentalPeriodPrices.objects.get(car=car)
     if total_days == 1:
         return discounted_price
     elif total_days == 2:
-        return discounted_price - 50
+        return discounted_price - rental_price.two_days_price
     elif 3 <= total_days <= 6:
-        return discounted_price - 200
+        return discounted_price - rental_price.three_to_six_days_price
     elif 7 <= total_days <= 29:
-        return discounted_price - 300
+        return discounted_price - rental_price.seven_to_29_days_price
     else:
-        return discounted_price - 380
+        return discounted_price - rental_price.thirty_days_price
 
 def booking_search(request):
     if request.method == 'GET':
@@ -124,7 +125,7 @@ def booking_search(request):
 
         car_prices = {}
         for car in available_cars:
-            dynamic_price = calculate_dynamic_price(car.discounted_price, total_days)
+            dynamic_price = calculate_dynamic_price(car.discounted_price, total_days, car)
             car.total_price = total_days * dynamic_price
             total_price = total_days * dynamic_price
             car_prices[car.slug] = {'total_price': total_price, 'total_days': total_days, 'pickup_date': pickup_date_str, 'return_date': return_date_str}
@@ -200,10 +201,10 @@ def car_details(request, slug):
 
             booking_days = (return_date - pickup_date).days
             discounted_price = cars.discounted_price
-            total_price = booking_days * calculate_dynamic_price(discounted_price, booking_days)
+            total_price = booking_days * calculate_dynamic_price(discounted_price, booking_days, cars)
 
             car_prices = {}
-            if booking_days > 1:
+            if booking_days > 0:
                 car_prices[car_id] = {'total_price': total_price, 'total_days': booking_days, 'pickup_date': pickup_date_str, 'return_date': return_date_str}
             request.session['car_prices'] = car_prices
             return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
@@ -232,6 +233,7 @@ def car_details(request, slug):
         'rating_choices': rating_choices,
         'average_review': average_review,
         'ratings_count': ratings_counts,
+        # 'marketing_price': marketing_prices()
     }
 
     return render(request, template_name="frontend/car_detail.html", context=context)

@@ -69,6 +69,11 @@
                             <option value="False">Out of Stock</option>
                         </select>
                     </div>
+                    <div class="form-group">
+                      <label class="form-label">Upload Car Images*</label>
+                      <input class="form-control" name="car_images" type="file" multiple required>
+                      <small class="text-muted">Note:* You can upload more than one image</small>
+                    </div>
                     </div>
                 <div class="col-md-6">
                     <div class="form-group">
@@ -98,9 +103,9 @@
                         <small class="text-muted">Note:* Don't type AED or any word, just type numeric price only</small>
                     </div>
                     <div class="form-group">
-                        <label class="form-label">Upload Car Images*</label>
-                        <input class="form-control" name="car_images" type="file" multiple required>
-                        <small class="text-muted">Note:* You can upload more than one image</small>
+                      <label class="form-label">Marketing Price*</label>
+                      <input type="text" class="form-control" name="marketing_price" value="{{car.marketing_price}}" required>
+                      <small class="text-muted">Note:* Don't type AED or any word, just type numeric price only</small>
                     </div>
                 </div>
                 <div class="col-md-12">

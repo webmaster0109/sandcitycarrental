@@ -160,7 +160,7 @@ Tabs-content START -->
 							<!-- Card body START -->
 							<div class="card-body p-0 pt-3">
 								<p class="mb-4">
-                                    {{cars.desc}}
+                                    {{cars.desc|safe}}
                                 </p>
 
 								<!-- List -->
@@ -443,14 +443,15 @@ Tabs-content START -->
 							<!-- Title -->
 							{% if not total_days %}
 							<div><small class="fw-bold fs-6 text-dark">Starting from*</small></div>
+							<div class="hstack gap-2 mb-1">
+								<h3 class="card-title mb-0">AED {{cars.marketing_price}}</h3>
+								<span class="fs-5">per day</span>
+							</div>
 							{% endif %}
 							<div class="hstack gap-2 mb-1">
-                                {% if total_days > 1 %}
-                                <h3 class="card-title mb-0">AED {{total_price}}</h3>
-								<span class="fs-5">{{total_days}} Days</span>
-                                {% else %}
-								<h3 class="card-title mb-0">AED {{cars.discounted_price}}</h3>
-								<span class="fs-5">per Day</span>
+                                {% if total_days > 0 %}
+                                <h3 class="card-title mb-0">{% if total_days == 1 %}AED {{cars.discounted_price}}{% else %}AED {{total_price}}{% endif %}</h3>
+								<span class="fs-5">{% if total_days == 1 %}{{total_days}} day{% else %}{{total_days}} days{% endif %}</span>
                                 {% endif %}
 							</div>
 							<div class="d-flex justify-content-between mb-4">

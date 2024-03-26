@@ -3,6 +3,7 @@ import uuid
 import os
 from django.core.files.storage import default_storage
 from django.contrib.auth.models import User
+from django_ckeditor_5.fields import CKEditor5Field
 
 class CarTypes(models.Model):
     types_id = models.UUIDField(primary_key=True, unique=True, editable=False, default=uuid.uuid4)
@@ -21,7 +22,7 @@ class Cars(models.Model):
     car_number = models.CharField(max_length=50, null=True, blank=True)
     slug = models.SlugField(max_length=255, unique=True, null=True, blank=True)
     year = models.PositiveIntegerField(default=0, null=True, blank=True)
-    desc = models.TextField(default="", null=True, blank=True)
+    desc = CKEditor5Field(config_name='extends', null=True, blank=True)
 
     body_type = models.CharField(max_length=100, null=True, blank=True)
     engine = models.CharField(max_length=255, null=True, blank=True)
@@ -30,11 +31,23 @@ class Cars(models.Model):
 
     actual_price = models.PositiveIntegerField(default=100, null=True, blank=True)
     discounted_price = models.PositiveIntegerField(default=50, null=True, blank=True)
+    marketing_price = models.PositiveIntegerField(default=50, null=True, blank=True)
 
     in_stock = models.BooleanField(default=True)
 
     def __str__(self):
         return self.brand
+
+class CarRentalPeriodPrices(models.Model):
+    car = models.ForeignKey(Cars, on_delete=models.CASCADE, null=True, blank=True)
+    two_days_price = models.PositiveIntegerField(default=0, null=True, blank=True)
+    three_to_six_days_price = models.PositiveIntegerField(default=0, null=True, blank=True)
+    seven_to_29_days_price = models.PositiveIntegerField(default=0, null=True, blank=True)
+    thirty_days_price = models.PositiveIntegerField(default=0, null=True, blank=True)
+    def __str__(self):
+        return self.car.brand
+    
+    
 
 class Booking(models.Model):
     PAYMENT_MODE_CHOICES = (
